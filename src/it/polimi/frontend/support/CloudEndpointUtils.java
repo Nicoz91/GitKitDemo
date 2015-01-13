@@ -1,4 +1,4 @@
-package com.google.identitytoolkit.demo;
+package it.polimi.frontend.support;
 
 import com.google.api.client.googleapis.json.GoogleJsonError;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;

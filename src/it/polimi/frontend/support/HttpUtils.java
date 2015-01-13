@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.identitytoolkit.demo;
+package it.polimi.frontend.support;
 
 import android.util.Log;
 
