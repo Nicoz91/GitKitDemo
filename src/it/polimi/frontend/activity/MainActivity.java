@@ -30,8 +30,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.identitytoolkit.GitkitClient;
 import com.google.identitytoolkit.GitkitUser;
 import com.google.identitytoolkit.IdToken;
@@ -47,8 +45,6 @@ import java.io.IOException;
 public class MainActivity extends FragmentActivity implements OnClickListener {
 
   private GitkitClient client;
-  private GitkitUser gitUser;
-  private TextView description;
   
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +62,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
       // in account information are passed to the callback.
       @Override
       public void onSignIn(IdToken idToken, GitkitUser user) {
-    	gitUser = user;
-        showProfilePage(idToken, user);
+    	showProfilePage(idToken, user);
         System.out.println("Ho il token: "+idToken.getKeyId());
           // Now use the idToken to create a session for your user.
           // To do so, you should exchange the idToken for either a Session Token or Cookie
@@ -150,9 +145,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 
 
-  private void showAccount(GitkitUser user) {
-	description = ((TextView) findViewById(R.id.description));
-	  
+  private void showAccount(GitkitUser user) {  
     ((TextView) findViewById(R.id.account_email)).setText(user.getEmail());
 
     if (user.getDisplayName() != null) {
