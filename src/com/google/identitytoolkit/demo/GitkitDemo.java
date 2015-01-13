@@ -30,19 +30,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.identitytoolkit.GitkitClient;
 import com.google.identitytoolkit.GitkitUser;
 import com.google.identitytoolkit.IdToken;
+import com.google.identitytoolkit.demo.userinfoendpoint.Userinfoendpoint;
+import com.google.identitytoolkit.demo.userinfoendpoint.model.UserInfo;
 
 import java.io.IOException;
 
 /**
- * Gitkit Demo. CIAO NICO
+ * Gitkit Demo
  */
 public class GitkitDemo extends FragmentActivity implements OnClickListener {
 
   private GitkitClient client;
-
+  private GitkitUser gitUser;
+  private TextView description;
+  
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -59,8 +65,10 @@ public class GitkitDemo extends FragmentActivity implements OnClickListener {
       // in account information are passed to the callback.
       @Override
       public void onSignIn(IdToken idToken, GitkitUser user) {
+    	gitUser = user;
         showProfilePage(idToken, user);
-
+        new UserInfoTask().execute();
+        System.out.println("Ho il token: "+idToken.getKeyId());
           // Now use the idToken to create a session for your user.
           // To do so, you should exchange the idToken for either a Session Token or Cookie
           // from your server.
@@ -143,6 +151,10 @@ public class GitkitDemo extends FragmentActivity implements OnClickListener {
 
 
   private void showAccount(GitkitUser user) {
+	description = ((TextView) findViewById(R.id.description));
+	
+	new UserInfoAsyncRetriever().execute();
+	  
     ((TextView) findViewById(R.id.account_email)).setText(user.getEmail());
 
     if (user.getDisplayName() != null) {
@@ -172,4 +184,88 @@ public class GitkitDemo extends FragmentActivity implements OnClickListener {
       }.execute(user.getPhotoUrl());
     }
   }
+  
+  
+  /**
+   * AsyncTask for calling Mobile Assistant API for checking into a 
+   * place (e.g., a store).
+   */
+  private class UserInfoTask extends AsyncTask<Void, Void, Void> {
+
+    /**
+     * Calls appropriate CloudEndpoint to indicate that user checked into a place.
+     *
+     * @param params the place where the user is checking in.
+     */
+    @Override
+    protected Void doInBackground(Void... params) {
+      UserInfo info = new UserInfo();
+
+      // Set the ID of the store where the user is.
+      info.setUserEmail(gitUser.getEmail());
+      info.setDescription("CIAOO");
+
+      Userinfoendpoint.Builder builder = new Userinfoendpoint.Builder(
+          AndroidHttp.newCompatibleTransport(), new JacksonFactory(), null);
+
+      builder = CloudEndpointUtils.updateBuilder(builder);
+
+      Userinfoendpoint endpoint = builder.build();
+
+
+      try {
+        endpoint.insertUserInfo(info).execute();
+      } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+
+      return null;
+    }
+  }
+
+  
+  /**
+   * AsyncTask for retrieving the list of places (e.g., stores) and updating the
+   * corresponding results list.
+   */
+  private class UserInfoAsyncRetriever extends AsyncTask<Void, Void, UserInfo> {
+
+    @Override
+    protected UserInfo doInBackground(Void... params) {
+
+
+      Userinfoendpoint.Builder endpointBuilder = new Userinfoendpoint.Builder(
+          AndroidHttp.newCompatibleTransport(), new JacksonFactory(), null);
+     
+      endpointBuilder = CloudEndpointUtils.updateBuilder(endpointBuilder);
+
+
+      UserInfo result;
+
+      Userinfoendpoint endpoint = endpointBuilder.build();
+
+      try {
+        result = endpoint.getUserInfo(gitUser.getEmail()).execute();
+      } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+        result = null;
+      }
+      return result;
+    }
+
+    @Override
+    @SuppressWarnings("null")
+    protected void onPostExecute(UserInfo result) {
+      
+    	if(result == null)
+    		description.setText("Nessuna descrizione inserita");
+    	else
+    		description.setText(result.getDescription());
+     
+    }
+  }
+  
+  
 }
