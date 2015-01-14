@@ -7,6 +7,7 @@ import it.polimi.frontend.R.id;
 import it.polimi.frontend.R.layout;
 import it.polimi.frontend.R.menu;
 import it.polimi.frontend.R.string;
+import it.polimi.frontend.fragment.RequestList;
 
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -134,7 +135,12 @@ public class TabbedActivity extends ActionBarActivity implements
 			// getItem is called to instantiate the fragment for the given page.
 			// Return a PlaceholderFragment (defined as a static inner class
 			// below).
-			return PlaceholderFragment.newInstance(position + 1);
+			switch (position) {
+			case 0:
+				return new RequestList();
+			default:
+				return PlaceholderFragment.newInstance(position + 1);
+			}
 		}
 
 		@Override
@@ -148,7 +154,7 @@ public class TabbedActivity extends ActionBarActivity implements
 			Locale l = Locale.getDefault();
 			switch (position) {
 			case 0:
-				return getString(R.string.title_section1).toUpperCase(l);
+				return "RequestList";
 			case 1:
 				return getString(R.string.title_section2).toUpperCase(l);
 			case 2:

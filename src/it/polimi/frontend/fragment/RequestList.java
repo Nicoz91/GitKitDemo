@@ -1,8 +1,7 @@
 package it.polimi.frontend.fragment;
 
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -11,8 +10,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import it.polimi.appengine.entity.requestendpoint.Requestendpoint;
 import it.polimi.appengine.entity.requestendpoint.model.CollectionResponseRequest;
 import it.polimi.appengine.entity.requestendpoint.model.Request;
-import it.polimi.appengine.entity.userendpoint.Userendpoint;
-import it.polimi.appengine.entity.userendpoint.model.User;
+import it.polimi.appengine.entity.requestendpoint.model.User;
 import it.polimi.frontend.support.CloudEndpointUtils;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 public class RequestList extends ListFragment{
 
@@ -30,7 +27,7 @@ public class RequestList extends ListFragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-
+		new TestInsertTask().execute();
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 
@@ -53,29 +50,31 @@ public class RequestList extends ListFragment{
 		@Override
 		protected Void doInBackground(Void... params) {
 			Request req = new Request();
+			req.setDescription("Descrizione di prova");
+			req.setTitle("Titolo di prova");
 			User user = new User();
 			// Set the ID of the store where the user is. 
 			// This would be replaced by the actual ID in the final version of the code.
 			user.setName("Ciccio");
 			user.setSurname("Pasticcio");
 			user.setPwAccount("ciccio@pasticcio.com");
-			Userendpoint.Builder userBuilder = new Userendpoint.Builder(AndroidHttp.newCompatibleTransport(), new JacksonFactory(),
+			req.setOwner(user);
+			Requestendpoint.Builder reqBuilder = new Requestendpoint.Builder(AndroidHttp.newCompatibleTransport(), new JacksonFactory(),
 					null);
-			userBuilder = CloudEndpointUtils.updateBuilder(userBuilder);
-			Userendpoint userEndpoint = userBuilder.build();
+			reqBuilder = CloudEndpointUtils.updateBuilder(reqBuilder);
+			Requestendpoint reqEndpoint = reqBuilder.build();
 			try {
-				userEndpoint.insertUser(user).execute();
+				reqEndpoint.insertRequest(req).execute();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
-			req.setDescription("Descrizione di prova");
-
-
-
-
 			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Void result) {
+			new TestRetrieverTask().execute();
 		}
 	}
 
@@ -110,7 +109,6 @@ public class RequestList extends ListFragment{
 		}
 
 		@Override
-		@SuppressWarnings("null")
 		protected void onPostExecute(CollectionResponseRequest result) {
 
 			/*
@@ -125,7 +123,11 @@ public class RequestList extends ListFragment{
 			}*/
 
 			List<Request> reqs = result.getItems();
-			ArrayAdapter<Request> adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, reqs); 
+			ArrayList<String> reqTitles = new ArrayList<String>();
+			for (int i=0; i<reqs.size(); i++) {
+				reqTitles.add(reqs.get(i).getTitle());
+			}
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, reqTitles); 
 			setListAdapter(adapter);
 			/*StringBuffer placesFound = new StringBuffer();
 			
