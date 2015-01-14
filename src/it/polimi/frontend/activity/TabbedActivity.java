@@ -2,11 +2,7 @@ package it.polimi.frontend.activity;
 
 import java.util.Locale;
 
-import it.polimi.frontend.R;
-import it.polimi.frontend.R.id;
-import it.polimi.frontend.R.layout;
-import it.polimi.frontend.R.menu;
-import it.polimi.frontend.R.string;
+import it.polimi.frontend.activity.R;
 import it.polimi.frontend.fragment.RequestList;
 
 import android.support.v7.app.ActionBarActivity;

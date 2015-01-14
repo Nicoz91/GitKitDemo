@@ -34,7 +34,7 @@ import com.google.identitytoolkit.GitkitClient;
 import com.google.identitytoolkit.GitkitUser;
 import com.google.identitytoolkit.IdToken;
 
-import it.polimi.frontend.R;
+import it.polimi.frontend.activity.R;
 
 import java.io.IOException;
 
