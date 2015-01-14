@@ -7,5 +7,12 @@
     <string name="sign_in_label">Sign in</string>
     <string name="manage_account_label">Manage account</string>
     <string name="sign_out_label">Sign out</string>
-	<string name="fb_app_id">626114737492775</string>
+    <string name="fb_app_id">626114737492775</string>
+    <string name="title_activity_tabbed">TabbedActivity</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
 </resources>

@@ -124,6 +124,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
     setContentView(R.layout.profile);
     showAccount(user);
     findViewById(R.id.sign_out).setOnClickListener(this);
+    
+    startActivity(new Intent(this, TabbedActivity.class));
   }
 
 
