@@ -87,7 +87,7 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/fb_app_id" />
 
-        <service android:name="it.polimi.frontend.support.GCMIntentService" />
+        <service android:name="it.polimi.frontend.activity.GCMIntentService" />
 
         <receiver
             android:name="com.google.android.gcm.GCMBroadcastReceiver"
@@ -105,7 +105,7 @@
         </receiver>
 
         <activity
-            android:name="it.polimi.frontend.support.RegisterActivity"
+            android:name="it.polimi.frontend.activity.RegisterActivity"
             android:launchMode="singleTop" />
         <activity
             android:name="it.polimi.frontend.activity.TabbedActivity"

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package it.polimi.frontend.support;
+package it.polimi.frontend.activity;
 
 import android.util.Log;
 

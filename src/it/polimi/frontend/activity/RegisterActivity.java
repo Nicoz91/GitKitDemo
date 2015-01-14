@@ -1,8 +1,9 @@
-package it.polimi.frontend.support;
+package it.polimi.frontend.activity;
 
 import java.io.IOException;
 
 import it.polimi.frontend.R;
+
 import com.google.identitytoolkit.demo.messageEndpoint.MessageEndpoint;
 import com.google.identitytoolkit.demo.messageEndpoint.model.CollectionResponseMessageData;
 import com.google.identitytoolkit.demo.messageEndpoint.model.MessageData;

@@ -1,4 +1,4 @@
-package it.polimi.frontend.support;
+package it.polimi.frontend.activity;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -13,7 +13,6 @@ import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.json.jackson2.JacksonFactory;
-
 import com.google.identitytoolkit.demo.deviceinfoendpoint.Deviceinfoendpoint;
 import com.google.identitytoolkit.demo.deviceinfoendpoint.model.DeviceInfo;
 
