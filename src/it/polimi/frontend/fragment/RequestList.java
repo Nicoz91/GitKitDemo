@@ -11,7 +11,7 @@ import it.polimi.appengine.entity.requestendpoint.Requestendpoint;
 import it.polimi.appengine.entity.requestendpoint.model.CollectionResponseRequest;
 import it.polimi.appengine.entity.requestendpoint.model.Request;
 import it.polimi.appengine.entity.requestendpoint.model.User;
-import it.polimi.frontend.support.CloudEndpointUtils;
+import it.polimi.frontend.activity.CloudEndpointUtils;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
