@@ -33,9 +33,10 @@ import android.widget.Toast;
 import com.google.identitytoolkit.GitkitClient;
 import com.google.identitytoolkit.GitkitUser;
 import com.google.identitytoolkit.IdToken;
-import com.google.identitytoolkit.demo.R;
+import it.polimi.frontend.R;
 
 import it.polimi.frontend.support.HttpUtils;
+import it.polimi.frontend.support.RegisterActivity;
 
 import java.io.IOException;
 
@@ -55,6 +56,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
     // The configurations are set in the AndroidManifest.xml. You can also set or overwrite them
     // by calling the corresponding setters on the GitkitClient builder.
     //
+    Intent intent = new Intent(this, RegisterActivity.class);
+    startActivity(intent);
 
     client = GitkitClient.newBuilder(this, new GitkitClient.SignInCallbacks() {
       // Implement the onSignIn method of GitkitClient.SignInCallbacks interface.

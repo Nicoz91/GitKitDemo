@@ -2,7 +2,7 @@ package it.polimi.frontend.support;
 
 import java.io.IOException;
 
-import com.google.identitytoolkit.demo.R;
+import it.polimi.frontend.R;
 import com.google.identitytoolkit.demo.messageEndpoint.MessageEndpoint;
 import com.google.identitytoolkit.demo.messageEndpoint.model.CollectionResponseMessageData;
 import com.google.identitytoolkit.demo.messageEndpoint.model.MessageData;

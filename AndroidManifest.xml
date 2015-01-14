@@ -15,7 +15,7 @@
  limitations under the License.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.google.identitytoolkit.demo"
+    package="it.polimi.frontend"
     android:versionCode="1"
     android:versionName="1.0.0" >
 
@@ -28,10 +28,10 @@
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
 
     <permission
-        android:name="com.google.identitytoolkit.demo.permission.C2D_MESSAGE"
+        android:name="it.polimi.frontend.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.google.identitytoolkit.demo.permission.C2D_MESSAGE" />
+    <uses-permission android:name="it.polimi.frontend.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
@@ -95,12 +95,12 @@
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
 
-                <category android:name="com.google.identitytoolkit.demo" />
+                <category android:name="it.polimi.frontend" />
             </intent-filter>
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
-                <category android:name="com.google.identitytoolkit.demo" />
+                <category android:name="it.polimi.frontend" />
             </intent-filter>
         </receiver>
 
