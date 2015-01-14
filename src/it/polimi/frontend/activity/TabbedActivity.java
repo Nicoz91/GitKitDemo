@@ -2,11 +2,11 @@ package it.polimi.frontend.activity;
 
 import java.util.Locale;
 
-import com.google.identitytoolkit.demo.R;
-import com.google.identitytoolkit.demo.R.id;
-import com.google.identitytoolkit.demo.R.layout;
-import com.google.identitytoolkit.demo.R.menu;
-import com.google.identitytoolkit.demo.R.string;
+import it.polimi.frontend.R;
+import it.polimi.frontend.R.id;
+import it.polimi.frontend.R.layout;
+import it.polimi.frontend.R.menu;
+import it.polimi.frontend.R.string;
 
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
