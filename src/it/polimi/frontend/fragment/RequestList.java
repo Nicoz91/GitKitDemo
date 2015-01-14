@@ -123,12 +123,14 @@ public class RequestList extends ListFragment{
 			}*/
 
 			List<Request> reqs = result.getItems();
-			ArrayList<String> reqTitles = new ArrayList<String>();
-			for (int i=0; i<reqs.size(); i++) {
-				reqTitles.add(reqs.get(i).getTitle());
+			if (reqs!=null){
+				ArrayList<String> reqTitles = new ArrayList<String>();
+				for (int i=0; i<reqs.size(); i++) {
+					reqTitles.add(reqs.get(i).getTitle());
+				}
+				ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, reqTitles); 
+				setListAdapter(adapter);
 			}
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, reqTitles); 
-			setListAdapter(adapter);
 			/*StringBuffer placesFound = new StringBuffer();
 			
 			for (Request place : reqs){
