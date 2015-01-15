@@ -28,7 +28,6 @@ public class RequestList extends ListFragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		//new TestInsertTask().execute();
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 
@@ -41,6 +40,7 @@ public class RequestList extends ListFragment{
 	/**
 	 * AsyncTask for calling Mobile Assistant API for checking into a place (e.g., a store)
 	 */
+	//TODO Modificare per task di recupero Requests
 	private class TestInsertTask extends AsyncTask<Void, Void, Request> {
 
 		/**

@@ -17,4 +17,10 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
+    <!-- Style per righe delle Liste -->
+    <style name="rowstyle">
+        <item name="android:background">@drawable/row_background</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:textSize">15sp</item>
+    </style>
 </resources>
