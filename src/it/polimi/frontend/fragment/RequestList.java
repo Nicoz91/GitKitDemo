@@ -22,7 +22,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 public class RequestList extends ListFragment{
@@ -44,7 +43,6 @@ public class RequestList extends ListFragment{
 	/**
 	 * AsyncTask for calling Mobile Assistant API for checking into a place (e.g., a store)
 	 */
-	//TODO Modificare per task di recupero Requests
 	private class TestInsertTask extends AsyncTask<Void, Void, Request> {
 
 		/**
