@@ -31,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.identitytoolkit.GitkitClient;
 import com.google.identitytoolkit.GitkitUser;
 import com.google.identitytoolkit.IdToken;
@@ -50,7 +51,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-    
+
     LoginSession.setPrefs(PreferenceManager.getDefaultSharedPreferences(this));
     GitkitUser session = LoginSession.getUser();
     IdToken sessionToken = LoginSession.getIdToken();

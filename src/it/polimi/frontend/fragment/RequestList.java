@@ -28,7 +28,7 @@ public class RequestList extends ListFragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		new TestInsertTask().execute();
+		//new TestInsertTask().execute();
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 
