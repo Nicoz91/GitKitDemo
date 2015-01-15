@@ -73,11 +73,13 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
     
       @Override
       public void onSignIn(IdToken idToken, GitkitUser user) {
+    	  
+     //Salvo i dati ricevuti nelle shared preferences
     	LoginSession.setUser(user);
     	LoginSession.setStringUser(user.toString());
     	LoginSession.setIdToken(idToken);
     	LoginSession.setStringToken(idToken.getTokenString());
-    	
+    //
     	
     	showProfilePage(idToken, user);
         System.out.println("Ho il token: "+idToken.getKeyId());

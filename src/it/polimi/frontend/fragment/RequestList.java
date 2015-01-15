@@ -12,6 +12,7 @@ import it.polimi.appengine.entity.requestendpoint.model.CollectionResponseReques
 import it.polimi.appengine.entity.requestendpoint.model.Request;
 import it.polimi.appengine.entity.requestendpoint.model.User;
 import it.polimi.frontend.activity.CloudEndpointUtils;
+import it.polimi.frontend.activity.LoginSession;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -55,9 +56,9 @@ public class RequestList extends ListFragment{
 			User user = new User();
 			// Set the ID of the store where the user is. 
 			// This would be replaced by the actual ID in the final version of the code.
-			user.setName("Ciccio");
+			user.setName(LoginSession.getUser().getDisplayName());
 			user.setSurname("Pasticcio");
-			user.setPwAccount("ciccio@pasticcio.com");
+			user.setPwAccount(LoginSession.getUser().getEmail());
 			req.setOwner(user);
 			Requestendpoint.Builder reqBuilder = new Requestendpoint.Builder(AndroidHttp.newCompatibleTransport(), new JacksonFactory(),
 					null);

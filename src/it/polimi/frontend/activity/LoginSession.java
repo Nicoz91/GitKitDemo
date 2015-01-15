@@ -19,6 +19,7 @@ public class LoginSession {
 	}
 
 	public static void setPrefs(SharedPreferences prefes) {
+		//TODO Aggiungere MODO PRIVATO
 		prefs = prefes;
 		if (prefs.contains("gituser")) {
 		     String gituser = prefs.getString("gituser", "");
