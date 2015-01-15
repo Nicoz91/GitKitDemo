@@ -23,6 +23,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -49,20 +50,35 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
+    
+    LoginSession.setPrefs(PreferenceManager.getDefaultSharedPreferences(this));
+    GitkitUser session = LoginSession.getUser();
+    IdToken sessionToken = LoginSession.getIdToken();
+    if(session!=null && sessionToken!=null){
+    	showProfilePage(sessionToken,session);
+    }
+    else
+    {
     // Step 1: Create a GitkitClient.
     // The configurations are set in the AndroidManifest.xml. You can also set or overwrite them
     // by calling the corresponding setters on the GitkitClient builder.
     //
-    Intent intent = new Intent(this, RegisterActivity.class);
-    startActivity(intent);
+//    Intent intent = new Intent(this, RegisterActivity.class);
+//    startActivity(intent);
 
     client = GitkitClient.newBuilder(this, new GitkitClient.SignInCallbacks() {
       // Implement the onSignIn method of GitkitClient.SignInCallbacks interface.
       // This method is called when the sign-in process succeeds. A Gitkit IdToken and the signed
       // in account information are passed to the callback.
+    
       @Override
       public void onSignIn(IdToken idToken, GitkitUser user) {
+    	LoginSession.setUser(user);
+    	LoginSession.setStringUser(user.toString());
+    	LoginSession.setIdToken(idToken);
+    	LoginSession.setStringToken(idToken.getTokenString());
+    	
+    	
     	showProfilePage(idToken, user);
         System.out.println("Ho il token: "+idToken.getKeyId());
           // Now use the idToken to create a session for your user.
@@ -82,7 +98,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
     showSignInPage();
   }
 
-
+  }
 
   // Step 3: Override the onActivityResult method.
   // When a result is returned to this activity, it is maybe intended for GitkitClient. Call
@@ -142,6 +158,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
     if (v.getId() == R.id.sign_in) {
       client.startSignIn();
     } else if (v.getId() == R.id.sign_out) {
+      LoginSession.reset();
       showSignInPage();
     }
   }
