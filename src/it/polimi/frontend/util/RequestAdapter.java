@@ -24,7 +24,7 @@ public class RequestAdapter extends ArrayAdapter<Request>{
 	private View rowView;
 	
 	public RequestAdapter(Context context, int resource, List<Request> objects) {
-		super(context, resource, objects);
+		super(context, R.layout.row_layout, objects);
 		this.context=context;
 		this.reqs=objects;
 	}

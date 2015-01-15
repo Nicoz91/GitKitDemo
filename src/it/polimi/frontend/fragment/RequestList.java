@@ -13,6 +13,8 @@ import it.polimi.appengine.entity.requestendpoint.model.Request;
 import it.polimi.appengine.entity.requestendpoint.model.User;
 import it.polimi.frontend.activity.CloudEndpointUtils;
 import it.polimi.frontend.activity.LoginSession;
+import it.polimi.frontend.activity.TabbedActivity;
+import it.polimi.frontend.util.RequestAdapter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -20,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
 public class RequestList extends ListFragment{
@@ -28,6 +31,7 @@ public class RequestList extends ListFragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
+		new RequestRetrieverTask().execute();
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 
@@ -73,7 +77,7 @@ public class RequestList extends ListFragment{
 			}
 			return r;
 		}
-		
+
 		@Override
 		protected void onPostExecute(Request result) {
 			if (result!=null){
@@ -85,4 +89,46 @@ public class RequestList extends ListFragment{
 		}
 	}
 
+	/**
+	 * AsyncTask for retrieving the list of places (e.g., stores) and updating the
+	 * corresponding results list.
+	 */
+	private class RequestRetrieverTask extends AsyncTask<Void, Void, CollectionResponseRequest> {
+
+		@Override
+		protected CollectionResponseRequest doInBackground(Void... params) {
+
+
+			Requestendpoint.Builder endpointBuilder = new Requestendpoint.Builder(
+					AndroidHttp.newCompatibleTransport(), new JacksonFactory(), null);
+
+			endpointBuilder = CloudEndpointUtils.updateBuilder(endpointBuilder);
+
+
+			CollectionResponseRequest result;
+
+			Requestendpoint endpoint = endpointBuilder.build();
+			System.out.println("Sto per recuperare requests");
+			try {
+				result = endpoint.listRequest().execute();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				result = null;
+				System.out.println("Requests null");
+			}
+			return result;
+		}
+		
+		@Override
+	    protected void onPostExecute(CollectionResponseRequest result) {
+			if (result!=null){
+				List<Request> reqs = result.getItems();
+				RequestAdapter adapter = new RequestAdapter(getActivity(),0,reqs);
+				if (getActivity() instanceof TabbedActivity)
+					setListAdapter(adapter);
+			} else
+				System.out.println("Anche in onPostExecute result è null");
+	    }
+	}
 }
