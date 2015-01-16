@@ -22,13 +22,13 @@ public class RequestAdapter extends ArrayAdapter<Request>{
 	private Context context;
 	private List<Request> reqs;
 	private View rowView;
-	
+
 	public RequestAdapter(Context context, int resource, List<Request> objects) {
 		super(context, R.layout.row_layout, objects);
 		this.context=context;
 		this.reqs=objects;
 	}
-	
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -39,16 +39,17 @@ public class RequestAdapter extends ArrayAdapter<Request>{
 		}
 		System.out.println("Position: "+position);
 		try{
-		TextView textView2 = (TextView) rowView.findViewById(R.id.subString);
-		textView2.setText(reqs.get(position).getTitle());
-		TextView textView = (TextView) rowView.findViewById(R.id.txtTitle);
-		textView.setText(reqs.get(position).getOwner().getName());
+			TextView textView = (TextView) rowView.findViewById(R.id.txtTitle);
+			textView.setText(reqs.get(position).getOwner().getName()+" "+
+								reqs.get(position).getOwner().getSurname()+" ");
+			TextView textView2 = (TextView) rowView.findViewById(R.id.subString);
+			textView2.setText(reqs.get(position).getTitle());
 
-		//TODO task profile image
-		String photoUrl=reqs.get(position).getOwner().getPhotoURL();
-		if (photoUrl!=null){
-			new ProfileImageTask().execute(photoUrl);
-		}
+			//TODO task profile image
+			String photoUrl=reqs.get(position).getOwner().getPhotoURL();
+			if (photoUrl!=null){
+				new ProfileImageTask().execute(photoUrl);
+			}
 
 		}catch(Exception e){
 			System.out.println("Trovata eccezione cerco di recuperare");
