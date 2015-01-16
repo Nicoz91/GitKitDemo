@@ -40,6 +40,7 @@ public class CloudEndpointUtils {
   protected static final String LOCAL_APP_ENGINE_SERVER_URL = "http://localhost:8888/";
 //  protected static final String LOCAL_APP_ENGINE_SERVER_URL = "http://0.0.0.0:8888/";
 
+
   /*
    * The root URL of where your DevAppServer is running when it's being
    * accessed via the Android emulator (if you're running the DevAppServer
@@ -48,6 +49,7 @@ public class CloudEndpointUtils {
    * http://developer.android.com/tools/devices/emulator.html#networkaddresses
    * for more information.
    */
+
   protected static final String LOCAL_APP_ENGINE_SERVER_URL_FOR_ANDROID = "http://10.0.0.2:8888";
 //  protected static final String LOCAL_APP_ENGINE_SERVER_URL_FOR_ANDROID = "http://192.168.43.90:8888";
 
