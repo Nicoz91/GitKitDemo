@@ -16,6 +16,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.identitytoolkit.demo.deviceinfoendpoint.Deviceinfoendpoint;
 import com.google.identitytoolkit.demo.deviceinfoendpoint.model.DeviceInfo;
 
+
 /**
  * This class is started up as a service of the Android application. It listens
  * for Google Cloud Messaging (GCM) messages directed to this device.

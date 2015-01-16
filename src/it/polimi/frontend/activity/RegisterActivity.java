@@ -2,15 +2,13 @@ package it.polimi.frontend.activity;
 
 import java.io.IOException;
 
-import it.polimi.frontend.activity.R;
-
-import com.google.identitytoolkit.demo.messageEndpoint.MessageEndpoint;
-import com.google.identitytoolkit.demo.messageEndpoint.model.CollectionResponseMessageData;
-import com.google.identitytoolkit.demo.messageEndpoint.model.MessageData;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.identitytoolkit.demo.messageEndpoint.MessageEndpoint;
+import com.google.identitytoolkit.demo.messageEndpoint.model.CollectionResponseMessageData;
+import com.google.identitytoolkit.demo.messageEndpoint.model.MessageData;
 
 import android.app.Activity;
 import android.app.AlertDialog;

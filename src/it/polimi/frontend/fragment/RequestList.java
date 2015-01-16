@@ -121,7 +121,9 @@ public class RequestList extends ListFragment{
 		@Override
 	    protected void onPostExecute(CollectionResponseRequest result) {
 			if (result!=null){
+
 				List<Request> reqs = result.getItems();
+				System.out.println("Size: "+reqs.size());
 				RequestAdapter adapter = new RequestAdapter(getActivity(),0,reqs);
 				if (getActivity() instanceof TabbedActivity)
 					setListAdapter(adapter);

@@ -37,14 +37,21 @@ public class RequestAdapter extends ArrayAdapter<Request>{
 		} else {
 			rowView = convertView;
 		}
-		TextView textView = (TextView) rowView.findViewById(R.id.txtTitle);
-		textView.setText(reqs.get(position).getOwner().getName());
+		System.out.println("Position: "+position);
+		try{
 		TextView textView2 = (TextView) rowView.findViewById(R.id.subString);
 		textView2.setText(reqs.get(position).getTitle());
+		TextView textView = (TextView) rowView.findViewById(R.id.txtTitle);
+		textView.setText(reqs.get(position).getOwner().getName());
+
 		//TODO task profile image
 		String photoUrl=reqs.get(position).getOwner().getPhotoURL();
 		if (photoUrl!=null){
 			new ProfileImageTask().execute(photoUrl);
+		}
+
+		}catch(Exception e){
+			System.out.println("Trovata eccezione cerco di recuperare");
 		}
 		return rowView;
 	}
