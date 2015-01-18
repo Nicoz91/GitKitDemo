@@ -1,12 +1,5 @@
 package it.polimi.frontend.fragment;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.json.jackson2.JacksonFactory;
-
 import it.polimi.appengine.entity.requestendpoint.Requestendpoint;
 import it.polimi.appengine.entity.requestendpoint.model.CollectionResponseRequest;
 import it.polimi.appengine.entity.requestendpoint.model.Request;
@@ -14,7 +7,13 @@ import it.polimi.appengine.entity.requestendpoint.model.User;
 import it.polimi.frontend.activity.CloudEndpointUtils;
 import it.polimi.frontend.activity.LoginSession;
 import it.polimi.frontend.activity.TabbedActivity;
+import it.polimi.frontend.util.ParentFragmentUtil;
 import it.polimi.frontend.util.RequestAdapter;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -24,22 +23,34 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class RequestList extends ListFragment{
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.json.jackson2.JacksonFactory;
 
+public class RequestList extends ListFragment{
+	
+	OnRequestSelectedListener mListener;
+	public final static String ID="RequestListFragmentID";
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		new RequestRetrieverTask().execute();
+		mListener = ParentFragmentUtil.getParent(this, OnRequestSelectedListener.class);
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		// TODO Auto-generated method stub
-		super.onListItemClick(l, v, position, id);
+		mListener.onRequestSelected(position, (Request) getListAdapter().getItem(position));
 	}
-
+	
+	/**
+	 * Interfaccia che deve implementare il master (fragment o activity) per ricevere dati sulla 
+	 * richiesta selezionata.
+	 * */
+	public interface OnRequestSelectedListener {
+		public void onRequestSelected(int position, Request request);
+	}
 	/**
 	 * AsyncTask for calling Mobile Assistant API for checking into a place (e.g., a store)
 	 */
@@ -70,7 +81,6 @@ public class RequestList extends ListFragment{
 			try {
 				r = reqEndpoint.insertRequest(req).execute();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return r;
@@ -110,7 +120,6 @@ public class RequestList extends ListFragment{
 			try {
 				result = endpoint.listRequest().execute();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				result = null;
 				System.out.println("Requests null");

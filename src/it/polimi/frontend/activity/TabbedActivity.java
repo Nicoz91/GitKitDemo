@@ -3,7 +3,7 @@ package it.polimi.frontend.activity;
 import java.util.Locale;
 
 import it.polimi.frontend.activity.R;
-import it.polimi.frontend.fragment.RequestList;
+import it.polimi.frontend.fragment.MasterFragment;
 
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -24,6 +24,8 @@ import android.widget.TextView;
 public class TabbedActivity extends ActionBarActivity implements
 		ActionBar.TabListener {
 
+	private static final int REQUEST_TAB=0;
+	
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
 	 * fragments for each of the sections. We use a {@link FragmentPagerAdapter}
@@ -132,8 +134,8 @@ public class TabbedActivity extends ActionBarActivity implements
 			// Return a PlaceholderFragment (defined as a static inner class
 			// below).
 			switch (position) {
-			case 0:
-				return new RequestList();
+			case REQUEST_TAB:
+				return new MasterFragment();
 			default:
 				return PlaceholderFragment.newInstance(position + 1);
 			}
@@ -149,7 +151,7 @@ public class TabbedActivity extends ActionBarActivity implements
 		public CharSequence getPageTitle(int position) {
 			Locale l = Locale.getDefault();
 			switch (position) {
-			case 0:
+			case REQUEST_TAB:
 				return "RequestList";
 			case 1:
 				return getString(R.string.title_section2).toUpperCase(l);
