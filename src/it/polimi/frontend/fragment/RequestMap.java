@@ -31,22 +31,22 @@ public class RequestMap extends Fragment {
 	static final LatLng CASA_STUDENTE = new LatLng(45.4766, 9.22414);
 	private List<Request> requests;
 	private GoogleMap map;
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.request_map_fragment,
 				container, false);
 		new RequestRetrieverTask().execute();
 		map = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map)).getMap();
-		    Marker casa = map.addMarker(new MarkerOptions().position(CASA_STUDENTE)
-		        .title("Casa dello studente")
-		        .snippet("Tutti alla casa"));
+		Marker casa = map.addMarker(new MarkerOptions().position(CASA_STUDENTE)
+				.title("Casa dello studente")
+				.snippet("Tutti alla casa"));
 
-		    // Move the camera instantly to hamburg with a zoom of 15.
-		    map.moveCamera(CameraUpdateFactory.newLatLngZoom(CASA_STUDENTE, 15));
+		// Move the camera instantly to hamburg with a zoom of 15.
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(CASA_STUDENTE, 15));
 
-		    // Zoom in, animating the camera.
-		    map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+		// Zoom in, animating the camera.
+		map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
 		return rootView;
 	}
 
@@ -82,9 +82,9 @@ public class RequestMap extends Fragment {
 
 		@Override
 		protected void onPostExecute(CollectionResponseRequest result) {
-			requests=result.getItems();
 			if (result!=null){
-				
+				requests=result.getItems();
+
 			} else
 				System.out.println("Anche in onPostExecute result è null");
 		}

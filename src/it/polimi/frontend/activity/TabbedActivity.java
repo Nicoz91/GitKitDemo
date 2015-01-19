@@ -23,11 +23,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class TabbedActivity extends ActionBarActivity implements
-		ActionBar.TabListener {
+ActionBar.TabListener {
 
 	private static final int REQUEST_TAB=0;
 	private static final int MAP_TAB=1;
-	
+	private MasterFragment masterFragment;
+
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
 	 * fragments for each of the sections. We use a {@link FragmentPagerAdapter}
@@ -64,12 +65,12 @@ public class TabbedActivity extends ActionBarActivity implements
 		// tab. We can also use ActionBar.Tab#select() to do this if we have
 		// a reference to the Tab.
 		mViewPager
-				.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-					@Override
-					public void onPageSelected(int position) {
-						actionBar.setSelectedNavigationItem(position);
-					}
-				});
+		.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+			@Override
+			public void onPageSelected(int position) {
+				actionBar.setSelectedNavigationItem(position);
+			}
+		});
 
 		// For each of the sections in the app, add a tab to the action bar.
 		for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
@@ -137,7 +138,8 @@ public class TabbedActivity extends ActionBarActivity implements
 			// below).
 			switch (position) {
 			case REQUEST_TAB:
-				return new MasterFragment();
+				masterFragment = new MasterFragment();
+				return masterFragment;
 			case MAP_TAB:
 				return new RequestMap();
 			default:
@@ -196,6 +198,21 @@ public class TabbedActivity extends ActionBarActivity implements
 			View rootView = inflater.inflate(R.layout.fragment_tabbed,
 					container, false);
 			return rootView;
+		}
+	}
+	
+	@Override
+	public void onBackPressed() {
+		
+		// If the fragment exists and has some back-stack entry
+		if (masterFragment != null && masterFragment.getChildFragmentManager().getBackStackEntryCount() > 0){
+			// Get the fragment fragment manager - and pop the backstack
+			masterFragment.getChildFragmentManager().popBackStack();
+		}
+		// Else, nothing in the direct fragment back stack
+		else{
+			// Let super handle the back press
+			super.onBackPressed();          
 		}
 	}
 
