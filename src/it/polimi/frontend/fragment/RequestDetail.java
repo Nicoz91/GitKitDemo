@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.support.v7.app.ActionBarActivity;
+//import android.support.v7.app.ActionBarActivity;
 
 public class RequestDetail extends Fragment {
 
@@ -33,9 +33,19 @@ public class RequestDetail extends Fragment {
 		View rootView = inflater.inflate(R.layout.request_detail_fragment,
 				container, false);
 		if (request!=null){
+			System.out.println("Sono nel dettaglio e il nome dell'owner è "+request.getOwner().getName());
 			ownerTV=(TextView)rootView.findViewById(R.id.ownerLabel);
 			ownerTV.setText(request.getOwner().getName());
 		}
 		return rootView;
+	}
+	
+	public void setRequest(Request request){
+		this.request=request;
+		refresh();
+	}
+	
+	private void refresh(){
+		ownerTV.setText(request.getOwner().getName());
 	}
 }

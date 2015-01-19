@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import it.polimi.frontend.activity.R;
 import it.polimi.frontend.fragment.MasterFragment;
+import it.polimi.frontend.fragment.RequestMap;
 
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -25,6 +26,7 @@ public class TabbedActivity extends ActionBarActivity implements
 		ActionBar.TabListener {
 
 	private static final int REQUEST_TAB=0;
+	private static final int MAP_TAB=1;
 	
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -136,6 +138,8 @@ public class TabbedActivity extends ActionBarActivity implements
 			switch (position) {
 			case REQUEST_TAB:
 				return new MasterFragment();
+			case MAP_TAB:
+				return new RequestMap();
 			default:
 				return PlaceholderFragment.newInstance(position + 1);
 			}
@@ -152,9 +156,9 @@ public class TabbedActivity extends ActionBarActivity implements
 			Locale l = Locale.getDefault();
 			switch (position) {
 			case REQUEST_TAB:
-				return "RequestList";
-			case 1:
-				return getString(R.string.title_section2).toUpperCase(l);
+				return "Request List";
+			case MAP_TAB:
+				return "Map";
 			case 2:
 				return getString(R.string.title_section3).toUpperCase(l);
 			}
