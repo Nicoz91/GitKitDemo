@@ -3,8 +3,11 @@ package it.polimi.frontend.activity;
 import java.io.IOException;
 import java.net.URLEncoder;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gcm.GCMBaseIntentService;
@@ -109,12 +112,28 @@ public class GCMIntentService extends GCMBaseIntentService {
    */
   @Override
   public void onMessage(Context context, Intent intent) {
-    sendNotificationIntent(
-        context,
-        "Message received via Google Cloud Messaging:\n\n"
-            + intent.getStringExtra("message"), true, false);
+//    sendNotificationIntent(
+//        context,
+//        "Message received via Google Cloud Messaging:\n\n"
+//            + intent.getStringExtra("message"), true, false);
+	  this.addNotification(intent.getStringExtra("message"));
   }
 
+	private void addNotification(String m) {
+	    NotificationCompat.Builder builder =  
+	            new NotificationCompat.Builder(this)  
+	            .setSmallIcon(R.drawable.ic_launcher)  
+	            .setContentTitle("Notifica")  
+	            .setContentText(m);  
+	    Intent notificationIntent = new Intent(this, MainActivity.class);  
+	    PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,   
+		            PendingIntent.FLAG_UPDATE_CURRENT);  
+		builder.setContentIntent(contentIntent);  
+	    // Add as notification  
+	    NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);  
+	    manager.notify(1, builder.build());  
+		}  
+  
   /**
    * Called back when a registration token has been received from the Google
    * Cloud Messaging service.

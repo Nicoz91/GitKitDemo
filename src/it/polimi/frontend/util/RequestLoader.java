@@ -25,7 +25,7 @@ public class RequestLoader {
 		this.listeners = new ArrayList<OnRequestLoadedListener>();
 	}
 	
-	public RequestLoader getInstance(){
+	public static RequestLoader getInstance(){
 		if (instance==null){
 			instance = new RequestLoader();
 		}
@@ -33,6 +33,7 @@ public class RequestLoader {
 	}
 	
 	public void loadRequest(){
+		System.out.println("Mi connetto per scaricare le richieste...");
 		new RequestRetrieverTask().execute();
 	}
 	

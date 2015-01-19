@@ -2,6 +2,7 @@ package it.polimi.frontend.fragment;
 
 import it.polimi.appengine.entity.requestendpoint.Requestendpoint;
 import it.polimi.appengine.entity.requestendpoint.model.CollectionResponseRequest;
+import it.polimi.appengine.entity.requestendpoint.model.GeoPt;
 import it.polimi.appengine.entity.requestendpoint.model.Request;
 import it.polimi.appengine.entity.requestendpoint.model.User;
 import it.polimi.frontend.activity.CloudEndpointUtils;
@@ -9,6 +10,8 @@ import it.polimi.frontend.activity.LoginSession;
 import it.polimi.frontend.activity.TabbedActivity;
 import it.polimi.frontend.util.ParentFragmentUtil;
 import it.polimi.frontend.util.RequestAdapter;
+import it.polimi.frontend.util.RequestLoader;
+import it.polimi.frontend.util.RequestLoader.OnRequestLoadedListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,15 +29,23 @@ import android.widget.ListView;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
-public class RequestList extends ListFragment{
+public class RequestList extends ListFragment implements OnRequestLoadedListener{
 	
 	OnRequestSelectedListener mListener;
 	public final static String ID="RequestListFragmentID";
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		new RequestRetrieverTask().execute();
+		Bundle savedInstanceState) {
+//		new TestInsertTask().execute();
+		RequestLoader.getInstance().addListener(this);
+		List<Request> requests = RequestLoader.getInstance().getRequests();
+		if(requests!=null && requests.size()>0 ){
+			setRequestAdapter(requests);	
+		}
+		else{
+			RequestLoader.getInstance().loadRequest();
+		}
 		mListener = ParentFragmentUtil.getParent(this, OnRequestSelectedListener.class);
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
@@ -51,93 +62,65 @@ public class RequestList extends ListFragment{
 	public interface OnRequestSelectedListener {
 		public void onRequestSelected(int position, Request request);
 	}
-	/**
-	 * AsyncTask for calling Mobile Assistant API for checking into a place (e.g., a store)
-	 */
-	private class TestInsertTask extends AsyncTask<Void, Void, Request> {
 
-		/**
-		 * Calls appropriate CloudEndpoint to indicate that user checked into a place.
-		 *
-		 * @param params the place where the user is checking in.
-		 */
-		@Override
-		protected Request doInBackground(Void... params) {
-			Request req = new Request();
-			req.setDescription("Descrizione di prova");
-			req.setTitle("Titolo di prova");
-			User user = new User();
-			// Set the ID of the store where the user is. 
-			// This would be replaced by the actual ID in the final version of the code.
-			user.setName(LoginSession.getUser().getDisplayName());
-			user.setSurname("Pasticcio");
-			user.setPwAccount(LoginSession.getUser().getEmail());
-			req.setOwner(user);
-			Requestendpoint.Builder reqBuilder = new Requestendpoint.Builder(AndroidHttp.newCompatibleTransport(), new JacksonFactory(),
-					null);
-			reqBuilder = CloudEndpointUtils.updateBuilder(reqBuilder);
-			Requestendpoint reqEndpoint = reqBuilder.build();
-			Request r = null;
-			try {
-				r = reqEndpoint.insertRequest(req).execute();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return r;
-		}
-
-		@Override
-		protected void onPostExecute(Request result) {
-			if (result!=null){
-				ArrayList<String> reqTitles = new ArrayList<String>();
-				reqTitles.add(result.getTitle());
-				ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, reqTitles); 
-				setListAdapter(adapter);
-			}
-		}
+	@Override
+	public void onRequestLoaded(List<Request> requests) {
+		setRequestAdapter(requests);		
 	}
-
+	
+	public void setRequestAdapter(List<Request> requests){
+		System.out.println("Setto le richieste");
+		List<Request> reqs = requests;
+		RequestAdapter adapter = new RequestAdapter(getActivity(),0,reqs);
+		setListAdapter(adapter);
+	}
+	
 	/**
-	 * AsyncTask for retrieving the list of places (e.g., stores) and updating the
-	 * corresponding results list.
-	 */
-	private class RequestRetrieverTask extends AsyncTask<Void, Void, CollectionResponseRequest> {
-
-		@Override
-		protected CollectionResponseRequest doInBackground(Void... params) {
-
-
-			Requestendpoint.Builder endpointBuilder = new Requestendpoint.Builder(
-					AndroidHttp.newCompatibleTransport(), new JacksonFactory(), null);
-
-			endpointBuilder = CloudEndpointUtils.updateBuilder(endpointBuilder);
-
-
-			CollectionResponseRequest result;
-
-			Requestendpoint endpoint = endpointBuilder.build();
-			System.out.println("Sto per recuperare requests");
-			try {
-				result = endpoint.listRequest().execute();
-			} catch (IOException e) {
-				e.printStackTrace();
-				result = null;
-				System.out.println("Requests null");
-			}
-			return result;
+* AsyncTask for calling Mobile Assistant API for checking into a place (e.g., a store)
+*/
+private class TestInsertTask extends AsyncTask<Void, Void, Request> {
+/**
+* Calls appropriate CloudEndpoint to indicate that user checked into a place.
+*
+* @param params the place where the user is checking in.
+*/
+	@Override
+	protected Request doInBackground(Void... params) {
+		Request req = new Request();
+		req.setDescription("Vicino alla casa");
+		req.setTitle("Ripasso Soft Computing");
+		GeoPt geo = new GeoPt();
+		geo.setLatitude(45.48666f);
+		geo.setLongitude(9.32414f);
+		req.setPlace(geo);
+		User user = new User();
+		// Set the ID of the store where the user is.
+		// This would be replaced by the actual ID in the final version of the code.
+		user.setName(LoginSession.getUser().getDisplayName());
+		user.setSurname("Pasticcio");
+		user.setPwAccount(LoginSession.getUser().getEmail());
+		req.setOwner(user);
+		Requestendpoint.Builder reqBuilder = new Requestendpoint.Builder(AndroidHttp.newCompatibleTransport(), new JacksonFactory(),
+		null);
+		reqBuilder = CloudEndpointUtils.updateBuilder(reqBuilder);
+		Requestendpoint reqEndpoint = reqBuilder.build();
+		Request r = null;
+		try {
+			r = reqEndpoint.insertRequest(req).execute();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		
-		@Override
-	    protected void onPostExecute(CollectionResponseRequest result) {
-			if (result!=null){
-
-				List<Request> reqs = result.getItems();
-				System.out.println("Size: "+reqs.size());
-				RequestAdapter adapter = new RequestAdapter(getActivity(),0,reqs);
-				if (getActivity() instanceof TabbedActivity)
-					setListAdapter(adapter);
-			} else
-				System.out.println("Anche in onPostExecute result è null");
-	    }
+		return r;
+	}
+	
+	@Override
+	protected void onPostExecute(Request result) {
+		if (result!=null){
+			ArrayList<String> reqTitles = new ArrayList<String>();
+			reqTitles.add(result.getTitle());
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, reqTitles);
+			setListAdapter(adapter);
+			}
+		}
 	}
 }

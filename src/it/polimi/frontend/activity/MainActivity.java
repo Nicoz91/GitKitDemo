@@ -24,6 +24,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -37,6 +38,7 @@ import com.google.identitytoolkit.GitkitUser;
 import com.google.identitytoolkit.IdToken;
 
 import it.polimi.frontend.activity.R;
+import it.polimi.frontend.activity.RegisterActivity.State;
 
 import java.io.IOException;
 
@@ -51,7 +53,14 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
+ //   if(!LogInSession.isRegistered()){
+    try {
+        //GCMIntentService.register(getApplicationContext());
+      } catch (Exception e) {
+    	  System.out.println("Impossibile registrare l'app");
+    	  //TODO ricominciare fino a che non viene registrata!
+      }
+ //   }
     LoginSession.setPrefs(PreferenceManager.getDefaultSharedPreferences(this));
     GitkitUser session = LoginSession.getUser();
     IdToken sessionToken = LoginSession.getIdToken();
@@ -126,9 +135,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
   @Override
   protected void onNewIntent(Intent intent) {
+	if(client!=null){
     if (!client.handleIntent(intent)) {
       super.onNewIntent(intent);
     }
+	}
   }
 
 

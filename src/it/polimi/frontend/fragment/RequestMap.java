@@ -5,6 +5,8 @@ import it.polimi.appengine.entity.requestendpoint.model.CollectionResponseReques
 import it.polimi.appengine.entity.requestendpoint.model.Request;
 import it.polimi.frontend.activity.CloudEndpointUtils;
 import it.polimi.frontend.activity.R;
+import it.polimi.frontend.util.RequestLoader;
+import it.polimi.frontend.util.RequestLoader.OnRequestLoadedListener;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,19 +28,27 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
-public class RequestMap extends Fragment {
+public class RequestMap extends Fragment implements OnRequestLoadedListener {
 
 	static final LatLng CASA_STUDENTE = new LatLng(45.4766, 9.22414);
-	private List<Request> requests;
 	private GoogleMap map;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.request_map_fragment,
 				container, false);
-		new RequestRetrieverTask().execute();
 		map = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map)).getMap();
-		Marker casa = map.addMarker(new MarkerOptions().position(CASA_STUDENTE)
+		
+		RequestLoader.getInstance().addListener(this);
+		List<Request> requests = RequestLoader.getInstance().getRequests();
+		if(requests!=null && requests.size()>0 ){
+			setRequestMark(requests);	
+		}
+		else{
+			RequestLoader.getInstance().loadRequest();
+		}
+		
+		map.addMarker(new MarkerOptions().position(CASA_STUDENTE)
 				.title("Casa dello studente")
 				.snippet("Tutti alla casa"));
 
@@ -50,44 +60,23 @@ public class RequestMap extends Fragment {
 		return rootView;
 	}
 
-	/**
-	 * AsyncTask for retrieving the list of places (e.g., stores) and updating the
-	 * corresponding results list.
-	 */
-	private class RequestRetrieverTask extends AsyncTask<Void, Void, CollectionResponseRequest> {
-
-		@Override
-		protected CollectionResponseRequest doInBackground(Void... params) {
-
-
-			Requestendpoint.Builder endpointBuilder = new Requestendpoint.Builder(
-					AndroidHttp.newCompatibleTransport(), new JacksonFactory(), null);
-
-			endpointBuilder = CloudEndpointUtils.updateBuilder(endpointBuilder);
-
-
-			CollectionResponseRequest result;
-
-			Requestendpoint endpoint = endpointBuilder.build();
-			System.out.println("Sto per recuperare requests");
-			try {
-				result = endpoint.listRequest().execute();
-			} catch (IOException e) {
-				e.printStackTrace();
-				result = null;
-				System.out.println("Requests null");
+	private void setRequestMark(List<Request> requests){
+		System.out.println("Setto le posizioni sulla mappa");
+		System.out.println("Size: "+requests.size());
+		for(Request r:requests){
+			if(r.getPlace()!=null){
+				System.out.println("setto "+r.getPlace().getLatitude());
+				map.addMarker(new MarkerOptions().position(new LatLng(r.getPlace().getLatitude(), r.getPlace().getLongitude()))
+					.title(r.getTitle())
+					.snippet(r.getDescription()));
 			}
-			return result;
 		}
+	}
 
-		@Override
-		protected void onPostExecute(CollectionResponseRequest result) {
-			if (result!=null){
-				requests=result.getItems();
-
-			} else
-				System.out.println("Anche in onPostExecute result è null");
-		}
+	@Override
+	public void onRequestLoaded(List<Request> requests) {
+		setRequestMark(requests);
+		
 	}
 
 }
