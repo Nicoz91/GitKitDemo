@@ -29,6 +29,10 @@ public class MasterFragment extends Fragment implements RequestList.OnRequestSel
 			((RequestList) getChildFragmentManager()
 					.findFragmentById(R.id.request_list))
 					.setActivateOnItemClick(true);*/
+		} else {
+			getChildFragmentManager().beginTransaction()
+			.replace(R.id.container,new RequestList(),RequestList.ID)
+			.commit();
 		}
 		return rootView;
 	}
@@ -46,12 +50,12 @@ public class MasterFragment extends Fragment implements RequestList.OnRequestSel
 		} else {
 			// In single-pane mode, simply start the detail fragment
 			// for the selected item ID.
-			Fragment reqList=getChildFragmentManager().findFragmentById(R.id.request_list);
+			Fragment reqList=getChildFragmentManager().findFragmentByTag(RequestList.ID);
 			
 			getChildFragmentManager().beginTransaction()
 			.hide(reqList)
-			.add(fragment,RequestDetail.ID)
 			.addToBackStack(RequestDetail.ID)
+			.add(R.id.container,fragment,RequestDetail.ID)
 			.commit();
 			
 			getChildFragmentManager().addOnBackStackChangedListener(
