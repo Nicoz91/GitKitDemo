@@ -5,6 +5,7 @@ import it.polimi.appengine.entity.requestendpoint.model.CollectionResponseReques
 import it.polimi.appengine.entity.requestendpoint.model.GeoPt;
 import it.polimi.appengine.entity.requestendpoint.model.Request;
 import it.polimi.appengine.entity.requestendpoint.model.User;
+import it.polimi.appengine.entity.userendpoint.Userendpoint;
 import it.polimi.frontend.activity.CloudEndpointUtils;
 import it.polimi.frontend.activity.LoginSession;
 import it.polimi.frontend.activity.MyApplication;
@@ -40,6 +41,7 @@ public class RequestList extends ListFragment implements OnRequestLoadedListener
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		//		new TestInsertTask().execute();
+		new Query().execute();
 		RequestLoader.getInstance().addListener(this);
 		List<Request> requests = RequestLoader.getInstance().getRequests();
 		if(requests!=null && requests.size()>0 ){
@@ -84,6 +86,48 @@ public class RequestList extends ListFragment implements OnRequestLoadedListener
 		RequestAdapter adapter = new RequestAdapter(c,0,reqs);
 		setListAdapter(adapter);
 	}
+
+
+	/**
+	 * AsyncTask for retrieving the list of places (e.g., stores) and updating the
+	 * corresponding results list.
+	 */
+	private class Query extends AsyncTask<Void, Void, it.polimi.appengine.entity.userendpoint.model.User> {
+
+		@Override
+		protected it.polimi.appengine.entity.userendpoint.model.User doInBackground(Void... params) {
+
+			System.out.println("Inizio la query");
+			Userendpoint.Builder endpointBuilder = new Userendpoint.Builder(
+					AndroidHttp.newCompatibleTransport(), new JacksonFactory(), null);
+
+			endpointBuilder = CloudEndpointUtils.updateBuilder(endpointBuilder);
+
+
+			it.polimi.appengine.entity.userendpoint.model.User result;
+
+			Userendpoint endpoint = endpointBuilder.build();
+
+			try {
+				result = endpoint.getUserByEmail("test@test.com").execute();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				result = null;
+			}
+			return result;
+		}
+
+		@Override
+		@SuppressWarnings("null")
+		protected void onPostExecute(it.polimi.appengine.entity.userendpoint.model.User result) {
+			System.out.println("Ho ricevuto l'utente: "+result.getName());
+			return;
+		}
+
+	}
+
+
 
 	/**
 	 * AsyncTask for calling Mobile Assistant API for checking into a place (e.g., a store)

@@ -53,14 +53,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
- //   if(!LogInSession.isRegistered()){
-    try {
-        //GCMIntentService.register(getApplicationContext());
-      } catch (Exception e) {
-    	  System.out.println("Impossibile registrare l'app");
-    	  //TODO ricominciare fino a che non viene registrata!
-      }
- //   }
     LoginSession.setPrefs(PreferenceManager.getDefaultSharedPreferences(this));
     GitkitUser session = LoginSession.getUser();
     IdToken sessionToken = LoginSession.getIdToken();
@@ -89,10 +81,10 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
     	LoginSession.setStringUser(user.toString());
     	LoginSession.setIdToken(idToken);
     	LoginSession.setStringToken(idToken.getTokenString());
-    //
-    	
-    	showProfilePage(idToken, user);
-        System.out.println("Ho il token: "+idToken.getKeyId());
+    	if(checkRegistration(user))
+    		showProfilePage(idToken, user);
+    	else
+    		showRegistrationPage(user);
           // Now use the idToken to create a session for your user.
           // To do so, you should exchange the idToken for either a Session Token or Cookie
           // from your server.
@@ -117,6 +109,25 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
   // GitkitClient.handleActivityResult to check the result. If the result is for GitkitClient,
   // the method returns true to indicate the result has been consumed.
   //
+  
+  private boolean checkRegistration(GitkitUser user){
+	  if(checkUser(user)){
+		    try {
+		        GCMIntentService.register(MyApplication.getContext());
+		      } catch (Exception e) {
+		    	  System.out.println("Impossibile registrare l'app");
+		    	  //TODO ricominciare fino a che non viene registrata!
+		      }
+		    return true;
+			  
+	  }
+	  else
+		  return false;
+  }
+  
+  private boolean checkUser(GitkitUser user){
+	  return true;
+  }
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -150,6 +161,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
     button.setOnClickListener(this);
   }
 
+  private void showRegistrationPage(GitkitUser user){
+    setContentView(R.layout.profile);
+    showAccount(user);
+    findViewById(R.id.sign_out).setOnClickListener(this);
+  }
 
   private void showProfilePage(IdToken idToken, GitkitUser user) {
     setContentView(R.layout.profile);

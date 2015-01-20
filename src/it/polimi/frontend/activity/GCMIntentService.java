@@ -16,8 +16,8 @@ import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.identitytoolkit.demo.deviceinfoendpoint.Deviceinfoendpoint;
-import com.google.identitytoolkit.demo.deviceinfoendpoint.model.DeviceInfo;
+import it.polimi.appengine.util.deviceinfoendpoint.Deviceinfoendpoint;
+import it.polimi.appengine.util.deviceinfoendpoint.model.DeviceInfo;
 
 
 /**
