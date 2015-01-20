@@ -24,7 +24,6 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -32,13 +31,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.identitytoolkit.GitkitClient;
 import com.google.identitytoolkit.GitkitUser;
 import com.google.identitytoolkit.IdToken;
 
 import it.polimi.frontend.activity.R;
-import it.polimi.frontend.activity.RegisterActivity.State;
 
 import java.io.IOException;
 
@@ -204,7 +201,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			showSignInPage();
 		}
 	}
-	
+
 	private void showAccount(GitkitUser user) {  
 		((TextView) findViewById(R.id.account_email)).setText(user.getEmail());
 

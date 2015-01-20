@@ -107,11 +107,14 @@ ActionBar.TabListener {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
+		Intent i;
 		switch (id) {
 		case R.id.action_settings:
+			i = new Intent(this, SettingsActivity.class);
+			startActivity(i);
 			return true;
 		case R.id.logout:
-			Intent i = new Intent(this, MainActivity.class);
+			i = new Intent(this, MainActivity.class);
 			i.putExtra("ActivityName", "TabbedActivity");
 			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(i);
