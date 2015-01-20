@@ -186,29 +186,29 @@ public class GCMIntentService extends GCMBaseIntentService {
           "Exception received when attempting to register with server at "
               + endpoint.getRootUrl(), e);
 
-      sendNotificationIntent(
-          context,
-          "1) Registration with Google Cloud Messaging...SUCCEEDED!\n\n"
-              + "2) Registration with Endpoints Server...FAILED!\n\n"
-              + "Unable to register your device with your Cloud Endpoints server running at "
-              + endpoint.getRootUrl()
-              + ". Either your Cloud Endpoints server is not deployed to App Engine, or "
-              + "your settings need to be changed to run against a local instance "
-              + "by setting LOCAL_ANDROID_RUN to 'true' in CloudEndpointUtils.java.",
-          true, true);
+//      sendNotificationIntent(
+//          context,
+//          "1) Registration with Google Cloud Messaging...SUCCEEDED!\n\n"
+//              + "2) Registration with Endpoints Server...FAILED!\n\n"
+//              + "Unable to register your device with your Cloud Endpoints server running at "
+//              + endpoint.getRootUrl()
+//              + ". Either your Cloud Endpoints server is not deployed to App Engine, or "
+//              + "your settings need to be changed to run against a local instance "
+//              + "by setting LOCAL_ANDROID_RUN to 'true' in CloudEndpointUtils.java.",
+//          true, true);
       return;
     }
 
-    sendNotificationIntent(
-        context,
-        "1) Registration with Google Cloud Messaging...SUCCEEDED!\n\n"
-            + "2) Registration with Endpoints Server...SUCCEEDED!\n\n"
-            + "Device registration with Cloud Endpoints Server running at  "
-            + endpoint.getRootUrl()
-            + " succeeded!\n\n"
-            + "To send a message to this device, "
-            + "open your browser and navigate to the sample application at "
-            + getWebSampleUrl(endpoint.getRootUrl()), false, true);
+//    sendNotificationIntent(
+//        context,
+//        "1) Registration with Google Cloud Messaging...SUCCEEDED!\n\n"
+//            + "2) Registration with Endpoints Server...SUCCEEDED!\n\n"
+//            + "Device registration with Cloud Endpoints Server running at  "
+//            + endpoint.getRootUrl()
+//            + " succeeded!\n\n"
+//            + "To send a message to this device, "
+//            + "open your browser and navigate to the sample application at "
+//            + getWebSampleUrl(endpoint.getRootUrl()), false, true);
   }
 
   /**
@@ -270,6 +270,7 @@ public class GCMIntentService extends GCMBaseIntentService {
    */
   private void sendNotificationIntent(Context context, String message,
       boolean isError, boolean isRegistrationMessage) {
+	  
     Intent notificationIntent = new Intent(context, RegisterActivity.class);
     notificationIntent.putExtra("gcmIntentServiceMessage", true);
     notificationIntent.putExtra("registrationMessage",

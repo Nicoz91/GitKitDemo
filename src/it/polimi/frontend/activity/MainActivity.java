@@ -32,13 +32,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.identitytoolkit.GitkitClient;
 import com.google.identitytoolkit.GitkitUser;
 import com.google.identitytoolkit.IdToken;
 
+import it.polimi.appengine.entity.userendpoint.Userendpoint;
+import it.polimi.appengine.entity.userendpoint.model.User;
 import it.polimi.frontend.activity.R;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Gitkit Demo
@@ -57,8 +62,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		if(session!=null && sessionToken!=null){
 			showProfilePage(sessionToken,session);
 		}
-		else
-		{
+
 			// Step 1: Create a GitkitClient.
 			// The configurations are set in the AndroidManifest.xml. You can also set or overwrite them
 			// by calling the corresponding setters on the GitkitClient builder.
@@ -98,7 +102,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			}).build();
 
 			showSignInPage();
-		}
+		
 
 	}
 
@@ -124,7 +128,66 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	}
 
 	private boolean checkUser(GitkitUser user){
+		User u = null;
+		try {
+			u = new QueryUser(user.getEmail()).execute().get();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(u.getPwAccount().equals(user.getEmail()))
 		return true;
+		else return false;
+	}
+	
+	/**
+	 * AsyncTask for retrieving the list of places (e.g., stores) and updating the
+	 * corresponding results list.
+	 */
+	private class QueryUser extends AsyncTask<Void, Void, it.polimi.appengine.entity.userendpoint.model.User> {
+		
+		private String email;
+		
+		public QueryUser(String email){
+			super();
+			this.email = email;
+		}
+		
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			showDialog();
+		}
+
+		@Override
+		protected it.polimi.appengine.entity.userendpoint.model.User doInBackground(Void... params) {
+			System.out.println("Inizio la query");
+			Userendpoint.Builder endpointBuilder = new Userendpoint.Builder(
+					AndroidHttp.newCompatibleTransport(), new JacksonFactory(), null);
+			endpointBuilder = CloudEndpointUtils.updateBuilder(endpointBuilder);
+			it.polimi.appengine.entity.userendpoint.model.User result;
+			Userendpoint endpoint = endpointBuilder.build();
+			try {
+				result = endpoint.getUserByEmail(email).execute();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				result = null;
+			}
+			return result;
+		}
+
+		@Override
+		@SuppressWarnings("null")
+		protected void onPostExecute(it.polimi.appengine.entity.userendpoint.model.User result) {
+			System.out.println("Ho ricevuto l'utente: "+result.getName());
+			hideDialog();
+			return;
+		}
+
 	}
 
 	@Override
@@ -235,6 +298,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	}
 	
 	private ProgressDialog mProgressDialog;
+	
+	//TODO REFACTOR
 	/** 
 	 * Metodi per mostrare o meno il progressDialog
 	 * */
