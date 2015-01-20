@@ -17,6 +17,7 @@
 package it.polimi.frontend.activity;
 
 import android.support.v4.app.FragmentActivity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
@@ -231,5 +232,28 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				}
 			}.execute(user.getPhotoUrl());
 		}
+	}
+	
+	private ProgressDialog mProgressDialog;
+	/** 
+	 * Metodi per mostrare o meno il progressDialog
+	 * */
+	protected void showDialog() {
+		if (mProgressDialog == null) {
+			setProgressDialog();
+		}
+		mProgressDialog.show();
+	}
+
+	protected void hideDialog() {
+		if (mProgressDialog != null && mProgressDialog.isShowing()) {
+			mProgressDialog.dismiss();
+		}
+	}
+
+	private void setProgressDialog() {
+		mProgressDialog = new ProgressDialog(this);
+		mProgressDialog.setTitle("Attendi...");
+		mProgressDialog.setMessage("Sto scaricando...");
 	}
 }
