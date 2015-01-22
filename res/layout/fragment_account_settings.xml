@@ -143,8 +143,7 @@
             android:clickable="true"
             android:focusableInTouchMode="false"
             android:hint="@string/bDayHint"
-            android:inputType="date"
-            android:onClick="showDatePickerDialog" />
+            android:inputType="date" />
     </TableRow>
 
     <TableRow

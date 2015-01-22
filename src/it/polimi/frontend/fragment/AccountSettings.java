@@ -35,6 +35,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 	private RadioButton femaleRB;
 	private boolean male;
 	private Menu menu;
+	private boolean editMode;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,7 +50,8 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		bDayET = (EditText) rootView.findViewById(R.id.bDay);
 		maleRB = (RadioButton) rootView.findViewById(R.id.radio_male);
 		femaleRB = (RadioButton) rootView.findViewById(R.id.radio_female);
-		editable(false);
+		editMode=false;
+		editable(editMode);
 		return rootView;
 	}
 
@@ -71,12 +73,14 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		case R.id.editAccount:
 			menu.findItem(R.id.editAccount).setVisible(false);
 			menu.findItem(R.id.saveAccount).setVisible(true);
-			editable(true);
+			editMode=true;
+			editable(editMode);
 			return true;
 		case R.id.saveAccount:
 			menu.findItem(R.id.editAccount).setVisible(true);
 			menu.findItem(R.id.saveAccount).setVisible(false);
-			editable(false);
+			editMode=false;
+			editable(editMode);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -118,6 +122,9 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		case R.id.radio_female:
 			male = false;
 			break;
+		case R.id.bDay:
+			showDatePickerDialog(v);
+			break;
 		default:
 			break;
 		}
@@ -140,7 +147,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		fbAccountET.setFocusableInTouchMode(editable);
 		fbAccountET.setClickable(editable);
 		bDayET.setFocusable(editable);
-		bDayET.setFocusableInTouchMode(editable);
+		bDayET.setFocusableInTouchMode(!editable);
 		bDayET.setClickable(editable);
 		maleRB.setClickable(editable);
 		femaleRB.setClickable(editable);
