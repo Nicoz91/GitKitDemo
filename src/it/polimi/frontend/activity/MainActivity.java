@@ -43,6 +43,7 @@ import it.polimi.appengine.entity.manager.model.GeoPt;
 import it.polimi.appengine.entity.manager.model.Request;
 import it.polimi.appengine.entity.manager.model.User;
 import it.polimi.frontend.activity.R;
+import it.polimi.frontend.util.QueryManager;
 import it.polimi.frontend.util.RequestLoader;
 
 import java.io.IOException;
@@ -70,10 +71,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			System.out.println("Impossibile registrare l'app");
 			//TODO ricominciare fino a che non viene registrata!
 		}
-		//Controllo se è attiva una sessione
-		if(session!=null && sessionToken!=null){
-			//showProfilePage(sessionToken,session);
-		}
+
 
 		// Step 1: Create a GitkitClient.
 		// The configurations are set in the AndroidManifest.xml. You can also set or overwrite them
@@ -115,7 +113,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			}
 		}).build();
 
-		showSignInPage();
+		//Controllo se è attiva una sessione
+		if(session!=null && sessionToken!=null){
+			showProfilePage(sessionToken,session);
+		}else
+			showSignInPage();
 
 
 	}
@@ -130,25 +132,14 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		//Se l'utente è già salvato allora associo il device
 		User u = checkUser(user);
 		if(u!=null){
-			try {
-
-				ArrayList<String> dev = (ArrayList<String>) u.getDevices();
-				if(dev==null || !dev.contains(LoginSession.getDeviceId()) ){
-					System.out.println("Faccio l'update su: "+u.getId());
-					u = (new UpdateUserDevice(u).execute()).get();
-				}
-
-				//				System.out.println("Faccio l'update su: "+u.getId());
-				//				u = (new UpdateUserDevice(u).execute()).get();
-				//				
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return false;
-			} catch (ExecutionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return false;
+			ArrayList<String> dev = (ArrayList<String>) u.getDevices();
+			if(dev==null || !dev.contains(LoginSession.getDeviceId()) ){
+				System.out.println("Faccio l'update su: "+u.getId());
+				u = QueryManager.getInstance().updateUserDevices(u);
+				if(u!=null)
+					return true;
+				else 
+					return false;
 			}
 			return true;
 
@@ -159,148 +150,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 	private User checkUser(GitkitUser user){
 		User u = null;
-		try {
-			u = new QueryUser(user.getEmail()).execute().get();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		u = QueryManager.getInstance().getUserByEmail(user.getEmail());
 		return u;
-	}
-
-	/**
-	 * AsyncTask for retrieving the list of places (e.g., stores) and updating the
-	 * corresponding results list.
-	 */
-	private class UpdateUserDevice extends AsyncTask<Void, Void, User> {
-
-		private User u;
-
-		public UpdateUserDevice(User u){
-			super();
-			this.u = u;
-		}
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			showDialog();
-		}
-
-		@Override
-		protected User doInBackground(Void... params) {
-			System.out.println("Modifico la lista dei device");
-			Manager.Builder endpointBuilder = new Manager.Builder(
-					AndroidHttp.newCompatibleTransport(), new JacksonFactory(), null);
-			endpointBuilder = CloudEndpointUtils.updateBuilder(endpointBuilder);
-			User result = null;
-			Manager endpoint = endpointBuilder.build();
-			if(u.getDevices()==null)
-				u.setDevices(new ArrayList<String>());
-			u.getDevices().add(LoginSession.getDeviceId());
-			try {
-				result = endpoint.updateUser(u).execute();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				result = null;
-			}
-			return result;
-		}
-
-	}
-
-
-	/**
-	 * AsyncTask for retrieving the list of places (e.g., stores) and updating the
-	 * corresponding results list.
-	 */
-	private class InsertUser extends AsyncTask<Void, Void, User> {
-
-		private User u;
-
-		public InsertUser(User u){
-			super();
-			this.u = u;
-		}
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			showDialog();
-		}
-
-		@Override
-		protected User doInBackground(Void... params) {
-			System.out.println("Creo un nuovo utente");
-			Manager.Builder endpointBuilder = new Manager.Builder(
-					AndroidHttp.newCompatibleTransport(), new JacksonFactory(), null);
-			endpointBuilder = CloudEndpointUtils.updateBuilder(endpointBuilder);
-			User result = null;
-			Manager endpoint = endpointBuilder.build();
-			try {
-				result = endpoint.insertUser(u).execute();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				result = null;
-			}
-			return result;
-		}
-
-	}
-
-	/**
-	 * AsyncTask for retrieving the list of places (e.g., stores) and updating the
-	 * corresponding results list.
-	 */
-	private class QueryUser extends AsyncTask<Void, Void, User> {
-
-		private String email;
-
-		public QueryUser(String email){
-			super();
-			this.email = email;
-		}
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			showDialog();
-		}
-
-		@Override
-		protected User doInBackground(Void... params) {
-			System.out.println("Inizio la query");
-			Manager.Builder endpointBuilder = new Manager.Builder(
-					AndroidHttp.newCompatibleTransport(), new JacksonFactory(), null);
-			endpointBuilder = CloudEndpointUtils.updateBuilder(endpointBuilder);
-			User result = null;
-			Manager endpoint = endpointBuilder.build();
-			try {
-				result = endpoint.getUserByEmail(email).execute();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				result = null;
-			}
-			return result;
-		}
-
-		@Override
-		@SuppressWarnings("null")
-		protected void onPostExecute(User result) {
-			if(result!=null)
-				System.out.println("Ho ricevuto l'utente: "+result.getName());
-			else
-				System.out.println("Nessun utente ricevuto, devo crearlo.");
-			hideDialog();
-			return;
-		}
-
 	}
 
 	@Override
@@ -357,26 +208,25 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		geo.setLongitude(9.22514f);
 		req.setPlace(geo);
 		u.getRequests().add(req);
-		
+
 		System.out.println("Provo a registrare l'utente");
-		try {
-			(new InsertUser(u).execute()).get();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		u  = QueryManager.getInstance().insertUser(u);
 		System.out.println("Registrazione effettuata con successo");
 		findViewById(R.id.sign_out).setOnClickListener(this);
-		
+
 		findViewById(R.id.sign_out).setOnClickListener(this);
 		startActivity(new Intent(this, TabbedActivity.class));
 	}
 
 	private void showProfilePage(IdToken idToken, GitkitUser user) {
 		RequestLoader.getInstance().loadRequest();
+		
+//		Request r = new Request();
+//		r.setDescription("Prova");
+//		r.setTitle("Non ti sdoppiare"+(int)(Math.random()*10));
+//		r = QueryManager.getInstance().insertRequest(r);
+//		if(r!=null)	System.out.println("Inserita correttamente");
+		
 		setContentView(R.layout.profile);
 		showAccount(user);
 		findViewById(R.id.sign_out).setOnClickListener(this);
@@ -442,28 +292,5 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		}
 	}
 
-	private ProgressDialog mProgressDialog;
 
-	//TODO REFACTOR
-	/** 
-	 * Metodi per mostrare o meno il progressDialog
-	 * */
-	protected void showDialog() {
-		if (mProgressDialog == null) {
-			setProgressDialog();
-		}
-		mProgressDialog.show();
-	}
-
-	protected void hideDialog() {
-		if (mProgressDialog != null && mProgressDialog.isShowing()) {
-			mProgressDialog.dismiss();
-		}
-	}
-
-	private void setProgressDialog() {
-		mProgressDialog = new ProgressDialog(this);
-		mProgressDialog.setTitle("Attendi...");
-		mProgressDialog.setMessage("Sto scaricando...");
-	}
 }
