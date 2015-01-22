@@ -17,5 +17,20 @@
     <string name="logout">Log out</string>
     <string name="iconDesc">Descr</string>
     <string name="title_activity_settings">SettingsActivity</string>
+    <string name="nameLabel">Nome:</string>
+    <string name="nameHint">Il tuo nome</string>
+    <string name="surnameLabel">Cognome:</string>
+    <string name="surnameHint">Il tuo cognome</string>
+    <string name="pwAccountLabel">App account:</string>
+    <string name="pwAccountHint">La mail del tuo account</string>
+    <string name="gmailAccountLabel">Google account:</string>
+    <string name="gmailAccountHint">Il tuo account google</string>
+    <string name="fbAccountLabel">Facebook Account:</string>
+    <string name="fbAccountHint">Il tuo account facebook</string>
+    <string name="bDayLabel">Data di nascita:</string>
+    <string name="bDayHint">La tua data di nascita</string>
+    <string name="genderLabel">Sesso:</string>
+    <string name="genderMale">M</string>
+    <string name="genderFemale">F</string>
 
 </resources>
