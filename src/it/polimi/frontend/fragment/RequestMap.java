@@ -12,11 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class RequestMap extends Fragment implements OnRequestLoadedListener {
+public class RequestMap extends Fragment implements OnRequestLoadedListener, OnMapReadyCallback {
 
 	static final LatLng CASA_STUDENTE = new LatLng(45.4766, 9.22414);
 	private GoogleMap map;
@@ -25,26 +26,8 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_request_map,
 				container, false);
-		map = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map)).getMap();
+		((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
 		
-		RequestLoader.getInstance().addListener(this);
-		List<Request> requests = RequestLoader.getInstance().getRequests();
-		if(requests!=null && requests.size()>0 ){
-			setRequestMark(requests);	
-		}
-		else{
-			//RequestLoader.getInstance().loadRequest();
-		}
-		
-		map.addMarker(new MarkerOptions().position(CASA_STUDENTE)
-				.title("Casa dello studente")
-				.snippet("Tutti alla casa"));
-
-		// Move the camera instantly to hamburg with a zoom of 15.
-		map.moveCamera(CameraUpdateFactory.newLatLngZoom(CASA_STUDENTE, 15));
-
-		// Zoom in, animating the camera.
-		map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
 		return rootView;
 	}
 
@@ -66,6 +49,30 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener {
 		if(requests!=null && requests.size()>0)
 		setRequestMark(requests);
 		
+	}
+
+	@Override
+	public void onMapReady(GoogleMap arg) {
+		// TODO Auto-generated method stub
+		this.map=arg;
+		RequestLoader.getInstance().addListener(this);
+		List<Request> requests = RequestLoader.getInstance().getRequests();
+		if(requests!=null && requests.size()>0 ){
+			setRequestMark(requests);	
+		}
+		else{
+			//RequestLoader.getInstance().loadRequest();
+		}
+		
+		map.addMarker(new MarkerOptions().position(CASA_STUDENTE)
+				.title("Casa dello studente")
+				.snippet("Tutti alla casa"));
+
+		// Move the camera instantly to hamburg with a zoom of 15.
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(CASA_STUDENTE, 15));
+
+		// Zoom in, animating the camera.
+		map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
 	}
 
 }

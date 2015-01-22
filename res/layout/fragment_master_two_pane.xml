@@ -16,7 +16,7 @@
     res/values-sw600dp/refs.xml for an example of layout aliases
     that replace the single-pane version of the layout with
     this two-pane version.
-	-->
+    -->
 
     <fragment
         android:id="@+id/request_list"
@@ -26,10 +26,22 @@
         android:layout_weight="2"
         tools:layout="@android:layout/list_content" />
 
-    <FrameLayout
-        android:id="@+id/request_detail_container"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="3" />
+        android:layout_weight="3"
+        android:orientation="vertical" >
+
+        <FrameLayout
+            android:id="@+id/request_detail_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2" />
+        <FrameLayout
+            android:id="@+id/feedback_list_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3" />
+    </LinearLayout>
 
 </LinearLayout>

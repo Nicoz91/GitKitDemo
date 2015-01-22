@@ -75,6 +75,5 @@ public class RequestList extends ListFragment implements OnRequestLoadedListener
 		setListAdapter(adapter);
 	}
 
-
 	
 }

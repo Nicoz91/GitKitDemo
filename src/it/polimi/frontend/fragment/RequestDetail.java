@@ -3,8 +3,11 @@ package it.polimi.frontend.fragment;
 import java.io.IOException;
 
 import it.polimi.appengine.entity.manager.model.Request;
+import it.polimi.appengine.entity.manager.model.User;
 import it.polimi.frontend.activity.HttpUtils;
 import it.polimi.frontend.activity.R;
+import it.polimi.frontend.fragment.RequestList.OnRequestSelectedListener;
+import it.polimi.frontend.util.ParentFragmentUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -22,6 +25,7 @@ public class RequestDetail extends Fragment {
 	public static final String ID="RequestDetailFragmentID";
 	private Request request;
 	private ImageView profileImg;
+	private OnUserSectionClickedListener listener;
 
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
@@ -53,6 +57,8 @@ public class RequestDetail extends Fragment {
 			((TextView)rootView.findViewById(R.id.descriptionLabel))
 				.setText(request.getDescription());
 		}
+		//registrazione del parente in ascolto
+		listener = ParentFragmentUtil.getParent(this, OnUserSectionClickedListener.class);
 		return rootView;
 	}
 	
@@ -82,5 +88,13 @@ public class RequestDetail extends Fragment {
 				profileImg.setImageBitmap(bitmap);
 			}
 		}
+	}
+	
+	/**
+	 * Interfaccia che deve implementare il master (fragment o activity) per mostrare i 
+	 * feedback dello user (in modo diverso a seconda del dispositivo).
+	 * */
+	public interface OnUserSectionClickedListener {
+		public void onUserSectionClicked(User owner);
 	}
 }
