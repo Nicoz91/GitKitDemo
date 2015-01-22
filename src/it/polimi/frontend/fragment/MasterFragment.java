@@ -5,6 +5,7 @@ import it.polimi.frontend.activity.R;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,29 +13,80 @@ import android.view.ViewGroup;
 public class MasterFragment extends Fragment implements RequestList.OnRequestSelectedListener{
 
 	private boolean twoPane;
-	
+	private static View view;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.master_fragment,
-				container, false);
+		//PRIMA POSSIBILE SOLUZIONE
+		if (view != null) {
+	        ViewGroup parent = (ViewGroup) view.getParent();
+	        if (parent != null)
+	            parent.removeView(view);
+	    }
+	    try {
+	        view = inflater.inflate(R.layout.fragment_master,container, false);
+	        if (view.findViewById(R.id.request_detail_container) != null) {
+				// The detail container view will be present only in the
+				// large-screen layouts (res/values-large and
+				// res/values-sw600dp). If this view is present, then the
+				// activity should be in two-pane mode.
+				twoPane = true;
+				/*
+				// In two-pane mode, list items should be given the
+				// 'activated' state when touched.
+				((RequestList) getChildFragmentManager()
+						.findFragmentById(R.id.request_list))
+						.setActivateOnItemClick(true);*/
+			} else {
+				getChildFragmentManager().beginTransaction()
+				.replace(R.id.container,new RequestList(),RequestList.ID)
+				.commit();
+			}
+	    } catch (InflateException e) {
+	        // map is already there, just return view as it is
+	    }
+	    return view;
+	    /*SECONDA SOLUZIONE POSSIBILE
+	    if(savedInstanceState==null)
+	    	View rootView = inflater.inflate(R.layout.fragment_master,container, false);
 		if (rootView.findViewById(R.id.request_detail_container) != null) {
 			// The detail container view will be present only in the
 			// large-screen layouts (res/values-large and
 			// res/values-sw600dp). If this view is present, then the
 			// activity should be in two-pane mode.
 			twoPane = true;
-			/*
+			
 			// In two-pane mode, list items should be given the
 			// 'activated' state when touched.
-			((RequestList) getChildFragmentManager()
-					.findFragmentById(R.id.request_list))
-					.setActivateOnItemClick(true);*/
+			//((RequestList) getChildFragmentManager()
+			//		.findFragmentById(R.id.request_list))
+			//		.setActivateOnItemClick(true);
 		} else {
 			getChildFragmentManager().beginTransaction()
 			.replace(R.id.container,new RequestList(),RequestList.ID)
 			.commit();
 		}
 		return rootView;
+	    */
+	    /* SITUAZIONE INIZIALE
+		View rootView = inflater.inflate(R.layout.fragment_master,container, false);
+		if (rootView.findViewById(R.id.request_detail_container) != null) {
+			// The detail container view will be present only in the
+			// large-screen layouts (res/values-large and
+			// res/values-sw600dp). If this view is present, then the
+			// activity should be in two-pane mode.
+			twoPane = true;
+			
+			// In two-pane mode, list items should be given the
+			// 'activated' state when touched.
+			//((RequestList) getChildFragmentManager()
+			//		.findFragmentById(R.id.request_list))
+			//		.setActivateOnItemClick(true);
+		} else {
+			getChildFragmentManager().beginTransaction()
+			.replace(R.id.container,new RequestList(),RequestList.ID)
+			.commit();
+		}
+		return rootView;*/
 	}
 
 	@Override

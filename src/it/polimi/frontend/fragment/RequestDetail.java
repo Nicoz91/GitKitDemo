@@ -36,7 +36,6 @@ public class RequestDetail extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		//TODO per gestire l'actionbar con API10 serve libreria opensource ActionBarSherlock
 		View rootView = inflater.inflate(R.layout.fragment_request_detail,
 				container, false);
 		profileImg = (ImageView) rootView.findViewById(R.id.profileImg);

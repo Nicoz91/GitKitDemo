@@ -6,13 +6,4 @@
     tools:layout="@android:layout/list_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-	<!--  
-    <fragment
-        android:id="@+id/request_list"
-        android:name="it.polimi.frontend.fragment.RequestList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp" />
-	-->
 </FrameLayout>
