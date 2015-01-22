@@ -1,32 +1,20 @@
 package it.polimi.frontend.fragment;
 
-import it.polimi.appengine.entity.requestendpoint.Requestendpoint;
-import it.polimi.appengine.entity.requestendpoint.model.CollectionResponseRequest;
-import it.polimi.appengine.entity.requestendpoint.model.Request;
-import it.polimi.frontend.activity.CloudEndpointUtils;
+import it.polimi.appengine.entity.manager.model.Request;
 import it.polimi.frontend.activity.R;
 import it.polimi.frontend.util.RequestLoader;
 import it.polimi.frontend.util.RequestLoader.OnRequestLoadedListener;
-
-import java.io.IOException;
 import java.util.List;
-
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.json.jackson2.JacksonFactory;
 
 public class RequestMap extends Fragment implements OnRequestLoadedListener {
 
@@ -45,7 +33,7 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener {
 			setRequestMark(requests);	
 		}
 		else{
-			RequestLoader.getInstance().loadRequest();
+			//RequestLoader.getInstance().loadRequest();
 		}
 		
 		map.addMarker(new MarkerOptions().position(CASA_STUDENTE)
@@ -75,6 +63,7 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener {
 
 	@Override
 	public void onRequestLoaded(List<Request> requests) {
+		if(requests!=null && requests.size()>0)
 		setRequestMark(requests);
 		
 	}

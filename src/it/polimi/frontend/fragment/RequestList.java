@@ -1,11 +1,9 @@
 package it.polimi.frontend.fragment;
 
-import it.polimi.appengine.entity.requestendpoint.Requestendpoint;
-import it.polimi.appengine.entity.requestendpoint.model.CollectionResponseRequest;
-import it.polimi.appengine.entity.requestendpoint.model.GeoPt;
-import it.polimi.appengine.entity.requestendpoint.model.Request;
-import it.polimi.appengine.entity.requestendpoint.model.User;
-import it.polimi.appengine.entity.userendpoint.Userendpoint;
+import it.polimi.appengine.entity.manager.Manager;
+import it.polimi.appengine.entity.manager.model.GeoPt;
+import it.polimi.appengine.entity.manager.model.Request;
+import it.polimi.appengine.entity.manager.model.User;
 import it.polimi.frontend.activity.CloudEndpointUtils;
 import it.polimi.frontend.activity.LoginSession;
 import it.polimi.frontend.activity.MyApplication;
@@ -41,14 +39,16 @@ public class RequestList extends ListFragment implements OnRequestLoadedListener
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		//		new TestInsertTask().execute();
-		new Query().execute();
+		// new Query().execute();
+		
 		RequestLoader.getInstance().addListener(this);
 		List<Request> requests = RequestLoader.getInstance().getRequests();
 		if(requests!=null && requests.size()>0 ){
 			setRequestAdapter(requests);	
 		}
 		else{
-			RequestLoader.getInstance().loadRequest();
+			System.out.println("Le richieste sono nulle? Le sto ancora caricando?");
+			//RequestLoader.getInstance().loadRequest();
 		}
 		mListener = ParentFragmentUtil.getParent(this, OnRequestSelectedListener.class);
 		return super.onCreateView(inflater, container, savedInstanceState);
@@ -70,8 +70,10 @@ public class RequestList extends ListFragment implements OnRequestLoadedListener
 	@Override
 	public void onRequestLoaded(List<Request> requests) {
 		System.out.println("Ho ricevuto requests:");
-		if(requests==null) System.out.println("Requests è nullo");
-		setRequestAdapter(requests);		
+		if(requests==null)
+			System.out.println("Requests è nullo");
+		else
+			setRequestAdapter(requests);		
 	}
 
 	public void setRequestAdapter(List<Request> requests){
@@ -82,7 +84,8 @@ public class RequestList extends ListFragment implements OnRequestLoadedListener
 			System.out.println("Il context è null ma noi bariamo");
 			c = MyApplication.getContext();
 		}
-		else System.out.println("Tutto ok inizializzo l'adapter");
+		else 
+			System.out.println("Tutto ok inizializzo l'adapter");
 		RequestAdapter adapter = new RequestAdapter(c,0,reqs);
 		setListAdapter(adapter);
 	}
@@ -92,35 +95,35 @@ public class RequestList extends ListFragment implements OnRequestLoadedListener
 	 * AsyncTask for retrieving the list of places (e.g., stores) and updating the
 	 * corresponding results list.
 	 */
-	private class Query extends AsyncTask<Void, Void, it.polimi.appengine.entity.userendpoint.model.User> {
+	private class Query extends AsyncTask<Void, Void, User> {
 
 		@Override
-		protected it.polimi.appengine.entity.userendpoint.model.User doInBackground(Void... params) {
+		protected User doInBackground(Void... params) {
 
 			System.out.println("Inizio la query");
-			Userendpoint.Builder endpointBuilder = new Userendpoint.Builder(
+			Manager.Builder endpointBuilder = new Manager.Builder(
 					AndroidHttp.newCompatibleTransport(), new JacksonFactory(), null);
 
 			endpointBuilder = CloudEndpointUtils.updateBuilder(endpointBuilder);
 
 
-			it.polimi.appengine.entity.userendpoint.model.User result;
+			User result = null;
 
-			Userendpoint endpoint = endpointBuilder.build();
+			Manager endpoint = endpointBuilder.build();
 
-			try {
-				result = endpoint.getUserByEmail("test@test.com").execute();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				result = null;
-			}
+//			try {
+//				result = endpoint.getUserByEmail("test@test.com").execute();
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//				result = null;
+//			}
 			return result;
 		}
 
 		@Override
 		@SuppressWarnings("null")
-		protected void onPostExecute(it.polimi.appengine.entity.userendpoint.model.User result) {
+		protected void onPostExecute(User result) {
 			System.out.println("Ho ricevuto l'utente: "+result.getName());
 			return;
 		}
@@ -140,27 +143,33 @@ public class RequestList extends ListFragment implements OnRequestLoadedListener
 		 */
 		@Override
 		protected Request doInBackground(Void... params) {
+			
+			Manager.Builder reqBuilder = new Manager.Builder(AndroidHttp.newCompatibleTransport(), new JacksonFactory(),
+					null);
+			reqBuilder = CloudEndpointUtils.updateBuilder(reqBuilder);
+			Manager reqEndpoint = reqBuilder.build();
+			User u = new User();
+			try {
+				u = reqEndpoint.getUserByEmail(LoginSession.getUser().getEmail()).execute();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			if(u.getRequests()==null)
+				u.setRequests(new ArrayList<Request>());
+			
 			Request req = new Request();
 			req.setDescription("Vicino alla casa");
 			req.setTitle("Ripasso Soft Computing");
 			GeoPt geo = new GeoPt();
-			geo.setLatitude(45.48666f);
-			geo.setLongitude(9.32414f);
+			geo.setLatitude(45.38766f);
+			geo.setLongitude(9.22514f);
 			req.setPlace(geo);
-			User user = new User();
-			// Set the ID of the store where the user is.
-			// This would be replaced by the actual ID in the final version of the code.
-			user.setName(LoginSession.getUser().getDisplayName());
-			user.setSurname("Pasticcio");
-			user.setPwAccount(LoginSession.getUser().getEmail());
-			req.setOwner(user);
-			Requestendpoint.Builder reqBuilder = new Requestendpoint.Builder(AndroidHttp.newCompatibleTransport(), new JacksonFactory(),
-					null);
-			reqBuilder = CloudEndpointUtils.updateBuilder(reqBuilder);
-			Requestendpoint reqEndpoint = reqBuilder.build();
+			u.getRequests().add(req);
+
 			Request r = null;
 			try {
-				r = reqEndpoint.insertRequest(req).execute();
+				reqEndpoint.updateUser(u).execute();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

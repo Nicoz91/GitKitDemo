@@ -38,11 +38,15 @@ import com.google.identitytoolkit.GitkitClient;
 import com.google.identitytoolkit.GitkitUser;
 import com.google.identitytoolkit.IdToken;
 
-import it.polimi.appengine.entity.userendpoint.Userendpoint;
-import it.polimi.appengine.entity.userendpoint.model.User;
+import it.polimi.appengine.entity.manager.Manager;
+import it.polimi.appengine.entity.manager.model.GeoPt;
+import it.polimi.appengine.entity.manager.model.Request;
+import it.polimi.appengine.entity.manager.model.User;
 import it.polimi.frontend.activity.R;
+import it.polimi.frontend.util.RequestLoader;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -59,50 +63,60 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		LoginSession.setPrefs(PreferenceManager.getDefaultSharedPreferences(this));
 		GitkitUser session = LoginSession.getUser();
 		IdToken sessionToken = LoginSession.getIdToken();
+		//Provo a registrare l'id così lo trovo già salvato in shared dopo
+		try {
+			GCMIntentService.register(MyApplication.getContext());
+		} catch (Exception e) {
+			System.out.println("Impossibile registrare l'app");
+			//TODO ricominciare fino a che non viene registrata!
+		}
+		//Controllo se è attiva una sessione
 		if(session!=null && sessionToken!=null){
-			showProfilePage(sessionToken,session);
+			//showProfilePage(sessionToken,session);
 		}
 
-			// Step 1: Create a GitkitClient.
-			// The configurations are set in the AndroidManifest.xml. You can also set or overwrite them
-			// by calling the corresponding setters on the GitkitClient builder.
-			//
-			//    Intent intent = new Intent(this, RegisterActivity.class);
-			//    startActivity(intent);
+		// Step 1: Create a GitkitClient.
+		// The configurations are set in the AndroidManifest.xml. You can also set or overwrite them
+		// by calling the corresponding setters on the GitkitClient builder.
+		//
+		//    Intent intent = new Intent(this, RegisterActivity.class);
+		//    startActivity(intent);
 
-			client = GitkitClient.newBuilder(this, new GitkitClient.SignInCallbacks() {
-				// Implement the onSignIn method of GitkitClient.SignInCallbacks interface.
-				// This method is called when the sign-in process succeeds. A Gitkit IdToken and the signed
-				// in account information are passed to the callback.
+		client = GitkitClient.newBuilder(this, new GitkitClient.SignInCallbacks() {
+			// Implement the onSignIn method of GitkitClient.SignInCallbacks interface.
+			// This method is called when the sign-in process succeeds. A Gitkit IdToken and the signed
+			// in account information are passed to the callback.
 
-				@Override
-				public void onSignIn(IdToken idToken, GitkitUser user) {
+			@Override
+			public void onSignIn(IdToken idToken, GitkitUser user) {
 
-					//Salvo i dati ricevuti nelle shared preferences
-					LoginSession.setUser(user);
-					LoginSession.setStringUser(user.toString());
-					LoginSession.setIdToken(idToken);
-					LoginSession.setStringToken(idToken.getTokenString());
-					if(checkRegistration(user))
-						showProfilePage(idToken, user);
-					else
-						showRegistrationPage(user);
-					// Now use the idToken to create a session for your user.
-					// To do so, you should exchange the idToken for either a Session Token or Cookie
-					// from your server.
-					// Finally, save the Session Token or Cookie to maintain your user's session.
-				}
+				//Salvo i dati ricevuti nelle shared preferences
+				LoginSession.setUser(user);
+				LoginSession.setStringUser(user.toString());
+				LoginSession.setIdToken(idToken);
+				LoginSession.setStringToken(idToken.getTokenString());
 
-				// Implement the onSignInFailed method of GitkitClient.SignInCallbacks interface.
-				// This method is called when the sign-in process fails.
-				@Override
-				public void onSignInFailed() {
-					Toast.makeText(MainActivity.this, "Sign in failed", Toast.LENGTH_LONG).show();
-				}
-			}).build();
+				//Controllo se l'utente ha già inserito i dati obbligatori
+				if(checkRegistration(user))
+					showProfilePage(idToken, user);
+				else
+					showRegistrationPage(user);
+				// Now use the idToken to create a session for your user.
+				// To do so, you should exchange the idToken for either a Session Token or Cookie
+				// from your server.
+				// Finally, save the Session Token or Cookie to maintain your user's session.
+			}
 
-			showSignInPage();
-		
+			// Implement the onSignInFailed method of GitkitClient.SignInCallbacks interface.
+			// This method is called when the sign-in process fails.
+			@Override
+			public void onSignInFailed() {
+				Toast.makeText(MainActivity.this, "Sign in failed", Toast.LENGTH_LONG).show();
+			}
+		}).build();
+
+		showSignInPage();
+
 
 	}
 
@@ -113,12 +127,28 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	//
 
 	private boolean checkRegistration(GitkitUser user){
-		if(checkUser(user)){
+		//Se l'utente è già salvato allora associo il device
+		User u = checkUser(user);
+		if(u!=null){
 			try {
-				GCMIntentService.register(MyApplication.getContext());
-			} catch (Exception e) {
-				System.out.println("Impossibile registrare l'app");
-				//TODO ricominciare fino a che non viene registrata!
+
+				ArrayList<String> dev = (ArrayList<String>) u.getDevices();
+				if(dev==null || !dev.contains(LoginSession.getDeviceId()) ){
+					System.out.println("Faccio l'update su: "+u.getId());
+					u = (new UpdateUserDevice(u).execute()).get();
+				}
+
+				//				System.out.println("Faccio l'update su: "+u.getId());
+				//				u = (new UpdateUserDevice(u).execute()).get();
+				//				
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return false;
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return false;
 			}
 			return true;
 
@@ -127,7 +157,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			return false;
 	}
 
-	private boolean checkUser(GitkitUser user){
+	private User checkUser(GitkitUser user){
 		User u = null;
 		try {
 			u = new QueryUser(user.getEmail()).execute().get();
@@ -138,24 +168,22 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if(u.getPwAccount().equals(user.getEmail()))
-		return true;
-		else return false;
+		return u;
 	}
-	
+
 	/**
 	 * AsyncTask for retrieving the list of places (e.g., stores) and updating the
 	 * corresponding results list.
 	 */
-	private class QueryUser extends AsyncTask<Void, Void, it.polimi.appengine.entity.userendpoint.model.User> {
-		
-		private String email;
-		
-		public QueryUser(String email){
+	private class UpdateUserDevice extends AsyncTask<Void, Void, User> {
+
+		private User u;
+
+		public UpdateUserDevice(User u){
 			super();
-			this.email = email;
+			this.u = u;
 		}
-		
+
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
@@ -163,13 +191,95 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		}
 
 		@Override
-		protected it.polimi.appengine.entity.userendpoint.model.User doInBackground(Void... params) {
-			System.out.println("Inizio la query");
-			Userendpoint.Builder endpointBuilder = new Userendpoint.Builder(
+		protected User doInBackground(Void... params) {
+			System.out.println("Modifico la lista dei device");
+			Manager.Builder endpointBuilder = new Manager.Builder(
 					AndroidHttp.newCompatibleTransport(), new JacksonFactory(), null);
 			endpointBuilder = CloudEndpointUtils.updateBuilder(endpointBuilder);
-			it.polimi.appengine.entity.userendpoint.model.User result;
-			Userendpoint endpoint = endpointBuilder.build();
+			User result = null;
+			Manager endpoint = endpointBuilder.build();
+			if(u.getDevices()==null)
+				u.setDevices(new ArrayList<String>());
+			u.getDevices().add(LoginSession.getDeviceId());
+			try {
+				result = endpoint.updateUser(u).execute();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				result = null;
+			}
+			return result;
+		}
+
+	}
+
+
+	/**
+	 * AsyncTask for retrieving the list of places (e.g., stores) and updating the
+	 * corresponding results list.
+	 */
+	private class InsertUser extends AsyncTask<Void, Void, User> {
+
+		private User u;
+
+		public InsertUser(User u){
+			super();
+			this.u = u;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			showDialog();
+		}
+
+		@Override
+		protected User doInBackground(Void... params) {
+			System.out.println("Creo un nuovo utente");
+			Manager.Builder endpointBuilder = new Manager.Builder(
+					AndroidHttp.newCompatibleTransport(), new JacksonFactory(), null);
+			endpointBuilder = CloudEndpointUtils.updateBuilder(endpointBuilder);
+			User result = null;
+			Manager endpoint = endpointBuilder.build();
+			try {
+				result = endpoint.insertUser(u).execute();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				result = null;
+			}
+			return result;
+		}
+
+	}
+
+	/**
+	 * AsyncTask for retrieving the list of places (e.g., stores) and updating the
+	 * corresponding results list.
+	 */
+	private class QueryUser extends AsyncTask<Void, Void, User> {
+
+		private String email;
+
+		public QueryUser(String email){
+			super();
+			this.email = email;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			showDialog();
+		}
+
+		@Override
+		protected User doInBackground(Void... params) {
+			System.out.println("Inizio la query");
+			Manager.Builder endpointBuilder = new Manager.Builder(
+					AndroidHttp.newCompatibleTransport(), new JacksonFactory(), null);
+			endpointBuilder = CloudEndpointUtils.updateBuilder(endpointBuilder);
+			User result = null;
+			Manager endpoint = endpointBuilder.build();
 			try {
 				result = endpoint.getUserByEmail(email).execute();
 			} catch (IOException e) {
@@ -182,8 +292,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 		@Override
 		@SuppressWarnings("null")
-		protected void onPostExecute(it.polimi.appengine.entity.userendpoint.model.User result) {
-			System.out.println("Ho ricevuto l'utente: "+result.getName());
+		protected void onPostExecute(User result) {
+			if(result!=null)
+				System.out.println("Ho ricevuto l'utente: "+result.getName());
+			else
+				System.out.println("Nessun utente ricevuto, devo crearlo.");
 			hideDialog();
 			return;
 		}
@@ -227,14 +340,46 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private void showRegistrationPage(GitkitUser user){
 		setContentView(R.layout.profile);
 		showAccount(user);
+		User u = new User();
+		u.setName("John"+Math.random()*100);
+		u.setSurname("A"+Math.random()*100);
+		u.setPwAccount(user.getEmail());
+		ArrayList<String> dev = new ArrayList<String>();
+		dev.add(LoginSession.getDeviceId());
+		u.setDevices(dev);
+		if(u.getRequests()==null)
+			u.setRequests(new ArrayList<Request>());
+		Request req = new Request();
+		req.setDescription("Richiesta iniziale");
+		req.setTitle("Test"+Math.random()*100);
+		GeoPt geo = new GeoPt();
+		geo.setLatitude(45.38766f);
+		geo.setLongitude(9.22514f);
+		req.setPlace(geo);
+		u.getRequests().add(req);
+		
+		System.out.println("Provo a registrare l'utente");
+		try {
+			(new InsertUser(u).execute()).get();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Registrazione effettuata con successo");
 		findViewById(R.id.sign_out).setOnClickListener(this);
+		
+		findViewById(R.id.sign_out).setOnClickListener(this);
+		startActivity(new Intent(this, TabbedActivity.class));
 	}
 
 	private void showProfilePage(IdToken idToken, GitkitUser user) {
+		RequestLoader.getInstance().loadRequest();
 		setContentView(R.layout.profile);
 		showAccount(user);
 		findViewById(R.id.sign_out).setOnClickListener(this);
-
 		startActivity(new Intent(this, TabbedActivity.class));
 	}
 
@@ -296,9 +441,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			}.execute(user.getPhotoUrl());
 		}
 	}
-	
+
 	private ProgressDialog mProgressDialog;
-	
+
 	//TODO REFACTOR
 	/** 
 	 * Metodi per mostrare o meno il progressDialog

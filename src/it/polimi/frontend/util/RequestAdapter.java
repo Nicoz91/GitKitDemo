@@ -3,7 +3,7 @@ package it.polimi.frontend.util;
 import java.io.IOException;
 import java.util.List;
 
-import it.polimi.appengine.entity.requestendpoint.model.Request;
+import it.polimi.appengine.entity.manager.model.Request;
 import it.polimi.frontend.activity.HttpUtils;
 import it.polimi.frontend.activity.R;
 import android.content.Context;

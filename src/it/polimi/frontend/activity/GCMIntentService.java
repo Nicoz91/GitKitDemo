@@ -144,7 +144,8 @@ public class GCMIntentService extends GCMBaseIntentService {
   @Override
   public void onRegistered(Context context, String registration) {
     boolean alreadyRegisteredWithEndpointServer = false;
-
+    System.out.println("Setto il device nelle shared preferences");
+    LoginSession.setStringDevice(registration);
     try {
 
       /*

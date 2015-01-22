@@ -1,6 +1,6 @@
 package it.polimi.frontend.fragment;
 
-import it.polimi.appengine.entity.requestendpoint.model.Request;
+import it.polimi.appengine.entity.manager.model.Request;
 import it.polimi.frontend.activity.R;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

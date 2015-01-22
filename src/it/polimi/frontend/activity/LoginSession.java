@@ -9,7 +9,16 @@ public class LoginSession {
 	private static GitkitUser user;
 	private static IdToken idToken;
 	private static SharedPreferences prefs;
+	private static String deviceId;
 	
+	public static String getDeviceId() {
+		return deviceId;
+	}
+
+	public static void setDeviceId(String deviceId) {
+		LoginSession.deviceId = deviceId;
+	}
+
 	public static GitkitUser getUser() {
 		return user;
 	}
@@ -29,6 +38,9 @@ public class LoginSession {
 		     String token = prefs.getString("token", "");
 			 idToken = IdToken.parse(token);
 		}
+		if (prefs.contains("device")){
+		     deviceId = prefs.getString("device", "");
+		}
 	}
 	
 	public static void setStringUser(String gituser){
@@ -37,6 +49,10 @@ public class LoginSession {
 	
 	public static void setStringToken(String token){
 		prefs.edit().putString("token", token).commit();
+	}
+	
+	public static void setStringDevice(String device){
+		prefs.edit().putString("device", device).commit();
 	}
 
 	public static IdToken getIdToken() {
