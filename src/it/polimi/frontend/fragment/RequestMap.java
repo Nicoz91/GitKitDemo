@@ -23,7 +23,7 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.request_map_fragment,
+		View rootView = inflater.inflate(R.layout.fragment_request_map,
 				container, false);
 		map = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map)).getMap();
 		
