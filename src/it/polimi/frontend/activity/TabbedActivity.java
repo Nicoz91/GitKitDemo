@@ -221,7 +221,7 @@ ActionBar.TabListener {
 	public void onBackPressed() {
 		
 		// If the fragment exists and has some back-stack entry
-		if (masterFragment != null && masterFragment.getChildFragmentManager().getBackStackEntryCount() > 0){
+		if (masterFragment != null && mViewPager.getCurrentItem()==REQUEST_TAB && masterFragment.getChildFragmentManager().getBackStackEntryCount() > 0){
 			// Get the fragment fragment manager - and pop the backstack
 			masterFragment.getChildFragmentManager().popBackStack();
 		}

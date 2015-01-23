@@ -25,7 +25,7 @@ public class MasterFragment extends Fragment implements RequestList.OnRequestSel
 		}
 		try {
 			view = inflater.inflate(R.layout.fragment_master,container, false);
-			if (view.findViewById(R.id.request_detail_container) != null) {
+			if (view.findViewById(R.id.detail_container) != null) {
 				// The detail container view will be present only in the
 				// large-screen layouts (res/values-large and
 				// res/values-sw600dp). If this view is present, then the
@@ -92,17 +92,18 @@ public class MasterFragment extends Fragment implements RequestList.OnRequestSel
 
 	@Override
 	public void onRequestSelected(int position, Request request) {
-		RequestDetail fragment = new RequestDetail(request);
 		if (twoPane) {
 			// In two-pane mode, show the detail view in this activity by
 			// adding or replacing the detail fragment using a
 			// fragment transaction.
+			DetailContainerFragment detailContFrag = new DetailContainerFragment(request);
 			getChildFragmentManager().beginTransaction()
-			.replace(R.id.request_detail_container, fragment).commit();
-
+			.replace(R.id.detail_container, detailContFrag, DetailContainerFragment.ID).commit();
+			System.out.println("Dentro onRequestSelected. Dovrei aver creato e settato il DetailFragment");
 		} else {
 			// In single-pane mode, simply start the detail fragment
 			// for the selected item ID.
+			RequestDetail fragment = new RequestDetail(request);
 			Fragment reqList=getChildFragmentManager().findFragmentByTag(RequestList.ID);
 
 			getChildFragmentManager().beginTransaction()
@@ -123,17 +124,18 @@ public class MasterFragment extends Fragment implements RequestList.OnRequestSel
 
 	@Override
 	public void onUserSectionClicked(User owner) {
-		FeedbackDetail fragment = new FeedbackDetail(owner);
 		if (twoPane) {
 			// In two-pane mode, show the detail view in this activity by
 			// adding or replacing the detail fragment using a
 			// fragment transaction.
-			getChildFragmentManager().beginTransaction()
-			.replace(R.id.feedback_list_container, fragment).commit();
-
+			//getChildFragmentManager().beginTransaction()
+			//.replace(R.id.feedback_list_container, fragment).commit();
+			
+			/*Se ne dovrebbe occupare il DetailContainerFragment, quindi non fa nulla*/
 		} else {
 			// In single-pane mode, simply start the detail fragment
 			// for the selected item ID.
+			FeedbackDetail fragment = new FeedbackDetail(owner);
 			Fragment reqDetail=getChildFragmentManager().findFragmentByTag(RequestDetail.ID);
 
 			getChildFragmentManager().beginTransaction()
