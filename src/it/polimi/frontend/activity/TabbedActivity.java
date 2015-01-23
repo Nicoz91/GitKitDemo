@@ -26,7 +26,9 @@ ActionBar.TabListener {
 	private static final int REQUEST_TAB=0;
 	private static final int MAP_TAB=1;
 	private MasterFragment masterFragment;
-
+	private RequestMap requestMap;
+	
+	
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
 	 * fragments for each of the sections. We use a {@link FragmentPagerAdapter}
@@ -161,7 +163,8 @@ ActionBar.TabListener {
 				masterFragment = new MasterFragment();
 				return masterFragment;
 			case MAP_TAB:
-				return new RequestMap();
+				requestMap = new RequestMap();
+				return requestMap;
 			default:
 				return PlaceholderFragment.newInstance(position + 1);
 			}
@@ -225,9 +228,11 @@ ActionBar.TabListener {
 	public void onBackPressed() {
 		
 		// If the fragment exists and has some back-stack entry
-		if (masterFragment != null && masterFragment.getChildFragmentManager().getBackStackEntryCount() > 0){
+		if (masterFragment != null && mViewPager.getCurrentItem()==REQUEST_TAB && masterFragment.getChildFragmentManager().getBackStackEntryCount() > 0){
 			// Get the fragment fragment manager - and pop the backstack
 			masterFragment.getChildFragmentManager().popBackStack();
+		} else if(requestMap != null && mViewPager.getCurrentItem()==MAP_TAB && requestMap.getChildFragmentManager().getBackStackEntryCount() > 0){
+			requestMap.getChildFragmentManager().popBackStack();
 		}
 		// Else, nothing in the direct fragment back stack
 		else{
