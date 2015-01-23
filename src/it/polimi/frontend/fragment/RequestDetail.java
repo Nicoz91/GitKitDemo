@@ -17,10 +17,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 //import android.support.v7.app.ActionBarActivity;
 
-public class RequestDetail extends Fragment {
+public class RequestDetail extends Fragment implements View.OnClickListener{
 
 	public static final String ID="RequestDetailFragmentID";
 	private Request request;
@@ -43,6 +44,7 @@ public class RequestDetail extends Fragment {
 		View rootView = inflater.inflate(R.layout.fragment_request_detail,
 				container, false);
 		profileImg = (ImageView) rootView.findViewById(R.id.profileImg);
+		((LinearLayout)rootView.findViewById(R.id.userSection)).setOnClickListener(this);
 		if (request!=null){
 			new ProfileImageTask().execute(request.getOwner().getPhotoURL());
 			((TextView)rootView.findViewById(R.id.ownerLabel))
@@ -96,5 +98,17 @@ public class RequestDetail extends Fragment {
 	 * */
 	public interface OnUserSectionClickedListener {
 		public void onUserSectionClicked(User owner);
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.userSection:
+			listener.onUserSectionClicked(request.getOwner());
+			break;
+
+		default:
+			break;
+		}
 	}
 }

@@ -123,7 +123,7 @@ public class MasterFragment extends Fragment implements RequestList.OnRequestSel
 
 	@Override
 	public void onUserSectionClicked(User owner) {
-		FeedbackDetail fragment = new FeedbackDetail(owner);//TODO
+		FeedbackDetail fragment = new FeedbackDetail(owner);
 		if (twoPane) {
 			// In two-pane mode, show the detail view in this activity by
 			// adding or replacing the detail fragment using a
