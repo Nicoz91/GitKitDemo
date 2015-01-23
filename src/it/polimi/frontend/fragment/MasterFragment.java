@@ -31,12 +31,12 @@ public class MasterFragment extends Fragment implements RequestList.OnRequestSel
 				// res/values-sw600dp). If this view is present, then the
 				// activity should be in two-pane mode.
 				twoPane = true;
-				/*Sembra non presente tale metodo per fragment della Support
+				
 				// In two-pane mode, list items should be given the
 				// 'activated' state when touched.
 				((RequestList) getChildFragmentManager()
 						.findFragmentById(R.id.request_list))
-						.setActivateOnItemClick(true);*/
+						.setActivateOnItemClick(true);
 			} else {
 				getChildFragmentManager().beginTransaction()
 				.replace(R.id.container,new RequestList(),RequestList.ID)

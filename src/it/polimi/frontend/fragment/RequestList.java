@@ -75,5 +75,10 @@ public class RequestList extends ListFragment implements OnRequestLoadedListener
 		setListAdapter(adapter);
 	}
 
+	public void setActivateOnItemClick(boolean activateOnItemClick) {
+        getListView().setChoiceMode(
+                activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
+                        : ListView.CHOICE_MODE_NONE);
+    }
 	
 }
