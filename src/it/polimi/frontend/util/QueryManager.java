@@ -259,7 +259,7 @@ public class QueryManager {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			showDialog();
+		//	showDialog();
 		}
 
 		@Override

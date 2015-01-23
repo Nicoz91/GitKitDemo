@@ -50,9 +50,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-/**
- * Gitkit Demo
- */
 public class MainActivity extends FragmentActivity implements OnClickListener {
 
 	private GitkitClient client;
@@ -226,6 +223,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 //		r.setTitle("Non ti sdoppiare"+(int)(Math.random()*10));
 //		r = QueryManager.getInstance().insertRequest(r);
 //		if(r!=null)	System.out.println("Inserita correttamente");
+//		System.out.println("Dovrei ricevere una notifica...");
 		
 		setContentView(R.layout.profile);
 		showAccount(user);

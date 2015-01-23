@@ -139,6 +139,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="it.polimi.frontend.activity.TabbedActivity" />
         </activity>
+        <activity
+            android:name=".RequestActivity"
+            android:label="@string/title_activity_request" >
+        </activity>
     </application>
 
 </manifest>

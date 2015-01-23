@@ -15,8 +15,10 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="logout">Log out</string>
+    <string name="insertRequest">Ins+</string>
     <string name="iconDesc">Descr</string>
     <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_request">RequestActivity</string>
     <string name="nameLabel">Nome:</string>
     <string name="nameHint">Il tuo nome</string>
     <string name="surnameLabel">Cognome:</string>
@@ -35,5 +37,16 @@
     <string name="edit">Modifica</string>
     <string name="save">Salva</string>
     <string name="title_activity_test">TestActivity</string>
-
+    <string name="insert_title_label">Titolo:</string>
+    <string name="insert_title_edit">Titolo</string>
+    <string name="insert_description_label">Descrizione:</string>
+    <string name="insert_description_edit">Descrizione</string>
+    <string name="insert_tag_label">Tag:</string>
+    <string name="insert_tag_edit">Tag</string>
+    <string name="insert_start_label">Inizio:</string>
+    <string name="insert_start_edit">Inizio</string>
+    <string name="insert_end_label">Fine:</string>
+    <string name="insert_end_edit">Fine</string>
+    <string name="insert_max_label">Partecipanti:</string>
+    <string name="insert_max_edit">1</string>
 </resources>

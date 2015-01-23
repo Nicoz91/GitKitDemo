@@ -111,6 +111,10 @@ ActionBar.TabListener {
 			startActivity(i);
 			this.finish();
 			return true;
+		case R.id.insertRequest:
+			i = new Intent(this, RequestActivity.class);
+			startActivity(i);
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}

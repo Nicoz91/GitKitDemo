@@ -4,16 +4,22 @@ import it.polimi.appengine.entity.manager.model.Request;
 import it.polimi.frontend.activity.R;
 import it.polimi.frontend.util.RequestLoader;
 import it.polimi.frontend.util.RequestLoader.OnRequestLoadedListener;
+
 import java.util.List;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class RequestMap extends Fragment implements OnRequestLoadedListener {
@@ -35,11 +41,10 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener {
 		else{
 			//RequestLoader.getInstance().loadRequest();
 		}
-		
 		map.addMarker(new MarkerOptions().position(CASA_STUDENTE)
 				.title("Casa dello studente")
 				.snippet("Tutti alla casa"));
-
+		
 		// Move the camera instantly to hamburg with a zoom of 15.
 		map.moveCamera(CameraUpdateFactory.newLatLngZoom(CASA_STUDENTE, 15));
 
