@@ -1,11 +1,12 @@
 package it.polimi.frontend.util;
 
+import it.polimi.appengine.entity.manager.model.Feedback;
+import it.polimi.frontend.activity.HttpUtils;
+import it.polimi.frontend.activity.R;
+
 import java.io.IOException;
 import java.util.List;
 
-import it.polimi.appengine.entity.manager.model.Request;
-import it.polimi.frontend.activity.HttpUtils;
-import it.polimi.frontend.activity.R;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,38 +16,41 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
-public class RequestAdapter extends ArrayAdapter<Request>{
+public class FeedbackAdapter extends ArrayAdapter<Feedback>{
 
 	private Context context;
-	private List<Request> reqs;
+	private List<Feedback> feedbacks;
 	private View rowView;
 
-	public RequestAdapter(Context context, int resource, List<Request> objects) {
-		super(context, R.layout.row_layout_request, objects);
+	public FeedbackAdapter(Context context, int resource, List<Feedback> objects) {
+		super(context, R.layout.row_layout_feedback, objects);
 		this.context=context;
-		this.reqs=objects;
+		this.feedbacks=objects;
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		if (convertView==null){
-			rowView = inflater.inflate(R.layout.row_layout_request, parent, false);
+			rowView = inflater.inflate(R.layout.row_layout_feedback, parent, false);
 		} else {
 			rowView = convertView;
 		}
 		System.out.println("Position: "+position);
 		try{
-			TextView textView = (TextView) rowView.findViewById(R.id.txtTitle);
-			textView.setText(reqs.get(position).getOwner().getName()+" "+
-								reqs.get(position).getOwner().getSurname()+" ");
-			TextView textView2 = (TextView) rowView.findViewById(R.id.subString);
-			textView2.setText(reqs.get(position).getTitle());
+			TextView reviewer = (TextView) rowView.findViewById(R.id.reviewer);
+			reviewer.setText(feedbacks.get(position).getFrom().getName()+" "+
+								feedbacks.get(position).getFrom().getSurname()+" ");
+			TextView comment = (TextView) rowView.findViewById(R.id.comment);
+			comment.setText(feedbacks.get(position).getDescription());
 
+			RatingBar valutazione = (RatingBar) rowView.findViewById(R.id.valutazione);
+			valutazione.setRating(feedbacks.get(position).getEvaluation());
 			//TODO task profile image
-			String photoUrl=reqs.get(position).getOwner().getPhotoURL();
+			String photoUrl=feedbacks.get(position).getFrom().getPhotoURL();
 			if (photoUrl!=null){
 				new ProfileImageTask().execute(photoUrl);
 			}
@@ -56,6 +60,7 @@ public class RequestAdapter extends ArrayAdapter<Request>{
 		}
 		return rowView;
 	}
+	
 	private class ProfileImageTask extends AsyncTask<String, Void, Bitmap>{
 		@Override
 		protected Bitmap doInBackground(String... arg) {
