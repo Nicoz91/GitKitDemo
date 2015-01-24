@@ -39,7 +39,7 @@ public class MasterFragment extends Fragment implements RequestList.OnRequestSel
 						.setActivateOnItemClick(true);
 			} else {
 				getChildFragmentManager().beginTransaction()
-				.replace(R.id.container,new RequestList(),RequestList.ID)
+				.replace(R.id.container,new RequestList(RequestList.ALL_REQUEST, null),RequestList.ID)
 				.commit();
 			}
 		} catch (InflateException e) {

@@ -1,12 +1,17 @@
 package it.polimi.frontend.fragment;
 
+import it.polimi.appengine.entity.manager.model.Key;
 import it.polimi.appengine.entity.manager.model.Request;
+import it.polimi.appengine.entity.manager.model.User;
 import it.polimi.frontend.activity.MyApplication;
 import it.polimi.frontend.util.ParentFragmentUtil;
 import it.polimi.frontend.util.RequestAdapter;
 import it.polimi.frontend.util.RequestLoader;
 import it.polimi.frontend.util.RequestLoader.OnRequestLoadedListener;
+
+import java.util.ArrayList;
 import java.util.List;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -19,7 +24,23 @@ public class RequestList extends ListFragment implements OnRequestLoadedListener
 
 	OnRequestSelectedListener mListener;
 	public final static String ID="RequestListFragmentID";
-
+	public final static int ALL_REQUEST=0;
+	public final static int OWNER_REQUEST=1;
+	public final static int JOINED_REQUEST=2;
+	private int listMode=0;
+	private User owner;
+	
+	/**
+	 * Inizializzazione della request list.
+	 * @param La modalità della lista.
+	 * @param L'owner eventuale nel caso la modalità sia OWNER o JOINED (può essere null
+	 * altrimenti).
+	 * */
+	public RequestList(int listMode, User owner){
+		this.listMode=listMode;
+		this.owner=owner;
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -27,7 +48,38 @@ public class RequestList extends ListFragment implements OnRequestLoadedListener
 		// new Query().execute();
 		
 		RequestLoader.getInstance().addListener(this);
-		List<Request> requests = RequestLoader.getInstance().getRequests();
+		List<Request> requests=null;
+		switch (listMode) {
+		case ALL_REQUEST:
+			requests = RequestLoader.getInstance().getRequests();			
+			break;
+		case OWNER_REQUEST:
+			if (owner!=null)
+				requests = owner.getRequests();	
+			else
+				System.out.println("RequestList: owner NULL");
+			break;
+		case JOINED_REQUEST:
+			if (owner!=null){
+				List<String> keys = owner.getJoinedReq();
+				requests = new ArrayList<Request>();
+				List<Request> allReqs = RequestLoader.getInstance().getRequests();
+				//Pseudo JOIN nested loop a mano in locale
+				if (allReqs!=null && allReqs.size()>0 && keys!=null && keys.size()>0)
+					for (Request r: allReqs)
+						for(String k: keys)
+							if(r.getId().equals(k)){
+								requests.add(r);
+								continue;
+							}
+			}
+			else
+				System.out.println("RequestList: owner NULL");			
+			break;
+		default:
+			requests = RequestLoader.getInstance().getRequests();
+			break;
+		}
 		if(requests!=null && requests.size()>0 ){
 			setRequestAdapter(requests);	
 		}
