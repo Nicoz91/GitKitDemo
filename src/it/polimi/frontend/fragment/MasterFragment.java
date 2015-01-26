@@ -66,7 +66,7 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 					requests = QueryManager.getInstance().getRequests();
 					break;
 				}
-				requestListFragment = new RequestList(requests);
+				requestListFragment = new RequestList(requests, mode);
 				getChildFragmentManager().beginTransaction()
 				.replace(R.id.request_list_container,requestListFragment,RequestList.ID)
 				.commit();
@@ -85,7 +85,7 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 					requests = QueryManager.getInstance().getRequests();
 					break;
 				}
-				requestListFragment = new RequestList(requests);
+				requestListFragment = new RequestList(requests, mode);
 				getChildFragmentManager().beginTransaction()
 				.replace(R.id.container,requestListFragment,RequestList.ID)
 				.commit();
@@ -102,13 +102,13 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 			// In two-pane mode, show the detail view in this activity by
 			// adding or replacing the detail fragment using a
 			// fragment transaction.
-			DetailContainerFragment detailContFrag = new DetailContainerFragment(request);
+			DetailContainerFragment detailContFrag = new DetailContainerFragment(request,mode);
 			getChildFragmentManager().beginTransaction()
 			.replace(R.id.detail_container, detailContFrag, DetailContainerFragment.ID).commit();
 		} else {
 			// In single-pane mode, simply start the detail fragment
 			// for the selected item ID.
-			RequestDetail fragment = new RequestDetail(request);
+			RequestDetail fragment = new RequestDetail(request,mode);
 			Fragment reqList=getChildFragmentManager().findFragmentByTag(RequestList.ID);
 
 			getChildFragmentManager().beginTransaction()

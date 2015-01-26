@@ -23,21 +23,11 @@ public class RequestList extends ListFragment /*implements OnRequestLoadedListen
 	public final static int OWNER_REQUEST=1;
 	public final static int JOINED_REQUEST=2;
 	private int listMode=0;
-	private User owner;
 	private List<Request> requests;
 
-	/**
-	 * Inizializzazione della request list.
-	 * @param La modalità della lista.
-	 * @param L'owner eventuale nel caso la modalità sia OWNER o JOINED (può essere null
-	 * altrimenti).
-	 * */
-	public RequestList(int listMode, User owner){
-		this.listMode=listMode;
-		this.owner=owner;
-	}
-	public RequestList(List<Request> reqs){
+	public RequestList(List<Request> reqs, int mode){
 		requests=reqs;
+		this.listMode=mode;
 	}
 
 	@Override

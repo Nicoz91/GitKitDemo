@@ -92,7 +92,7 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 	@Override
 	public void onInfoWindowClick(Marker m) {
 		if(twoPane){
-			DetailContainerFragment detailContFragment = new DetailContainerFragment(markers.get(m));
+			DetailContainerFragment detailContFragment = new DetailContainerFragment(markers.get(m),MasterFragment.ALL_REQUEST);
 			Fragment mapFragment=getChildFragmentManager().findFragmentById(R.id.map);
 
 			getChildFragmentManager().beginTransaction()
@@ -101,7 +101,7 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 			.add(R.id.mapContainer,detailContFragment,DetailContainerFragment.ID)
 			.commit();
 		} else {
-			RequestDetail fragment = new RequestDetail(markers.get(m));
+			RequestDetail fragment = new RequestDetail(markers.get(m),MasterFragment.ALL_REQUEST);
 			Fragment mapFragment=getChildFragmentManager().findFragmentById(R.id.map);
 
 			getChildFragmentManager().beginTransaction()

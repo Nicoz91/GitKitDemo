@@ -24,6 +24,10 @@ import android.widget.TextView;
 public class RequestDetail extends Fragment implements View.OnClickListener{
 
 	public static final String ID="RequestDetailFragmentID";
+	public final static int ALL_REQUEST=0;
+	public final static int OWNER_REQUEST=1;
+	public final static int JOINED_REQUEST=2;
+	private int mode=0;
 	private Request request;
 	private ImageView profileImg;
 	private OnUserSectionClickedListener listener;
@@ -35,8 +39,9 @@ public class RequestDetail extends Fragment implements View.OnClickListener{
 	public RequestDetail() {
 	}
 
-	public RequestDetail(Request request){
+	public RequestDetail(Request request, int mode){
 		this.request=request;
+		this.mode=mode;
 	}
 
 	@Override

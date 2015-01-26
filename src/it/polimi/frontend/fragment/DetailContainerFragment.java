@@ -12,10 +12,15 @@ import android.view.ViewGroup;
 public class DetailContainerFragment extends Fragment implements RequestDetail.OnUserSectionClickedListener{
 
 	public static final String ID="DetailContainerFragmentID";
+	public final static int ALL_REQUEST=0;
+	public final static int OWNER_REQUEST=1;
+	public final static int JOINED_REQUEST=2;
+	private int mode=0;
 	private Request request;
 	
-	public DetailContainerFragment(Request request){
+	public DetailContainerFragment(Request request,int mode){
 		this.request=request;
+		this.mode=mode;
 	}
 	
 	@Override
@@ -23,7 +28,7 @@ public class DetailContainerFragment extends Fragment implements RequestDetail.O
 		View rootView = inflater.inflate(R.layout.fragment_detail_container,
 				container, false);
 		//Inizializza dettaglio della richiesta
-		RequestDetail fragment = new RequestDetail(request);
+		RequestDetail fragment = new RequestDetail(request,mode);
 		getChildFragmentManager().beginTransaction()
 		.replace(R.id.request_detail_container, fragment,RequestDetail.ID).commit();
 		System.out.println("Dentro DetailContainerFragment. Dovrei aver creato RequestDetail.");
