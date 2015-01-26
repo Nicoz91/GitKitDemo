@@ -6,12 +6,15 @@ import it.polimi.appengine.entity.manager.model.User;
 import it.polimi.frontend.activity.CloudEndpointUtils;
 import it.polimi.frontend.activity.LoginSession;
 import it.polimi.frontend.activity.MyApplication;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
@@ -24,6 +27,7 @@ public class QueryManager {
 	private Manager manager;
 	private static QueryManager instance;
 	private ProgressDialog mProgressDialog;
+	private long id;
 	/** 
 	 * Metodi per mostrare o meno il progressDialog
 	 * */
@@ -154,7 +158,52 @@ public class QueryManager {
 		return r;
 	}
 	
+	public ArrayList<Request> getUserPartecipation(String email){
+		User u = this.getUserByEmail(email);
+		ArrayList<Request> partecipation = new ArrayList<Request>();
+		for(Request r : requests){
+			if(u.getJoinedReq().contains(r.getId()))
+				partecipation.add(r);
+		}
+		return partecipation;
+	}
 	
+	public void joinRequest(Request r){
+		if(r==null){System.out.println("R è null... strano");}
+		else{System.out.println("R id:"+r.getId());}
+		try {
+			new JoinRequest(r).execute().get();
+			if(r.getPartecipants()==null)
+				r.setPartecipants(new ArrayList<Long>());
+			r.getPartecipants().add(id);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public long getId() {
+		return id;
+	}
+
+	public void removeRequest(Request r){
+		
+		if(r==null){System.out.println("R è null... strano");}
+		else{System.out.println("R id:"+r.getId());}
+		try {
+			new RemoveRequest(r).execute().get();
+			r.getPartecipants().remove(id);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	public void addListener(OnRequestLoadedListener listener){
 		listeners.add(listener);
@@ -176,13 +225,16 @@ public class QueryManager {
 				users = (ArrayList<User>) manager.listUser().execute().getItems();
 				try{
 					for(User u : users){
+						if(u.getPwAccount() == LoginSession.getUser().getEmail()) id = u.getId();
 						ArrayList<Request> a = (ArrayList<Request>) u.getRequests();
 						if(a!=null && a.size()>0){
 							for(Request r : a){
 								Request req = manager.getRequest(r.getId()).execute();
 								if(req==null) System.out.println("Non ho trovato nulla");
 								else System.out.println("Title: "+req.getTitle());
-								r.setOwner(u);}
+								r.setOwner(u);
+								if(req.getPartecipants()==null)
+									req.setPartecipants(new ArrayList<Long>());}
 							requests.addAll(a);
 						}
 					}
@@ -200,7 +252,8 @@ public class QueryManager {
 		@Override
 		protected void onPostExecute(ArrayList<Request> result) {
 			System.out.println("NOTIFICO A TUTTI!("+listeners.size()+")");
-			requests = result;
+			if(result!=null)
+				requests = result;
 			for (OnRequestLoadedListener l : listeners){
 				l.onRequestLoaded(requests);
 			}
@@ -313,7 +366,6 @@ public class QueryManager {
 
 	}
 	private class InsertRequest extends AsyncTask<Void, Void, Request> {
-		
 		public Request r;
 		
 		public InsertRequest(Request r){
@@ -344,5 +396,79 @@ public class QueryManager {
 
 
 	}
+	private class JoinRequest extends AsyncTask<Void, Void, User> {
+		public Request r;
+		
+		public JoinRequest(Request r){
+			this.r = r;
+		}
 
+		@Override
+		protected User doInBackground(Void... params) {
+			User u = new User();
+			try {
+				u = manager.getUserByEmail(LoginSession.getUser().getEmail()).execute();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			if(u==null)
+				System.out.println("Utente null");
+			else
+				System.out.println("Sto modificando: "+u.getName());
+			
+			if(u.getJoinedReq()==null)
+				u.setJoinedReq(new ArrayList<String>());
+			u.getJoinedReq().add(r.getId());
+
+			try {
+				manager.updateUser(u).execute();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return u;
+		}
+
+
+
+	}
+	private class RemoveRequest extends AsyncTask<Void, Void, User> {
+		public Request r;
+		
+		public RemoveRequest(Request r){
+			this.r = r;
+		}
+
+		@Override
+		protected User doInBackground(Void... params) {
+			User u = new User();
+			try {
+				u = manager.getUserByEmail(LoginSession.getUser().getEmail()).execute();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			if(u==null)
+				System.out.println("Utente null");
+			else
+				System.out.println("Sto modificando: "+u.getName());
+			
+			if(u.getJoinedReq()==null)
+				return null;
+			if(!u.getJoinedReq().contains(r.getId()))
+				return null;
+			
+			u.getJoinedReq().remove(r.getId());
+
+			try {
+				manager.updateUser(u).execute();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return u;
+		}
+
+
+
+	}
 }
