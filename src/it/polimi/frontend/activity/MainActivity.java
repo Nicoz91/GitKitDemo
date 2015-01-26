@@ -46,7 +46,6 @@ import it.polimi.frontend.activity.R;
 import it.polimi.frontend.util.QueryManager;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends FragmentActivity implements OnClickListener {
 

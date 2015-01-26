@@ -208,7 +208,6 @@ public class QueryManager {
 
 
 	}
-
 	private class QueryUser extends AsyncTask<Void, Void, User> {
 
 		private String email;
@@ -250,7 +249,6 @@ public class QueryManager {
 		}
 
 	}
-
 	private class UpdateUserDevice extends AsyncTask<Void, Void, User> {
 
 		private User u;
