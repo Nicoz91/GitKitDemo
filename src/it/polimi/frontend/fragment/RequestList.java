@@ -5,12 +5,8 @@ import it.polimi.appengine.entity.manager.model.User;
 import it.polimi.frontend.activity.MyApplication;
 import it.polimi.frontend.util.ParentFragmentUtil;
 import it.polimi.frontend.util.RequestAdapter;
-import it.polimi.frontend.util.RequestLoader;
-import it.polimi.frontend.util.RequestLoader.OnRequestLoadedListener;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -29,7 +25,7 @@ public class RequestList extends ListFragment /*implements OnRequestLoadedListen
 	private int listMode=0;
 	private User owner;
 	private List<Request> requests;
-	
+
 	/**
 	 * Inizializzazione della request list.
 	 * @param La modalità della lista.
@@ -43,7 +39,7 @@ public class RequestList extends ListFragment /*implements OnRequestLoadedListen
 	public RequestList(List<Request> reqs){
 		requests=reqs;
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -52,7 +48,7 @@ public class RequestList extends ListFragment /*implements OnRequestLoadedListen
 		/*
 		RequestLoader.getInstance().addListener(this);
 		List<Request> requests=null;
-		
+
 		switch (listMode) {
 		case ALL_REQUEST:
 			requests = RequestLoader.getInstance().getRequests();			
@@ -128,7 +124,11 @@ public class RequestList extends ListFragment /*implements OnRequestLoadedListen
 
 	public void setRequestAdapter(List<Request> requests){
 		System.out.println("Setto le richieste");
-		List<Request> reqs = requests;
+		List<Request> reqs;
+		if(requests == null)
+			reqs = new ArrayList<Request>();
+		else
+			reqs= requests;
 		Context c = getActivity();
 		if(c==null){ 
 			System.out.println("Il context è null ma noi bariamo");
@@ -141,9 +141,9 @@ public class RequestList extends ListFragment /*implements OnRequestLoadedListen
 	}
 
 	public void setActivateOnItemClick(boolean activateOnItemClick) {
-        getListView().setChoiceMode(
-                activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
-                        : ListView.CHOICE_MODE_NONE);
-    }
-	
+		getListView().setChoiceMode(
+				activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
+						: ListView.CHOICE_MODE_NONE);
+	}
+
 }
