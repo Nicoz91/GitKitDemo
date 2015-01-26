@@ -3,8 +3,8 @@ package it.polimi.frontend.fragment;
 import it.polimi.appengine.entity.manager.model.Request;
 import it.polimi.appengine.entity.manager.model.User;
 import it.polimi.frontend.activity.R;
-import it.polimi.frontend.util.RequestLoader;
-import it.polimi.frontend.util.RequestLoader.OnRequestLoadedListener;
+import it.polimi.frontend.util.QueryManager;
+import it.polimi.frontend.util.QueryManager.OnRequestLoadedListener;
 
 import java.util.HashMap;
 import java.util.List;
@@ -68,8 +68,8 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 	public void onMapReady(GoogleMap arg) {
 		// TODO Auto-generated method stub
 		this.map=arg;
-		RequestLoader.getInstance().addListener(this);
-		List<Request> requests = RequestLoader.getInstance().getRequests();
+		QueryManager.getInstance().addListener(this);
+		List<Request> requests = QueryManager.getInstance().getRequests();
 		if(requests!=null && requests.size()>0 ){
 			setRequestMark(requests);	
 		}

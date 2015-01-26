@@ -3,8 +3,8 @@ package it.polimi.frontend.fragment;
 import it.polimi.appengine.entity.manager.model.Request;
 import it.polimi.appengine.entity.manager.model.User;
 import it.polimi.frontend.activity.R;
-import it.polimi.frontend.util.RequestLoader;
-import it.polimi.frontend.util.RequestLoader.OnRequestLoadedListener;
+import it.polimi.frontend.util.QueryManager;
+import it.polimi.frontend.util.QueryManager.OnRequestLoadedListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +36,7 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		//PRIMA POSSIBILE SOLUZIONE (A problema di exception al cambio di tab)
+		QueryManager.getInstance().addListener(this);
 		if (view != null) {
 			ViewGroup parent = (ViewGroup) view.getParent();
 			if (parent != null)
@@ -44,7 +45,6 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 		try {
 			view = inflater.inflate(R.layout.fragment_master,container, false);
 			//Ora sarà masterFragment il listener del loader e passerà i risultati al RequestList
-			RequestLoader.getInstance().addListener(this);
 			List<Request> requests = new ArrayList<Request>();
 			RequestList requestListFragment = null;
 			// CASO TABLET:
@@ -63,7 +63,7 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 					break;
 				default: //Caso ALL_REQUEST + tutti gli altri possibili
 					//TODO
-					requests = RequestLoader.getInstance().getRequests();
+					requests = QueryManager.getInstance().getRequests();
 					break;
 				}
 				requestListFragment = new RequestList(requests);
@@ -82,7 +82,7 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 					//TODO
 					break;
 				default: //Caso ALL_REQUEST + tutti gli altri possibili
-					requests = RequestLoader.getInstance().getRequests();
+					requests = QueryManager.getInstance().getRequests();
 					break;
 				}
 				requestListFragment = new RequestList(requests);
@@ -154,6 +154,7 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 	}
 	@Override
 	public void onRequestLoaded(List<Request> requests) {
+		System.out.println("Ho caricato: "+requests.size());
 		RequestList requestListFragment = (RequestList)getChildFragmentManager().findFragmentByTag(RequestList.ID);
 		switch (mode) {
 		case OWNER_REQUEST:

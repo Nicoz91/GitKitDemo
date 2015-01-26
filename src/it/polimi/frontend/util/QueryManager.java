@@ -1,22 +1,17 @@
 package it.polimi.frontend.util;
 import it.polimi.appengine.entity.manager.Manager;
 import it.polimi.appengine.entity.manager.model.Feedback;
-import it.polimi.appengine.entity.manager.model.GeoPt;
 import it.polimi.appengine.entity.manager.model.Request;
 import it.polimi.appengine.entity.manager.model.User;
 import it.polimi.frontend.activity.CloudEndpointUtils;
 import it.polimi.frontend.activity.LoginSession;
 import it.polimi.frontend.activity.MyApplication;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.widget.ArrayAdapter;
-
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
@@ -149,6 +144,13 @@ public class QueryManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		requests.add(r);
+		System.out.println("Aggiorno la view");
+		System.out.println("Size: "+listeners.size());
+		for (OnRequestLoadedListener l : listeners){
+			System.out.println("Classe: "+l.getClass().toString());
+			l.onRequestLoaded(requests);
+		}
 		return r;
 	}
 	
@@ -156,6 +158,7 @@ public class QueryManager {
 
 	public void addListener(OnRequestLoadedListener listener){
 		listeners.add(listener);
+		System.out.println("Ho aggiunto un listener: "+listener.getClass().toString());
 	}
 
 	public interface OnRequestLoadedListener{
@@ -164,10 +167,10 @@ public class QueryManager {
 
 	
 	//Classi che effettuano le query
-	private class LoadDataTask extends AsyncTask<Void, Void, Void> {
+	private class LoadDataTask extends AsyncTask<Void, Void,  ArrayList<Request>> {
 
 		@Override
-		protected Void doInBackground(Void... params) {
+		protected ArrayList<Request> doInBackground(Void... params) {
 			System.out.println("Sto per ricostruire le request");
 			try {
 				users = (ArrayList<User>) manager.listUser().execute().getItems();
@@ -176,9 +179,9 @@ public class QueryManager {
 						ArrayList<Request> a = (ArrayList<Request>) u.getRequests();
 						if(a!=null && a.size()>0){
 							for(Request r : a){
-								System.out.println("La chiave è: "+r.getId());
 								Request req = manager.getRequest(r.getId()).execute();
 								if(req==null) System.out.println("Non ho trovato nulla");
+								else System.out.println("Title: "+req.getTitle());
 								r.setOwner(u);}
 							requests.addAll(a);
 						}
@@ -191,12 +194,13 @@ public class QueryManager {
 				e.printStackTrace();
 				System.out.println("Requests null");
 			}
-			return null;
+			return (ArrayList<Request>)requests;
 		}
 
 		@Override
-		protected void onPostExecute(Void result) {
-			super.onPostExecute(result);
+		protected void onPostExecute(ArrayList<Request> result) {
+			System.out.println("NOTIFICO A TUTTI!("+listeners.size()+")");
+			requests = result;
 			for (OnRequestLoadedListener l : listeners){
 				l.onRequestLoaded(requests);
 			}
@@ -204,7 +208,6 @@ public class QueryManager {
 
 
 	}
-
 	private class QueryUser extends AsyncTask<Void, Void, User> {
 
 		private String email;
@@ -246,7 +249,6 @@ public class QueryManager {
 		}
 
 	}
-
 	private class UpdateUserDevice extends AsyncTask<Void, Void, User> {
 
 		private User u;
@@ -336,8 +338,10 @@ public class QueryManager {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			return r;
+			return r.setOwner(u);
 		}
+
+
 
 	}
 

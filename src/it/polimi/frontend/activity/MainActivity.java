@@ -44,11 +44,8 @@ import it.polimi.appengine.entity.manager.model.Request;
 import it.polimi.appengine.entity.manager.model.User;
 import it.polimi.frontend.activity.R;
 import it.polimi.frontend.util.QueryManager;
-import it.polimi.frontend.util.RequestLoader;
-
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends FragmentActivity implements OnClickListener {
 
@@ -216,7 +213,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	}
 
 	private void showProfilePage(IdToken idToken, GitkitUser user) {
-		RequestLoader.getInstance().loadRequest();
+		QueryManager.getInstance().loadRequest();
 		
 //		Request r = new Request();
 //		r.setDescription("Prova");
