@@ -1,6 +1,5 @@
 package it.polimi.frontend.fragment;
 
-import it.polimi.appengine.entity.manager.model.Key;
 import it.polimi.appengine.entity.manager.model.Request;
 import it.polimi.appengine.entity.manager.model.User;
 import it.polimi.frontend.activity.MyApplication;

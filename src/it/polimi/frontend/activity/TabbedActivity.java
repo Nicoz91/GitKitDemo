@@ -160,7 +160,7 @@ ActionBar.TabListener {
 			// below).
 			switch (position) {
 			case REQUEST_TAB:
-				masterFragment = new MasterFragment();
+				masterFragment = new MasterFragment(MasterFragment.ALL_REQUEST);
 				return masterFragment;
 			case MAP_TAB:
 				requestMap = new RequestMap();

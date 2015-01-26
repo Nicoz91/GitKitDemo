@@ -47,6 +47,7 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 			RequestLoader.getInstance().addListener(this);
 			List<Request> requests = new ArrayList<Request>();
 			RequestList requestListFragment = null;
+			// CASO TABLET:
 			if (view.findViewById(R.id.detail_container) != null) {
 				// The detail container view will be present only in the
 				// large-screen layouts (res/values-large and
@@ -63,16 +64,16 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 				default: //Caso ALL_REQUEST + tutti gli altri possibili
 					//TODO
 					requests = RequestLoader.getInstance().getRequests();
-					requestListFragment = new RequestList(requests);
-					getChildFragmentManager().beginTransaction()
-					.replace(R.id.request_list_container,requestListFragment,RequestList.ID)
-					.commit();
-					// In two-pane mode, list items should be given the
-					// 'activated' state when touched.
-					//requestListFragment.setActivateOnItemClick(true);
 					break;
 				}
-			} else {
+				requestListFragment = new RequestList(requests);
+				getChildFragmentManager().beginTransaction()
+				.replace(R.id.request_list_container,requestListFragment,RequestList.ID)
+				.commit();
+				// In two-pane mode, list items should be given the
+				// 'activated' state when touched.
+				//requestListFragment.setActivateOnItemClick(true);
+			} else { //CASO SMARTPHONE:
 				switch (mode) {
 				case OWNER_REQUEST:
 					//TODO
@@ -90,51 +91,9 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 				.commit();
 			}
 		} catch (InflateException e) {
-			// map is already there, just return view as it is
+			// is already there, just return view as it is
 		}
 		return view;
-		/*SECONDA SOLUZIONE POSSIBILE
-	    if(savedInstanceState==null)
-	    	View rootView = inflater.inflate(R.layout.fragment_master,container, false);
-		if (rootView.findViewById(R.id.request_detail_container) != null) {
-			// The detail container view will be present only in the
-			// large-screen layouts (res/values-large and
-			// res/values-sw600dp). If this view is present, then the
-			// activity should be in two-pane mode.
-			twoPane = true;
-
-			// In two-pane mode, list items should be given the
-			// 'activated' state when touched.
-			//((RequestList) getChildFragmentManager()
-			//		.findFragmentById(R.id.request_list))
-			//		.setActivateOnItemClick(true);
-		} else {
-			getChildFragmentManager().beginTransaction()
-			.replace(R.id.container,new RequestList(),RequestList.ID)
-			.commit();
-		}
-		return rootView;
-		 */
-		/* SITUAZIONE INIZIALE
-		View rootView = inflater.inflate(R.layout.fragment_master,container, false);
-		if (rootView.findViewById(R.id.request_detail_container) != null) {
-			// The detail container view will be present only in the
-			// large-screen layouts (res/values-large and
-			// res/values-sw600dp). If this view is present, then the
-			// activity should be in two-pane mode.
-			twoPane = true;
-
-			// In two-pane mode, list items should be given the
-			// 'activated' state when touched.
-			//((RequestList) getChildFragmentManager()
-			//		.findFragmentById(R.id.request_list))
-			//		.setActivateOnItemClick(true);
-		} else {
-			getChildFragmentManager().beginTransaction()
-			.replace(R.id.container,new RequestList(),RequestList.ID)
-			.commit();
-		}
-		return rootView;*/
 	}
 
 	@Override
@@ -146,7 +105,6 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 			DetailContainerFragment detailContFrag = new DetailContainerFragment(request);
 			getChildFragmentManager().beginTransaction()
 			.replace(R.id.detail_container, detailContFrag, DetailContainerFragment.ID).commit();
-			System.out.println("Dentro onRequestSelected. Dovrei aver creato e settato il DetailFragment");
 		} else {
 			// In single-pane mode, simply start the detail fragment
 			// for the selected item ID.
@@ -171,26 +129,18 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 
 	@Override
 	public void onUserSectionClicked(User owner) {
-		if (twoPane) {
-			// In two-pane mode, show the detail view in this activity by
-			// adding or replacing the detail fragment using a
-			// fragment transaction.
-			//getChildFragmentManager().beginTransaction()
-			//.replace(R.id.feedback_list_container, fragment).commit();
-			
-			/*Se ne dovrebbe occupare il DetailContainerFragment, quindi non fa nulla*/
-		} else {
+		if (!twoPane) {
 			// In single-pane mode, simply start the detail fragment
 			// for the selected item ID.
 			FeedbackDetail fragment = new FeedbackDetail(owner);
 			Fragment reqDetail=getChildFragmentManager().findFragmentByTag(RequestDetail.ID);
-
+			
 			getChildFragmentManager().beginTransaction()
 			.hide(reqDetail)
 			.addToBackStack(FeedbackDetail.ID)
 			.add(R.id.container,fragment,FeedbackDetail.ID)
 			.commit();
-
+			
 			getChildFragmentManager().addOnBackStackChangedListener(
 					new FragmentManager.OnBackStackChangedListener() {
 						public void onBackStackChanged() {
@@ -198,6 +148,8 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 							// Update your UI here.
 						}
 					});
+		} else {
+			/*Se ne dovrebbe occupare il DetailContainerFragment, quindi non fa nulla*/
 		}
 	}
 	@Override
