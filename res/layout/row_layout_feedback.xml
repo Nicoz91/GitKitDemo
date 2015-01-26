@@ -39,6 +39,7 @@
             <RatingBar
                 android:id="@+id/valutazione"
                 style="?android:attr/ratingBarStyleSmall"
+                android:isIndicator="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>

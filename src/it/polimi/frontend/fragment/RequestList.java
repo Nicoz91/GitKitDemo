@@ -1,7 +1,6 @@
 package it.polimi.frontend.fragment;
 
 import it.polimi.appengine.entity.manager.model.Request;
-import it.polimi.appengine.entity.manager.model.User;
 import it.polimi.frontend.activity.MyApplication;
 import it.polimi.frontend.util.ParentFragmentUtil;
 import it.polimi.frontend.util.RequestAdapter;

@@ -36,6 +36,9 @@
     <string name="genderFemale">F</string>
     <string name="edit">Modifica</string>
     <string name="save">Salva</string>
+    <string name="commentTitle">Commento: </string>
+    <string name="commentHint">Una tua valutazione descrittiva.</string>
+    <string name="sendFeedback">Invia</string>
     <string name="title_activity_test">TestActivity</string>
     <string name="insert_title_label">Titolo:</string>
     <string name="insert_title_edit">Titolo</string>
