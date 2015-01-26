@@ -189,13 +189,44 @@ public class QueryManager {
 		return id;
 	}
 
-	public void removeRequest(Request r){
+	public void removeJoinRequest(Request r){
 		
 		if(r==null){System.out.println("R è null... strano");}
 		else{System.out.println("R id:"+r.getId());}
 		try {
-			new RemoveRequest(r).execute().get();
+			new RemoveJoinRequest(r).execute().get();
 			r.getPartecipants().remove(id);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void removeOwnerRequest(Request r){
+		
+		if(r==null){System.out.println("R è null... strano");}
+		else{System.out.println("R id:"+r.getId());}
+		try {
+			new RemoveOwnerRequest(r).execute().get();
+			r.getPartecipants().remove(id);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	public void insertFeedback(){
+		System.out.println("Provo ad inserire un feed");
+		try {
+			new InsertFeedback(new Feedback()).execute().get();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -432,10 +463,10 @@ public class QueryManager {
 
 
 	}
-	private class RemoveRequest extends AsyncTask<Void, Void, User> {
+	private class RemoveJoinRequest extends AsyncTask<Void, Void, User> {
 		public Request r;
 		
-		public RemoveRequest(Request r){
+		public RemoveJoinRequest(Request r){
 			this.r = r;
 		}
 
@@ -467,8 +498,76 @@ public class QueryManager {
 			}
 			return u;
 		}
-
-
-
 	}
+	private class RemoveOwnerRequest extends AsyncTask<Void, Void, User> {
+		public Request r;
+		
+		public RemoveOwnerRequest(Request r){
+			this.r = r;
+		}
+
+		@Override
+		protected User doInBackground(Void... params) {
+			User u = new User();
+			try {
+				u = manager.getUserByEmail(LoginSession.getUser().getEmail()).execute();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			if(u==null)
+				System.out.println("Utente null");
+			else
+				System.out.println("Sto modificando: "+u.getName());
+			
+			if(u.getRequests()==null)
+				return null;
+			if(!u.getRequests().contains(r.getId()))
+				return null;
+			
+			u.getRequests().remove(r.getId());
+
+			try {
+				manager.updateUser(u).execute();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return u;
+		}
+	}
+	private class InsertFeedback extends AsyncTask<Void, Void, Feedback> {
+		public Feedback r;
+		
+		public InsertFeedback(Feedback r){
+			this.r = r;
+		}
+
+		@Override
+		protected Feedback doInBackground(Void... params) {
+			System.out.println("Doing in background");
+			User u = new User();
+			try {
+				u = manager.getUserByEmail(LoginSession.getUser().getEmail()).execute();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			System.out.println("Ho ricevuto l'utente");
+//			if(u.getRequests()==null)
+//				u.setRequests(new ArrayList<Request>());
+//			u.getRequests().add(r);
+			Feedback f = new Feedback();
+			f.setDescription("male male");
+			f.setEvaluation(3);
+			f.setFrom(u);
+			f.setTo(u);
+			System.out.println("Persisting?");
+			try {
+				f = manager.insertFeedback(f).execute();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return f;
+		}
+}
 }

@@ -64,10 +64,12 @@ public class RequestDetail extends Fragment implements View.OnClickListener{
 			public void onClick(View v) {
 				if(request.getPartecipants()==null || !request.getPartecipants().contains((QueryManager.getInstance().getId())) ){
 					QueryManager.getInstance().joinRequest(request);
+					//QueryManager.getInstance().insertFeedback();
 					join.setText("Cancella");
 				}
 				else{
-					QueryManager.getInstance().removeRequest(request);
+					QueryManager.getInstance().removeJoinRequest(request);
+					//QueryManager.getInstance().insertFeedback();
 					join.setText("Partecipa");
 				}
 			}
