@@ -20,7 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-public class RequestList extends ListFragment implements OnRequestLoadedListener{
+public class RequestList extends ListFragment /*implements OnRequestLoadedListener*/{
 
 	OnRequestSelectedListener mListener;
 	public final static String ID="RequestListFragmentID";
@@ -29,6 +29,7 @@ public class RequestList extends ListFragment implements OnRequestLoadedListener
 	public final static int JOINED_REQUEST=2;
 	private int listMode=0;
 	private User owner;
+	private List<Request> requests;
 	
 	/**
 	 * Inizializzazione della request list.
@@ -40,15 +41,19 @@ public class RequestList extends ListFragment implements OnRequestLoadedListener
 		this.listMode=listMode;
 		this.owner=owner;
 	}
+	public RequestList(List<Request> reqs){
+		requests=reqs;
+	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		//		new TestInsertTask().execute();
 		// new Query().execute();
-		
+		/*
 		RequestLoader.getInstance().addListener(this);
 		List<Request> requests=null;
+		
 		switch (listMode) {
 		case ALL_REQUEST:
 			requests = RequestLoader.getInstance().getRequests();			
@@ -86,7 +91,16 @@ public class RequestList extends ListFragment implements OnRequestLoadedListener
 		else{
 			System.out.println("Le richieste sono nulle? Le sto ancora caricando?");
 			//RequestLoader.getInstance().loadRequest();
+		}*/
+		if(requests!=null && requests.size()>0 ){
+			setRequestAdapter(requests);	
 		}
+		else{
+			System.out.println("Le richieste sono nulle? Le sto ancora caricando?");
+			setRequestAdapter(new ArrayList<Request>());
+			//RequestLoader.getInstance().loadRequest();
+		}
+
 		mListener = ParentFragmentUtil.getParent(this, OnRequestSelectedListener.class);
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
@@ -104,7 +118,7 @@ public class RequestList extends ListFragment implements OnRequestLoadedListener
 		public void onRequestSelected(int position, Request request);
 	}
 
-	@Override
+	//@Override
 	public void onRequestLoaded(List<Request> requests) {
 		System.out.println("Ho ricevuto requests:");
 		if(requests==null)

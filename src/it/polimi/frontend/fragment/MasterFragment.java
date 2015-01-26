@@ -3,6 +3,12 @@ package it.polimi.frontend.fragment;
 import it.polimi.appengine.entity.manager.model.Request;
 import it.polimi.appengine.entity.manager.model.User;
 import it.polimi.frontend.activity.R;
+import it.polimi.frontend.util.RequestLoader;
+import it.polimi.frontend.util.RequestLoader.OnRequestLoadedListener;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,10 +17,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class MasterFragment extends Fragment implements RequestList.OnRequestSelectedListener, RequestDetail.OnUserSectionClickedListener{
+public class MasterFragment extends Fragment implements OnRequestLoadedListener, RequestList.OnRequestSelectedListener, RequestDetail.OnUserSectionClickedListener{
 
 	private boolean twoPane;
 	private static View view;
+	public final static int ALL_REQUEST=0;
+	public final static int OWNER_REQUEST=1;
+	public final static int JOINED_REQUEST=2;
+	private int mode;
+	
+	public MasterFragment(){
+		this.mode=0;
+	}
+	public MasterFragment(int mode){
+		this.mode=mode;
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		//PRIMA POSSIBILE SOLUZIONE (A problema di exception al cambio di tab)
@@ -25,21 +43,50 @@ public class MasterFragment extends Fragment implements RequestList.OnRequestSel
 		}
 		try {
 			view = inflater.inflate(R.layout.fragment_master,container, false);
+			//Ora sarà masterFragment il listener del loader e passerà i risultati al RequestList
+			RequestLoader.getInstance().addListener(this);
+			List<Request> requests = new ArrayList<Request>();
+			RequestList requestListFragment = null;
 			if (view.findViewById(R.id.detail_container) != null) {
 				// The detail container view will be present only in the
 				// large-screen layouts (res/values-large and
 				// res/values-sw600dp). If this view is present, then the
 				// activity should be in two-pane mode.
 				twoPane = true;
-				
-				// In two-pane mode, list items should be given the
-				// 'activated' state when touched.
-				((RequestList) getChildFragmentManager()
-						.findFragmentById(R.id.request_list))
-						.setActivateOnItemClick(true);
+				switch (mode) {
+				case OWNER_REQUEST:
+					//TODO
+					break;
+				case JOINED_REQUEST:
+					//TODO
+					break;
+				default: //Caso ALL_REQUEST + tutti gli altri possibili
+					//TODO
+					requests = RequestLoader.getInstance().getRequests();
+					requestListFragment = new RequestList(requests);
+					getChildFragmentManager().beginTransaction()
+					.replace(R.id.request_list_container,requestListFragment,RequestList.ID)
+					.commit();
+					// In two-pane mode, list items should be given the
+					// 'activated' state when touched.
+					//requestListFragment.setActivateOnItemClick(true);
+					break;
+				}
 			} else {
+				switch (mode) {
+				case OWNER_REQUEST:
+					//TODO
+					break;
+				case JOINED_REQUEST:
+					//TODO
+					break;
+				default: //Caso ALL_REQUEST + tutti gli altri possibili
+					requests = RequestLoader.getInstance().getRequests();
+					break;
+				}
+				requestListFragment = new RequestList(requests);
 				getChildFragmentManager().beginTransaction()
-				.replace(R.id.container,new RequestList(RequestList.ALL_REQUEST, null),RequestList.ID)
+				.replace(R.id.container,requestListFragment,RequestList.ID)
 				.commit();
 			}
 		} catch (InflateException e) {
@@ -151,6 +198,21 @@ public class MasterFragment extends Fragment implements RequestList.OnRequestSel
 							// Update your UI here.
 						}
 					});
+		}
+	}
+	@Override
+	public void onRequestLoaded(List<Request> requests) {
+		RequestList requestListFragment = (RequestList)getChildFragmentManager().findFragmentByTag(RequestList.ID);
+		switch (mode) {
+		case OWNER_REQUEST:
+			//TODO
+			break;
+		case JOINED_REQUEST:
+			//TODO
+			break;
+		default: //Caso ALL_REQUEST + tutti gli altri possibili
+			requestListFragment.setRequestAdapter(requests);
+			break;
 		}
 	}
 
