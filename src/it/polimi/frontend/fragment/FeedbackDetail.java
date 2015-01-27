@@ -37,8 +37,10 @@ public class FeedbackDetail extends Fragment {
 			if (feedbacks==null)
 				feedbacks= new ArrayList<Feedback>();
 			Feedback f = new Feedback();
-			f.setFromName("Primo");
-			f.setFromSurname("Reviwer");
+			User u = new User();
+			u.setName("Primo");
+			u.setSurname("Reviwer");
+			f.setFrom(u);
 			f.setEvaluation(3);
 			f.setDescription("Questa persona fa schifo. Ma comunque gli do 3 stelle.");
 			feedbacks.add(f);
