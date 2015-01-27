@@ -234,6 +234,12 @@ public class QueryManager {
 
 	public void insertFeedback(Feedback f){
 		System.out.println("Provo ad inserire un feed");
+		f = new Feedback();
+		f.setDescription("Male male");
+		f.setEvaluation(3);
+		f.setToId(user.getId());
+		f.setRequest("asdjQ");
+		
 		try {
 			new InsertFeedback(f).execute().get();
 		} catch (InterruptedException e) {

@@ -221,7 +221,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 //		r = QueryManager.getInstance().insertRequest(r);
 //		if(r!=null)	System.out.println("Inserita correttamente");
 //		System.out.println("Dovrei ricevere una notifica...");
-		
+		QueryManager.getInstance().insertFeedback(null);
 		setContentView(R.layout.profile);
 		showAccount(user);
 		findViewById(R.id.sign_out).setOnClickListener(this);
