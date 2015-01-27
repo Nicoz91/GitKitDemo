@@ -42,15 +42,15 @@ public class FeedbackAdapter extends ArrayAdapter<Feedback>{
 		System.out.println("Position: "+position);
 		try{
 			TextView reviewer = (TextView) rowView.findViewById(R.id.reviewer);
-			reviewer.setText(feedbacks.get(position).getFromName()+" "+
-								feedbacks.get(position).getFromSurname()+" ");
+			reviewer.setText(feedbacks.get(position).getFrom().getName()+" "+
+								feedbacks.get(position).getFrom().getSurname()+" ");
 			TextView comment = (TextView) rowView.findViewById(R.id.comment);
 			comment.setText(feedbacks.get(position).getDescription());
 
 			RatingBar valutazione = (RatingBar) rowView.findViewById(R.id.valutazione);
 			valutazione.setRating(feedbacks.get(position).getEvaluation());
 			//TODO task profile image
-			String photoUrl=feedbacks.get(position).getFromPhotoURL();
+			String photoUrl=feedbacks.get(position).getFrom().getPhotoURL();
 			if (photoUrl!=null){
 				new ProfileImageTask().execute(photoUrl);
 			}
