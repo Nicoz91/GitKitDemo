@@ -22,7 +22,7 @@ public class FeedbackDetail extends Fragment {
 	public static final String ID = "FeedbackDetailFragmentID";
 	private User owner;
 	private ListView feedbackLV;
-	
+
 	public FeedbackDetail(User owner){
 		this.owner=owner;
 	}
@@ -32,7 +32,6 @@ public class FeedbackDetail extends Fragment {
 				container, false);
 		this.feedbackLV = (ListView)rootView.findViewById(R.id.feedbackList);
 		if (owner!=null){
-			((TextView)rootView.findViewById(R.id.feedbackLabel)).setText("Nome del'owner"+owner.getName());
 			List<Feedback> feedbacks = owner.getReceivedFb();
 			//feedback di prova per visualizzazione
 			if (feedbacks==null)
@@ -53,9 +52,9 @@ public class FeedbackDetail extends Fragment {
 			FeedbackAdapter fba = new FeedbackAdapter(c,0,feedbacks);
 			feedbackLV.setAdapter(fba);
 		}else
-			((TextView)rootView.findViewById(R.id.feedbackLabel)).setText("Nessun Nome dell'owner");
+			System.out.println("Nessun Nome dell'owner");
 		System.out.println("Sono dentro l'onCreateView del FeedbackDetail Fragment");
 		return rootView;
 	}
-	
+
 }

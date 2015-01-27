@@ -38,7 +38,7 @@
     <string name="save">Salva</string>
     <string name="commentTitle">Commento: </string>
     <string name="commentHint">Una tua valutazione descrittiva.</string>
-    <string name="sendFeedback">Invia</string>
+    <string name="sendFeedback">Lascia un Feedback</string>
     <string name="title_activity_test">TestActivity</string>
     <string name="insert_title_label">Titolo:</string>
     <string name="insert_title_edit">Titolo</string>
