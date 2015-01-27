@@ -250,9 +250,15 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	public void onResume(){
 		super.onResume();
 		Intent i = getIntent();
-		if (i!=null && i.getStringExtra("ActivityName")!=null && i.getStringExtra("ActivityName").equals("TabbedActivity")){
+		if (i!=null && i.getStringExtra("Reason")!=null && i.getStringExtra("Reason").equals("Logout")){
 			LoginSession.reset();
 			showSignInPage();
+		} else if (i!=null && i.getStringExtra("Reason")!=null && i.getStringExtra("Reason").equals("Exit")){
+			//System.runFinalizersOnExit(true);
+			//android.os.Process.killProcess(android.os.Process.myPid()); 
+			//System.exit(0); 
+			QueryManager.destroy();
+			this.finish();
 		}
 	}
 
@@ -287,5 +293,12 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		}
 	}
 
+	@Override
+	protected void onDestroy() {
+		QueryManager.destroy();
+		super.onDestroy();
+	}
+
+	
 
 }

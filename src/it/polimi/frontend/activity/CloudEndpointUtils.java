@@ -51,8 +51,8 @@ public class CloudEndpointUtils {
    */
 
 //  protected static final String LOCAL_APP_ENGINE_SERVER_URL_FOR_ANDROID = "http://10.0.0.2:8888";
-//  protected static final String LOCAL_APP_ENGINE_SERVER_URL_FOR_ANDROID = "http://192.168.1.12:8888";
-  protected static final String LOCAL_APP_ENGINE_SERVER_URL_FOR_ANDROID = "http://192.168.1.131:8888";
+  protected static final String LOCAL_APP_ENGINE_SERVER_URL_FOR_ANDROID = "http://10.169.151.124:8888";
+//  protected static final String LOCAL_APP_ENGINE_SERVER_URL_FOR_ANDROID = "http://192.168.1.131:8888";
 
 
 

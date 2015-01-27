@@ -49,9 +49,9 @@ public class QueryManager {
 		mProgressDialog.setTitle("Attendi...");
 		mProgressDialog.setMessage("Sto scaricando...");
 	}
-	
-	
-	
+
+
+
 	private QueryManager(){
 		this.users = new ArrayList<User>();
 		this.requests = new ArrayList<Request>();
@@ -73,7 +73,7 @@ public class QueryManager {
 	public void loadData(){
 		new LoadDataTask().execute();
 	}
-	
+
 	public void loadRequest(){
 		System.out.println("Mi connetto per scaricare le richieste...");
 		new LoadDataTask().execute();
@@ -90,7 +90,7 @@ public class QueryManager {
 	public List<Feedback> getFeedback() {
 		return feedback;
 	}
-	
+
 	public User getUserByEmail(String email){
 		User u = null;
 		try {
@@ -104,10 +104,10 @@ public class QueryManager {
 		}
 		return u;
 	}
-	
+
 	public User updateUserDevices(User user){
 		User u = null;
-		
+
 		try {
 			u= new UpdateUserDevice(user).execute().get();
 		} catch (InterruptedException e) {
@@ -118,12 +118,12 @@ public class QueryManager {
 			e.printStackTrace();
 		}
 		return u;
-		
+
 	}
-	
+
 	public User insertUser(User user){
 		User u = null;
-		
+
 		try {
 			u= new InsertUser(user).execute().get();
 		} catch (InterruptedException e) {
@@ -134,9 +134,9 @@ public class QueryManager {
 			e.printStackTrace();
 		}
 		return u;
-		
+
 	}
-	
+
 	public Request insertRequest(Request request){
 		Request r = null;
 		try {
@@ -157,7 +157,7 @@ public class QueryManager {
 		}
 		return r;
 	}
-	
+
 	public ArrayList<Request> getUserPartecipation(String email){
 		User u = this.getUserByEmail(email);
 		ArrayList<Request> partecipation = new ArrayList<Request>();
@@ -167,7 +167,7 @@ public class QueryManager {
 		}
 		return partecipation;
 	}
-	
+
 	public void joinRequest(Request r){
 		if(r==null){System.out.println("R è null... strano");}
 		else{System.out.println("R id:"+r.getId());}
@@ -184,13 +184,13 @@ public class QueryManager {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public long getId() {
 		return id;
 	}
 
 	public void removeJoinRequest(Request r){
-		
+
 		if(r==null){System.out.println("R è null... strano");}
 		else{System.out.println("R id:"+r.getId());}
 		try {
@@ -204,9 +204,9 @@ public class QueryManager {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void removeOwnerRequest(Request r){
-		
+
 		if(r==null){System.out.println("R è null... strano");}
 		else{System.out.println("R id:"+r.getId());}
 		try {
@@ -220,9 +220,9 @@ public class QueryManager {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
+
+
+
 	public void insertFeedback(){
 		System.out.println("Provo ad inserire un feed");
 		try {
@@ -245,7 +245,10 @@ public class QueryManager {
 		public void onRequestLoaded(List<Request> requests);
 	}
 
-	
+	public static void destroy (){
+		instance=null;
+	}
+
 	//Classi che effettuano le query
 	private class LoadDataTask extends AsyncTask<Void, Void,  ArrayList<Request>> {
 
@@ -345,7 +348,7 @@ public class QueryManager {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-		//	showDialog();
+			//	showDialog();
 		}
 
 		@Override
@@ -398,7 +401,7 @@ public class QueryManager {
 	}
 	private class InsertRequest extends AsyncTask<Void, Void, Request> {
 		public Request r;
-		
+
 		public InsertRequest(Request r){
 			this.r = r;
 		}
@@ -429,7 +432,7 @@ public class QueryManager {
 	}
 	private class JoinRequest extends AsyncTask<Void, Void, User> {
 		public Request r;
-		
+
 		public JoinRequest(Request r){
 			this.r = r;
 		}
@@ -447,7 +450,7 @@ public class QueryManager {
 				System.out.println("Utente null");
 			else
 				System.out.println("Sto modificando: "+u.getName());
-			
+
 			if(u.getJoinedReq()==null)
 				u.setJoinedReq(new ArrayList<String>());
 			u.getJoinedReq().add(r.getId());
@@ -465,7 +468,7 @@ public class QueryManager {
 	}
 	private class RemoveJoinRequest extends AsyncTask<Void, Void, User> {
 		public Request r;
-		
+
 		public RemoveJoinRequest(Request r){
 			this.r = r;
 		}
@@ -483,12 +486,12 @@ public class QueryManager {
 				System.out.println("Utente null");
 			else
 				System.out.println("Sto modificando: "+u.getName());
-			
+
 			if(u.getJoinedReq()==null)
 				return null;
 			if(!u.getJoinedReq().contains(r.getId()))
 				return null;
-			
+
 			u.getJoinedReq().remove(r.getId());
 
 			try {
@@ -501,7 +504,7 @@ public class QueryManager {
 	}
 	private class RemoveOwnerRequest extends AsyncTask<Void, Void, User> {
 		public Request r;
-		
+
 		public RemoveOwnerRequest(Request r){
 			this.r = r;
 		}
@@ -519,12 +522,12 @@ public class QueryManager {
 				System.out.println("Utente null");
 			else
 				System.out.println("Sto modificando: "+u.getName());
-			
+
 			if(u.getRequests()==null)
 				return null;
 			if(!u.getRequests().contains(r.getId()))
 				return null;
-			
+
 			u.getRequests().remove(r.getId());
 
 			try {
@@ -537,7 +540,7 @@ public class QueryManager {
 	}
 	private class InsertFeedback extends AsyncTask<Void, Void, Feedback> {
 		public Feedback r;
-		
+
 		public InsertFeedback(Feedback r){
 			this.r = r;
 		}
@@ -553,13 +556,13 @@ public class QueryManager {
 				e1.printStackTrace();
 			}
 			System.out.println("Ho ricevuto l'utente");
-//			if(u.getRequests()==null)
-//				u.setRequests(new ArrayList<Request>());
-//			u.getRequests().add(r);
+			//			if(u.getRequests()==null)
+			//				u.setRequests(new ArrayList<Request>());
+			//			u.getRequests().add(r);
 			Feedback f = new Feedback();
 			f.setDescription("male male");
 			f.setEvaluation(3);
-			f.setFrom(u);
+			f.setFromName(u.getName());
 			f.setTo(u);
 			System.out.println("Persisting?");
 			try {
@@ -569,5 +572,5 @@ public class QueryManager {
 			}
 			return f;
 		}
-}
+	}
 }

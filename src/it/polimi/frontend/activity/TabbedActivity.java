@@ -5,6 +5,7 @@ import java.util.Locale;
 import it.polimi.frontend.activity.R;
 import it.polimi.frontend.fragment.MasterFragment;
 import it.polimi.frontend.fragment.RequestMap;
+import it.polimi.frontend.util.QueryManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -108,7 +109,7 @@ ActionBar.TabListener {
 			return true;
 		case R.id.logout:
 			i = new Intent(this, MainActivity.class);
-			i.putExtra("ActivityName", "TabbedActivity");
+			i.putExtra("Reason", "Logout");
 			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(i);
 			this.finish();
@@ -237,7 +238,12 @@ ActionBar.TabListener {
 		// Else, nothing in the direct fragment back stack
 		else{
 			// Let super handle the back press
-			super.onBackPressed();          
+			Intent i = new Intent(this, MainActivity.class);
+			i.putExtra("Reason", "Exit");
+			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(i);
+			this.finish();
+			//super.onBackPressed();
 		}
 	}
 

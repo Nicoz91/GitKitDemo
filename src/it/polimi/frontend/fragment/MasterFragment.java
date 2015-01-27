@@ -164,7 +164,8 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 			//TODO
 			break;
 		default: //Caso ALL_REQUEST + tutti gli altri possibili
-			requestListFragment.setRequestAdapter(requests);
+			if (requestListFragment!=null)
+				requestListFragment.setRequestAdapter(requests);
 			break;
 		}
 	}
