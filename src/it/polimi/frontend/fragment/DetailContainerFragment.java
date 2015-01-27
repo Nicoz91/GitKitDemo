@@ -37,7 +37,7 @@ public class DetailContainerFragment extends Fragment implements RequestDetail.O
 
 	@Override
 	public void onUserSectionClicked(User owner) {
-		FeedbackDetail fragment = new FeedbackDetail(owner);
+		FeedbackDetail fragment = new FeedbackDetail(owner,this.mode);
 		getChildFragmentManager().beginTransaction()
 			.replace(R.id.feedback_list_container, fragment,FeedbackDetail.ID).commit();
 		System.out.println("Dentro DetailContainerFragment. Dovrei aver creato FeedbackDetail");

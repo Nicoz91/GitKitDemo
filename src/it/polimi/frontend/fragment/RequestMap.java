@@ -125,7 +125,7 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 		} else {
 			// In single-pane mode, simply start the detail fragment
 			// for the selected item ID.
-			FeedbackDetail fragment = new FeedbackDetail(owner);
+			FeedbackDetail fragment = new FeedbackDetail(owner,MasterFragment.ALL_REQUEST);
 			Fragment reqDetail=getChildFragmentManager().findFragmentByTag(RequestDetail.ID);
 
 			getChildFragmentManager().beginTransaction()

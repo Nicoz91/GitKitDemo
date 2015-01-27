@@ -15,16 +15,33 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
-public class FeedbackDetail extends Fragment {
+import android.widget.RatingBar.OnRatingBarChangeListener;
+public class FeedbackDetail extends Fragment implements OnClickListener, OnRatingBarChangeListener{
 
 	public static final String ID = "FeedbackDetailFragmentID";
 	private User owner;
 	private ListView feedbackLV;
+	public final static int ALL_REQUEST=0;
+	public final static int OWNER_REQUEST=1;
+	public final static int JOINED_REQUEST=2;
+	private int mode=0;
+	private int evaluation=3;
+	private EditText commentET;
+	private User fromUser, toUser;
+	private OnFeedbackSentListener mListener;
 
-	public FeedbackDetail(User owner){
+	public interface OnFeedbackSentListener{
+		public void onFeedbackSent(Feedback feedback);//TODO
+	}
+	
+	public FeedbackDetail(User owner, int mode){
 		this.owner=owner;
+		this.mode=mode;
 	}
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -59,4 +76,20 @@ public class FeedbackDetail extends Fragment {
 		return rootView;
 	}
 
+	@Override
+	public void onClick(View v) {
+		Feedback fb = new Feedback();
+		fb.setEvaluation(evaluation);
+		fb.setDescription(commentET.getEditableText().toString());
+		//fb.setFrom(fromUser);
+		//fb.setTo(toUser); TODO, servono?
+		mListener.onFeedbackSent(fb);
+		
+	}
+
+	@Override
+	public void onRatingChanged(RatingBar ratingBar, float rating,
+			boolean fromUser) {
+		evaluation = (int) Math.round(rating);
+	}
 }

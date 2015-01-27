@@ -132,7 +132,7 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 		if (!twoPane) {
 			// In single-pane mode, simply start the detail fragment
 			// for the selected item ID.
-			FeedbackDetail fragment = new FeedbackDetail(owner);
+			FeedbackDetail fragment = new FeedbackDetail(owner,this.mode);
 			Fragment reqDetail=getChildFragmentManager().findFragmentByTag(RequestDetail.ID);
 			
 			getChildFragmentManager().beginTransaction()
