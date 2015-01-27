@@ -21,7 +21,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 public class QueryManager {
 
 	private List<User> users;
-	private List<Feedback> feedback;
+	private List<Feedback> feedbacks;
 	private List<Request> requests;
 	private List<OnRequestLoadedListener> listeners;
 	private Manager manager;
@@ -55,7 +55,7 @@ public class QueryManager {
 	private QueryManager(){
 		this.users = new ArrayList<User>();
 		this.requests = new ArrayList<Request>();
-		this.feedback = new ArrayList<Feedback>();
+		this.feedbacks = new ArrayList<Feedback>();
 		this.listeners = new ArrayList<OnRequestLoadedListener>();
 		Manager.Builder managerBuilder = new Manager.Builder(
 				AndroidHttp.newCompatibleTransport(), new JacksonFactory(), null);
@@ -88,7 +88,7 @@ public class QueryManager {
 	}
 
 	public List<Feedback> getFeedback() {
-		return feedback;
+		return feedbacks;
 	}
 
 	public User getUserByEmail(String email){
@@ -232,10 +232,10 @@ public class QueryManager {
 
 
 
-	public void insertFeedback(){
+	public void insertFeedback(Feedback f){
 		System.out.println("Provo ad inserire un feed");
 		try {
-			new InsertFeedback(new Feedback()).execute().get();
+			new InsertFeedback(f).execute().get();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -271,17 +271,36 @@ public class QueryManager {
 						System.out.println("Id degli utenti: "+u.getId());
 						if(u.getPwAccount().equals(LoginSession.getUser().getEmail())) 
 							user = u;
-						ArrayList<Request> a = (ArrayList<Request>) u.getRequests();
-						if(a!=null && a.size()>0){
-							for(Request r : a){
-								Request req = manager.getRequest(r.getId()).execute();
-								if(req==null) System.out.println("Non ho trovato nulla");
-								else System.out.println("Title: "+req.getTitle());
+
+						ArrayList<Request> ownerReq = (ArrayList<Request>) u.getRequests();
+						ArrayList<Feedback> sentFeed = (ArrayList<Feedback>) u.getSentFb();
+
+						if(ownerReq!=null && ownerReq.size()>0){
+							for(Request r : ownerReq){
+								//								Request req = manager.getRequest(r.getId()).execute();
+								//								if(req==null) System.out.println("Non ho trovato nulla");
+								//								else System.out.println("Title: "+req.getTitle());
 								r.setOwner(u);
-								if(req.getPartecipants()==null)
-									req.setPartecipants(new ArrayList<Long>());}
-							requests.addAll(a);
+								if(r.getPartecipants()==null)
+									r.setPartecipants(new ArrayList<Long>());}
+							requests.addAll(ownerReq);
 						}
+
+						if(sentFeed!=null && sentFeed.size()>0){
+							for(Feedback f: sentFeed){
+								f.setFrom(u);
+								for(User u1 : users){
+									if(f.getToId()==u1.getId()){
+										f.setTo(u1);
+										if(u1.getReceivedFb()==null)
+											u1.setReceivedFb(new ArrayList<Feedback>());
+										u1.getReceivedFb().add(f);
+									}
+								}
+
+							}
+						}
+
 					}
 				}catch(Exception e){
 					e.printStackTrace();
@@ -304,7 +323,6 @@ public class QueryManager {
 			}
 		}
 	}
-
 	private class QueryUser extends AsyncTask<Void, Void, User> {
 
 		private String email;
@@ -559,10 +577,11 @@ public class QueryManager {
 		}
 	}
 	private class InsertFeedback extends AsyncTask<Void, Void, Feedback> {
-		public Feedback r;
 
-		public InsertFeedback(Feedback r){
-			this.r = r;
+		public Feedback f;
+
+		public InsertFeedback(Feedback f){
+			this.f = f;
 		}
 
 		@Override
@@ -575,18 +594,16 @@ public class QueryManager {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			System.out.println("Ho ricevuto l'utente");
-			//			if(u.getRequests()==null)
-			//				u.setRequests(new ArrayList<Request>());
-			//			u.getRequests().add(r);
-			Feedback f = new Feedback();
-			f.setDescription("male male");
-			f.setEvaluation(3);
-			f.setFromName(u.getName());
-			f.setTo(u);
+			if(u==null)
+				System.out.println("Utente null");
+			else
+				System.out.println("Sto modificando: "+u.getName());
+			if(u.getSentFb()==null)
+				u.setSentFb(new ArrayList<Feedback>());
+			u.getSentFb().add(f);
 			System.out.println("Persisting?");
 			try {
-				f = manager.insertFeedback(f).execute();
+				manager.updateUser(u);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
