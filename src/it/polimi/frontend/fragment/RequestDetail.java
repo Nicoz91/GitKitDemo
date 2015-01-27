@@ -53,9 +53,9 @@ public class RequestDetail extends Fragment implements View.OnClickListener{
 				container, false);
 		profileImg = (ImageView) rootView.findViewById(R.id.profileImg);
 		join = (Button) rootView.findViewById(R.id.joinReq);
-		System.out.println("Mio ID: "+QueryManager.getInstance().getId());
+		System.out.println("Mio ID: "+QueryManager.getInstance().getCurrentUser().getId());
 		System.out.println("Partecipants: "+request.getPartecipants());
-		if(request.getPartecipants()==null || !request.getPartecipants().contains((QueryManager.getInstance().getId())))
+		if(request.getPartecipants()==null || !request.getPartecipants().contains((QueryManager.getInstance().getCurrentUser().getId())))
 			join.setText("Partecipa");
 		else
 			join.setText("Cancella");
@@ -64,7 +64,7 @@ public class RequestDetail extends Fragment implements View.OnClickListener{
 
 			@Override
 			public void onClick(View v) {
-				if(request.getPartecipants()==null || !request.getPartecipants().contains((QueryManager.getInstance().getId())) ){
+				if(request.getPartecipants()==null || !request.getPartecipants().contains((QueryManager.getInstance().getCurrentUser().getId())) ){
 					QueryManager.getInstance().joinRequest(request);
 					//QueryManager.getInstance().insertFeedback();
 					join.setText("Cancella");

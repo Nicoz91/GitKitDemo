@@ -27,7 +27,7 @@ public class QueryManager {
 	private Manager manager;
 	private static QueryManager instance;
 	private ProgressDialog mProgressDialog;
-	private long id;
+	private User user;
 	/** 
 	 * Metodi per mostrare o meno il progressDialog
 	 * */
@@ -168,6 +168,19 @@ public class QueryManager {
 		return partecipation;
 	}
 
+	public User getCurrentUser(){
+		return user;
+	}
+
+	public ArrayList<User> getUserFromRequest(Request r){
+		ArrayList<User> ret = new ArrayList<User>();
+		for(User u : this.users){
+			if(r.getPartecipants().contains(u.getId()))
+				ret.add(u);		
+		}
+		return ret;
+	}
+
 	public void joinRequest(Request r){
 		if(r==null){System.out.println("R è null... strano");}
 		else{System.out.println("R id:"+r.getId());}
@@ -175,7 +188,7 @@ public class QueryManager {
 			new JoinRequest(r).execute().get();
 			if(r.getPartecipants()==null)
 				r.setPartecipants(new ArrayList<Long>());
-			r.getPartecipants().add(id);
+			r.getPartecipants().add(user.getId());
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -185,17 +198,13 @@ public class QueryManager {
 		}
 	}
 
-	public long getId() {
-		return id;
-	}
-
 	public void removeJoinRequest(Request r){
 
 		if(r==null){System.out.println("R è null... strano");}
 		else{System.out.println("R id:"+r.getId());}
 		try {
 			new RemoveJoinRequest(r).execute().get();
-			r.getPartecipants().remove(id);
+			r.getPartecipants().remove(user.getId());
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -211,7 +220,7 @@ public class QueryManager {
 		else{System.out.println("R id:"+r.getId());}
 		try {
 			new RemoveOwnerRequest(r).execute().get();
-			r.getPartecipants().remove(id);
+			r.getPartecipants().remove(user.getId());
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -261,7 +270,7 @@ public class QueryManager {
 					for(User u : users){
 						System.out.println("Id degli utenti: "+u.getId());
 						if(u.getPwAccount().equals(LoginSession.getUser().getEmail())) 
-							id = u.getId();
+							user = u;
 						ArrayList<Request> a = (ArrayList<Request>) u.getRequests();
 						if(a!=null && a.size()>0){
 							for(Request r : a){
