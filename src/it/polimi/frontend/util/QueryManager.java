@@ -259,7 +259,9 @@ public class QueryManager {
 				users = (ArrayList<User>) manager.listUser().execute().getItems();
 				try{
 					for(User u : users){
-						if(u.getPwAccount() == LoginSession.getUser().getEmail()) id = u.getId();
+						System.out.println("Id degli utenti: "+u.getId());
+						if(u.getPwAccount().equals(LoginSession.getUser().getEmail())) 
+							id = u.getId();
 						ArrayList<Request> a = (ArrayList<Request>) u.getRequests();
 						if(a!=null && a.size()>0){
 							for(Request r : a){
@@ -292,9 +294,8 @@ public class QueryManager {
 				l.onRequestLoaded(requests);
 			}
 		}
-
-
 	}
+
 	private class QueryUser extends AsyncTask<Void, Void, User> {
 
 		private String email;
@@ -453,10 +454,17 @@ public class QueryManager {
 
 			if(u.getJoinedReq()==null)
 				u.setJoinedReq(new ArrayList<String>());
+			if(r.getPartecipants()==null)
+				r.setPartecipants(new ArrayList<Long>());
+			r.getPartecipants().add(u.getId());
+			r.setTitle("Cambiato");
+			System.out.println("I partecipant della R che sta per esser aggiunta "+ r.getPartecipants());
 			u.getJoinedReq().add(r.getId());
-
+			r.setOwner(null);
 			try {
 				manager.updateUser(u).execute();
+				manager.updateRequest(r).execute();
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -491,6 +499,9 @@ public class QueryManager {
 				return null;
 			if(!u.getJoinedReq().contains(r.getId()))
 				return null;
+			if(r.getPartecipants()==null)
+				r.setPartecipants(new ArrayList<Long>());
+			r.getPartecipants().remove(u.getId());
 
 			u.getJoinedReq().remove(r.getId());
 

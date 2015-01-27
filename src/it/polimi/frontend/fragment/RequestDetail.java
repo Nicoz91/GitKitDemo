@@ -53,6 +53,8 @@ public class RequestDetail extends Fragment implements View.OnClickListener{
 				container, false);
 		profileImg = (ImageView) rootView.findViewById(R.id.profileImg);
 		join = (Button) rootView.findViewById(R.id.joinReq);
+		System.out.println("Mio ID: "+QueryManager.getInstance().getId());
+		System.out.println("Partecipants: "+request.getPartecipants());
 		if(request.getPartecipants()==null || !request.getPartecipants().contains((QueryManager.getInstance().getId())))
 			join.setText("Partecipa");
 		else
