@@ -50,6 +50,7 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 			switch (mode) {
 			case OWNER_REQUEST:
 				requests = QueryManager.getInstance().getCurrentUser().getRequests();
+				System.out.println("Dovrei aver recuperato le richieste dell'owner");
 				break;
 			case JOINED_REQUEST:
 				String mail=null;

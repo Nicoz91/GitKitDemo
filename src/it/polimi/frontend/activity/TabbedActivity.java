@@ -170,19 +170,20 @@ ActionBar.TabListener {
 				return requestMap;
 			case OWNER_TAB:
 				masterFragmentOwner = new MasterFragment(MasterFragment.OWNER_REQUEST);
+				System.out.println("Dovrei aver creato il masterfragment dell'owner");
 				return masterFragmentOwner;
 			case JOINED_TAB:
 				masterFragmentJoined = new MasterFragment(MasterFragment.JOINED_REQUEST);
 				return masterFragmentJoined;
-			case 4:
-				return PlaceholderFragment.newInstance(position + 1);
+			//case 4:
+			//	return PlaceholderFragment.newInstance(position + 1);
 			}
 			return null;
 		}
 
 		@Override
 		public int getCount() {
-			// Show 3 total pages.
+			// Show 4 total pages.
 			return 4;
 		}
 
