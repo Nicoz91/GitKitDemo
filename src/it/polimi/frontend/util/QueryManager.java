@@ -237,7 +237,7 @@ public class QueryManager {
 		f = new Feedback();
 		f.setDescription("Male male");
 		f.setEvaluation(3);
-		f.setToId(user.getId());
+		//f.setToId(user.getId());
 		f.setRequest("asdjQ");
 		
 		try {
@@ -609,7 +609,7 @@ public class QueryManager {
 			u.getSentFb().add(f);
 			System.out.println("Persisting?");
 			try {
-				manager.updateUser(u);
+				manager.updateUser(u).execute();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

@@ -1,14 +1,18 @@
 package it.polimi.frontend.fragment;
 
-import java.io.IOException;
-
 import it.polimi.appengine.entity.manager.model.Request;
 import it.polimi.appengine.entity.manager.model.User;
 import it.polimi.frontend.activity.HttpUtils;
+import it.polimi.frontend.activity.MyApplication;
 import it.polimi.frontend.activity.R;
-import it.polimi.frontend.fragment.RequestList.OnRequestSelectedListener;
 import it.polimi.frontend.util.ParentFragmentUtil;
 import it.polimi.frontend.util.QueryManager;
+import it.polimi.frontend.util.UserAdapter;
+
+import java.io.IOException;
+import java.util.List;
+
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -18,13 +22,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 //import android.support.v7.app.ActionBarActivity;
 
-public class RequestDetail extends Fragment implements View.OnClickListener{
+public class RequestDetail extends Fragment implements OnClickListener, OnItemClickListener{
 
 	public static final String ID="RequestDetailFragmentID";
 	public final static int ALL_REQUEST=0;
@@ -34,7 +41,9 @@ public class RequestDetail extends Fragment implements View.OnClickListener{
 	private Request request;
 	private ImageView profileImg;
 	private OnUserSectionClickedListener listener;
-	private Button join;
+	private OnUserPartecipantClickedListener partecipantListener;
+	private Button join,sendFb;
+	private ListView userPartecipant;
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
 	 * fragment (e.g. upon screen orientation changes).
@@ -53,31 +62,18 @@ public class RequestDetail extends Fragment implements View.OnClickListener{
 				container, false);
 		profileImg = (ImageView) rootView.findViewById(R.id.profileImg);
 		join = (Button) rootView.findViewById(R.id.joinReq);
-		System.out.println("Mio ID: "+QueryManager.getInstance().getCurrentUser().getId());
-		System.out.println("Partecipants: "+request.getPartecipants());
 		if(request.getPartecipants()==null || !request.getPartecipants().contains((QueryManager.getInstance().getCurrentUser().getId())))
 			join.setText("Partecipa");
 		else
 			join.setText("Cancella");
-		
-		join.setOnClickListener(new OnClickListener(){
 
-			@Override
-			public void onClick(View v) {
-				if(request.getPartecipants()==null || !request.getPartecipants().contains((QueryManager.getInstance().getCurrentUser().getId())) ){
-					QueryManager.getInstance().joinRequest(request);
-					//QueryManager.getInstance().insertFeedback();
-					join.setText("Cancella");
-				}
-				else{
-					QueryManager.getInstance().removeJoinRequest(request);
-					//QueryManager.getInstance().insertFeedback();
-					join.setText("Partecipa");
-				}
-			}
+		join.setOnClickListener(this);
+		LinearLayout ll = (LinearLayout)rootView.findViewById(R.id.userSection);
+		if (mode==OWNER_REQUEST)
+			ll.setVisibility(View.GONE);
+		else
+			ll.setOnClickListener(this);
 
-		});
-		((LinearLayout)rootView.findViewById(R.id.userSection)).setOnClickListener(this);
 		if (request!=null){
 			new ProfileImageTask().execute(request.getOwner().getPhotoURL());
 			((TextView)rootView.findViewById(R.id.ownerLabel))
@@ -91,9 +87,15 @@ public class RequestDetail extends Fragment implements View.OnClickListener{
 			.setText(request.getTitle());
 			((TextView)rootView.findViewById(R.id.descriptionLabel))
 			.setText(request.getDescription());
+			userPartecipant = (ListView) rootView.findViewById(R.id.partecipantsList);
+			
+			sendFb = (Button) rootView.findViewById(R.id.showPartecipant);
+			sendFb.setOnClickListener(this);
+
 		}
 		//registrazione del parente in ascolto
 		listener = ParentFragmentUtil.getParent(this, OnUserSectionClickedListener.class);
+		partecipantListener = ParentFragmentUtil.getParent(this, OnUserPartecipantClickedListener.class);
 		return rootView;
 	}
 
@@ -130,18 +132,61 @@ public class RequestDetail extends Fragment implements View.OnClickListener{
 	 * feedback dello user (in modo diverso a seconda del dispositivo).
 	 * */
 	public interface OnUserSectionClickedListener {
-		public void onUserSectionClicked(User owner);
+		public void onUserSectionClicked(User owner, String requestId);
+	}
+
+	public interface OnUserPartecipantClickedListener {
+		public void onUserPartecipantClicked(User owner, String requestId);
 	}
 
 	@Override
 	public void onClick(View v) {
+		System.out.println("Sono entrato nell'onclick");
 		switch (v.getId()) {
 		case R.id.userSection:
-			listener.onUserSectionClicked(request.getOwner());
+			listener.onUserSectionClicked(request.getOwner(),request.getId());
 			break;
+		case R.id.joinReq:
+			if(request.getPartecipants()==null || !request.getPartecipants().contains((QueryManager.getInstance().getCurrentUser().getId())) ){
+				QueryManager.getInstance().joinRequest(request);
+				//QueryManager.getInstance().insertFeedback();
+				join.setText("Cancella");
+			}
+			else{
+				QueryManager.getInstance().removeJoinRequest(request);
+				//QueryManager.getInstance().insertFeedback();
+				join.setText("Partecipa");
+			}
+			break;
+		case R.id.showPartecipant:
+			System.out.println("Sono entrato nell'onclick di showPartecipant");
+			if (sendFb.getText().toString().equals("Mostra Partecipanti")){
+				sendFb.setText("Nascondi Partecipanti");
+				userPartecipant.setVisibility(View.VISIBLE);
 
+				userPartecipant.setOnItemClickListener(this);
+
+				List<User> users = QueryManager.getInstance().getUserFromRequest(request);
+				Context c = getActivity();
+				if(c==null){ 
+					System.out.println("Il context è null ma noi bariamo");
+					c = MyApplication.getContext();
+				}
+				else 
+					System.out.println("Tutto ok inizializzo l'adapter");
+				userPartecipant.setAdapter(new UserAdapter(c,0,users));
+			}else{
+				userPartecipant.setVisibility(View.GONE);
+				sendFb.setText("Mostra Partecipanti");
+			}
+			break;
 		default:
 			break;
 		}
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+		partecipantListener.onUserPartecipantClicked((User) userPartecipant.getAdapter().getItem(position),request.getId());
 	}
 }

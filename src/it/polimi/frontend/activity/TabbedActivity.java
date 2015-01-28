@@ -26,7 +26,8 @@ ActionBar.TabListener {
 
 	private static final int REQUEST_TAB=0;
 	private static final int MAP_TAB=1;
-	private MasterFragment masterFragment;
+	private static final int OWNER_TAB=2;
+	private MasterFragment masterFragment,masterFragmentOwner;
 	private RequestMap requestMap;
 	
 	
@@ -166,6 +167,9 @@ ActionBar.TabListener {
 			case MAP_TAB:
 				requestMap = new RequestMap();
 				return requestMap;
+			case OWNER_TAB:
+				masterFragmentOwner = new MasterFragment(MasterFragment.OWNER_REQUEST);
+				return masterFragmentOwner;
 			default:
 				return PlaceholderFragment.newInstance(position + 1);
 			}
@@ -174,7 +178,7 @@ ActionBar.TabListener {
 		@Override
 		public int getCount() {
 			// Show 3 total pages.
-			return 3;
+			return 4;
 		}
 
 		@Override
@@ -185,7 +189,9 @@ ActionBar.TabListener {
 				return "Request List";
 			case MAP_TAB:
 				return "Map";
-			case 2:
+			case OWNER_TAB:
+				return "Owner Request";
+			case 3:
 				return getString(R.string.title_section3).toUpperCase(l);
 			}
 			return null;
@@ -234,6 +240,9 @@ ActionBar.TabListener {
 			masterFragment.getChildFragmentManager().popBackStack();
 		} else if(requestMap != null && mViewPager.getCurrentItem()==MAP_TAB && requestMap.getChildFragmentManager().getBackStackEntryCount() > 0){
 			requestMap.getChildFragmentManager().popBackStack();
+		} else if (masterFragmentOwner != null && mViewPager.getCurrentItem()==OWNER_TAB && masterFragmentOwner.getChildFragmentManager().getBackStackEntryCount() > 0){
+			// Get the fragment fragment manager - and pop the backstack
+			masterFragmentOwner.getChildFragmentManager().popBackStack();
 		}
 		// Else, nothing in the direct fragment back stack
 		else{

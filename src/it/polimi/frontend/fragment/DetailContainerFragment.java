@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class DetailContainerFragment extends Fragment implements RequestDetail.OnUserSectionClickedListener{
+public class DetailContainerFragment extends Fragment implements RequestDetail.OnUserSectionClickedListener,RequestDetail.OnUserPartecipantClickedListener{
 
 	public static final String ID="DetailContainerFragmentID";
 	public final static int ALL_REQUEST=0;
@@ -36,8 +36,16 @@ public class DetailContainerFragment extends Fragment implements RequestDetail.O
 	}
 
 	@Override
-	public void onUserSectionClicked(User owner) {
-		FeedbackDetail fragment = new FeedbackDetail(owner,this.mode);
+	public void onUserSectionClicked(User owner,String requestId) {
+		FeedbackDetail fragment = new FeedbackDetail(owner,this.mode,requestId);
+		getChildFragmentManager().beginTransaction()
+			.replace(R.id.feedback_list_container, fragment,FeedbackDetail.ID).commit();
+		System.out.println("Dentro DetailContainerFragment. Dovrei aver creato FeedbackDetail");
+	}
+
+	@Override
+	public void onUserPartecipantClicked(User owner,String requestId) {
+		FeedbackDetail fragment = new FeedbackDetail(owner,this.mode,requestId);
 		getChildFragmentManager().beginTransaction()
 			.replace(R.id.feedback_list_container, fragment,FeedbackDetail.ID).commit();
 		System.out.println("Dentro DetailContainerFragment. Dovrei aver creato FeedbackDetail");

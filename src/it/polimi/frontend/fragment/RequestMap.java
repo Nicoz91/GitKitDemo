@@ -26,7 +26,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class RequestMap extends Fragment implements OnRequestLoadedListener, OnMapReadyCallback, OnInfoWindowClickListener,RequestDetail.OnUserSectionClickedListener {
+public class RequestMap extends Fragment implements OnRequestLoadedListener, OnMapReadyCallback, OnInfoWindowClickListener,RequestDetail.OnUserSectionClickedListener,RequestDetail.OnUserPartecipantClickedListener {
 
 	static final LatLng CASA_STUDENTE = new LatLng(45.4766, 9.22414);
 	private GoogleMap map;
@@ -113,7 +113,7 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 	}
 
 	@Override
-	public void onUserSectionClicked(User owner) {
+	public void onUserSectionClicked(User owner,String requestId) {
 		if (twoPane) {
 			// In two-pane mode, show the detail view in this activity by
 			// adding or replacing the detail fragment using a
@@ -125,7 +125,39 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 		} else {
 			// In single-pane mode, simply start the detail fragment
 			// for the selected item ID.
-			FeedbackDetail fragment = new FeedbackDetail(owner,MasterFragment.ALL_REQUEST);
+			FeedbackDetail fragment = new FeedbackDetail(owner,MasterFragment.ALL_REQUEST,null);
+			Fragment reqDetail=getChildFragmentManager().findFragmentByTag(RequestDetail.ID);
+
+			getChildFragmentManager().beginTransaction()
+			.hide(reqDetail)
+			.addToBackStack(FeedbackDetail.ID)
+			.add(R.id.mapContainer,fragment,FeedbackDetail.ID)
+			.commit();
+
+			getChildFragmentManager().addOnBackStackChangedListener(
+					new FragmentManager.OnBackStackChangedListener() {
+						public void onBackStackChanged() {
+							//TODO
+							// Update your UI here.
+						}
+					});
+		}
+	}
+
+	@Override
+	public void onUserPartecipantClicked(User owner, String requestId) {
+		if (twoPane) {
+			// In two-pane mode, show the detail view in this activity by
+			// adding or replacing the detail fragment using a
+			// fragment transaction.
+			//getChildFragmentManager().beginTransaction()
+			//.replace(R.id.feedback_list_container, fragment).commit();
+			
+			/*Se ne dovrebbe occupare il DetailContainerFragment, quindi non fa nulla*/
+		} else {
+			// In single-pane mode, simply start the detail fragment
+			// for the selected item ID.
+			FeedbackDetail fragment = new FeedbackDetail(owner,MasterFragment.ALL_REQUEST,null);
 			Fragment reqDetail=getChildFragmentManager().findFragmentByTag(RequestDetail.ID);
 
 			getChildFragmentManager().beginTransaction()

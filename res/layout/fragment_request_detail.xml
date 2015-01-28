@@ -62,11 +62,24 @@
         android:id="@+id/descriptionLabel"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/joinReq"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Partecipa" />
+
+    <Button
+        android:id="@+id/showPartecipant"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Mostra Partecipanti" />
     
-        <Button
-            android:id="@+id/joinReq"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Partecipa" />
+    <ListView
+        android:id="@+id/partecipantsList"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        android:layout_weight="1" />
 
 </LinearLayout>

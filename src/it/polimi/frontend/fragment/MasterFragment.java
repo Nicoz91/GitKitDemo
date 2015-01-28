@@ -17,7 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class MasterFragment extends Fragment implements OnRequestLoadedListener, RequestList.OnRequestSelectedListener, RequestDetail.OnUserSectionClickedListener{
+public class MasterFragment extends Fragment implements OnRequestLoadedListener, RequestList.OnRequestSelectedListener, RequestDetail.OnUserSectionClickedListener,RequestDetail.OnUserPartecipantClickedListener{
 
 	private boolean twoPane;
 	private static View view;
@@ -47,6 +47,19 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 			//Ora sarà masterFragment il listener del loader e passerà i risultati al RequestList
 			List<Request> requests = new ArrayList<Request>();
 			RequestList requestListFragment = null;
+			switch (mode) {
+			case OWNER_REQUEST:
+				requests = QueryManager.getInstance().getCurrentUser().getRequests();
+				break;
+			case JOINED_REQUEST:
+				//TODO
+				break;
+			default: //Caso ALL_REQUEST + tutti gli altri possibili
+				//TODO
+				requests = QueryManager.getInstance().getRequests();
+				break;
+			}
+			requestListFragment = new RequestList(requests, mode);
 			// CASO TABLET:
 			if (view.findViewById(R.id.detail_container) != null) {
 				// The detail container view will be present only in the
@@ -54,19 +67,6 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 				// res/values-sw600dp). If this view is present, then the
 				// activity should be in two-pane mode.
 				twoPane = true;
-				switch (mode) {
-				case OWNER_REQUEST:
-					//TODO
-					break;
-				case JOINED_REQUEST:
-					//TODO
-					break;
-				default: //Caso ALL_REQUEST + tutti gli altri possibili
-					//TODO
-					requests = QueryManager.getInstance().getRequests();
-					break;
-				}
-				requestListFragment = new RequestList(requests, mode);
 				getChildFragmentManager().beginTransaction()
 				.replace(R.id.request_list_container,requestListFragment,RequestList.ID)
 				.commit();
@@ -74,18 +74,6 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 				// 'activated' state when touched.
 				//requestListFragment.setActivateOnItemClick(true);
 			} else { //CASO SMARTPHONE:
-				switch (mode) {
-				case OWNER_REQUEST:
-					//TODO
-					break;
-				case JOINED_REQUEST:
-					//TODO
-					break;
-				default: //Caso ALL_REQUEST + tutti gli altri possibili
-					requests = QueryManager.getInstance().getRequests();
-					break;
-				}
-				requestListFragment = new RequestList(requests, mode);
 				getChildFragmentManager().beginTransaction()
 				.replace(R.id.container,requestListFragment,RequestList.ID)
 				.commit();
@@ -108,15 +96,25 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 		} else {
 			// In single-pane mode, simply start the detail fragment
 			// for the selected item ID.
+			switch (mode) {
+			case OWNER_REQUEST:
+				//UserList userListFragment = new UserList
+				break;
+			case JOINED_REQUEST:
+				break;
+
+			default://ALL_REQUEST				
+				break;
+			}
 			RequestDetail fragment = new RequestDetail(request,mode);
 			Fragment reqList=getChildFragmentManager().findFragmentByTag(RequestList.ID);
-
+			
 			getChildFragmentManager().beginTransaction()
 			.hide(reqList)
 			.addToBackStack(RequestDetail.ID)
 			.add(R.id.container,fragment,RequestDetail.ID)
 			.commit();
-
+			
 			getChildFragmentManager().addOnBackStackChangedListener(
 					new FragmentManager.OnBackStackChangedListener() {
 						public void onBackStackChanged() {
@@ -128,11 +126,11 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 	}
 
 	@Override
-	public void onUserSectionClicked(User owner) {
+	public void onUserSectionClicked(User owner,String requestId) {
 		if (!twoPane) {
 			// In single-pane mode, simply start the detail fragment
 			// for the selected item ID.
-			FeedbackDetail fragment = new FeedbackDetail(owner,this.mode);
+			FeedbackDetail fragment = new FeedbackDetail(owner,this.mode,requestId);
 			Fragment reqDetail=getChildFragmentManager().findFragmentByTag(RequestDetail.ID);
 			
 			getChildFragmentManager().beginTransaction()
@@ -168,6 +166,25 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 				requestListFragment.setRequestAdapter(requests);
 			break;
 		}
+	}
+	@Override
+	public void onUserPartecipantClicked(User owner, String requestId) {
+		FeedbackDetail fragment = new FeedbackDetail(owner,this.mode,requestId);
+		Fragment reqDetail=getChildFragmentManager().findFragmentByTag(RequestDetail.ID);
+		
+		getChildFragmentManager().beginTransaction()
+		.hide(reqDetail)
+		.addToBackStack(FeedbackDetail.ID)
+		.add(R.id.container,fragment,FeedbackDetail.ID)
+		.commit();
+		
+		getChildFragmentManager().addOnBackStackChangedListener(
+				new FragmentManager.OnBackStackChangedListener() {
+					public void onBackStackChanged() {
+						//TODO
+						// Update your UI here.
+					}
+				});
 	}
 
 }

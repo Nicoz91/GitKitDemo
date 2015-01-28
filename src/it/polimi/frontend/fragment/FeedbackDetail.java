@@ -14,12 +14,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RatingBar;
-import android.widget.TextView;
 import android.widget.RatingBar.OnRatingBarChangeListener;
 public class FeedbackDetail extends Fragment implements OnClickListener, OnRatingBarChangeListener{
 
@@ -34,19 +35,28 @@ public class FeedbackDetail extends Fragment implements OnClickListener, OnRatin
 	private EditText commentET;
 	private User fromUser, toUser;
 	private OnFeedbackSentListener mListener;
+	private LinearLayout sendFbForm;
+	private String requestID;
 
 	public interface OnFeedbackSentListener{
 		public void onFeedbackSent(Feedback feedback);//TODO
 	}
 	
-	public FeedbackDetail(User owner, int mode){
+	public FeedbackDetail(User owner, int mode, String request){
 		this.owner=owner;
 		this.mode=mode;
+		this.requestID=request;
 	}
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_feedback_detail,
 				container, false);
+		//TODO gestire visibilità sendFbForm in base a check su IDs
+		this.sendFbForm= (LinearLayout)rootView.findViewById(R.id.sendFbForm);
+		if (mode==ALL_REQUEST)
+			sendFbForm.setVisibility(View.GONE);
+		((Button) rootView.findViewById(R.id.send)).setOnClickListener(this);
+		((RatingBar)rootView.findViewById(R.id.valutazione)).setOnRatingBarChangeListener(this);
 		this.feedbackLV = (ListView)rootView.findViewById(R.id.feedbackList);
 		if (owner!=null){
 			List<Feedback> feedbacks = owner.getReceivedFb();
@@ -78,11 +88,12 @@ public class FeedbackDetail extends Fragment implements OnClickListener, OnRatin
 
 	@Override
 	public void onClick(View v) {
+		sendFbForm.setVisibility(View.GONE);
 		Feedback fb = new Feedback();
 		fb.setEvaluation(evaluation);
-		fb.setDescription(commentET.getEditableText().toString());
-		//fb.setFrom(fromUser);
-		//fb.setTo(toUser); TODO, servono?
+		fb.setDescription(((EditText)getView().findViewById(R.id.description)).getEditableText().toString());
+		fb.setTo(owner);
+		fb.setRequest(requestID);
 		mListener.onFeedbackSent(fb);
 		
 	}
