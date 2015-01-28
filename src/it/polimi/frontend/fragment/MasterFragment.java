@@ -94,6 +94,7 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 			}
 		} catch (InflateException e) {
 			// is already there, just return view as it is
+			e.printStackTrace();
 		}
 		return view;
 	}

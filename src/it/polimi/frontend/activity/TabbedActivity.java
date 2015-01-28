@@ -228,7 +228,7 @@ ActionBar.TabListener {
 			case JOINED_TAB:
 				return getString(R.string.joined_tab_title).toUpperCase(l);
 			default:
-				return getString(R.string.title_section3).toUpperCase(l);
+				return "";
 			}
 		}
 		

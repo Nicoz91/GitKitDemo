@@ -74,7 +74,8 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 			ll.setOnClickListener(this);
 
 		if (request!=null){
-			new ProfileImageTask().execute(request.getOwner().getPhotoURL());
+			if (request.getOwner()!= null && request.getOwner().getPhotoURL()!=null)
+				new ProfileImageTask().execute(request.getOwner().getPhotoURL());
 			((TextView)rootView.findViewById(R.id.ownerLabel))
 			.setText(request.getOwner().getName()+" "+request.getOwner().getSurname());
 			if (request.getOwner().getBday()!=null){
