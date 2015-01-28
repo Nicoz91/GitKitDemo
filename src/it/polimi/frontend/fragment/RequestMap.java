@@ -13,6 +13,7 @@ import java.util.Map;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,21 +27,31 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class RequestMap extends Fragment implements OnRequestLoadedListener, OnMapReadyCallback, OnInfoWindowClickListener,RequestDetail.OnUserSectionClickedListener,RequestDetail.OnUserPartecipantClickedListener {
+public class RequestMap extends Fragment implements OnRequestLoadedListener, OnMapReadyCallback, OnInfoWindowClickListener,RequestDetail.OnUserClickedListener {
 
 	static final LatLng CASA_STUDENTE = new LatLng(45.4766, 9.22414);
 	private GoogleMap map;
 	private Map<Marker,Request> markers;
 	private boolean twoPane=false;
+	private static View view;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_request_map,
-				container, false);
-		((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
-		markers = new HashMap<Marker,Request>();
-		twoPane = getResources().getBoolean(R.bool.isTablet);
-		return rootView;
+		if (view != null) {
+			ViewGroup parent = (ViewGroup) view.getParent();
+			if (parent != null)
+				parent.removeView(view);
+		}
+		try {
+			view = inflater.inflate(R.layout.fragment_request_map,
+					container, false);
+			((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
+			markers = new HashMap<Marker,Request>();
+			twoPane = getResources().getBoolean(R.bool.isTablet);
+		} catch (InflateException e) {
+			// is already there, just return view as it is
+		}
+		return view;
 	}
 
 	private void setRequestMark(List<Request> requests){
@@ -50,8 +61,8 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 			if(r.getPlace()!=null){
 				System.out.println("setto "+r.getPlace().getLatitude());
 				Marker m = map.addMarker(new MarkerOptions().position(new LatLng(r.getPlace().getLatitude(), r.getPlace().getLongitude()))
-					.title(r.getTitle())
-					.snippet(r.getDescription()));
+						.title(r.getTitle())
+						.snippet(r.getDescription()));
 				markers.put(m,r);
 			}
 		}
@@ -60,8 +71,8 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 	@Override
 	public void onRequestLoaded(List<Request> requests) {
 		if(requests!=null && requests.size()>0)
-		setRequestMark(requests);
-		
+			setRequestMark(requests);
+
 	}
 
 	@Override
@@ -76,7 +87,7 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 		else{
 			//RequestLoader.getInstance().loadRequest();
 		}
-		
+
 		map.addMarker(new MarkerOptions().position(CASA_STUDENTE)
 				.title("Casa dello studente")
 				.snippet("Tutti alla casa"));
@@ -113,51 +124,19 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 	}
 
 	@Override
-	public void onUserSectionClicked(User owner,String requestId) {
+	public void onUserClicked(User user,String requestId) {
 		if (twoPane) {
 			// In two-pane mode, show the detail view in this activity by
 			// adding or replacing the detail fragment using a
 			// fragment transaction.
 			//getChildFragmentManager().beginTransaction()
 			//.replace(R.id.feedback_list_container, fragment).commit();
-			
+
 			/*Se ne dovrebbe occupare il DetailContainerFragment, quindi non fa nulla*/
 		} else {
 			// In single-pane mode, simply start the detail fragment
 			// for the selected item ID.
-			FeedbackDetail fragment = new FeedbackDetail(owner,MasterFragment.ALL_REQUEST,null);
-			Fragment reqDetail=getChildFragmentManager().findFragmentByTag(RequestDetail.ID);
-
-			getChildFragmentManager().beginTransaction()
-			.hide(reqDetail)
-			.addToBackStack(FeedbackDetail.ID)
-			.add(R.id.mapContainer,fragment,FeedbackDetail.ID)
-			.commit();
-
-			getChildFragmentManager().addOnBackStackChangedListener(
-					new FragmentManager.OnBackStackChangedListener() {
-						public void onBackStackChanged() {
-							//TODO
-							// Update your UI here.
-						}
-					});
-		}
-	}
-
-	@Override
-	public void onUserPartecipantClicked(User owner, String requestId) {
-		if (twoPane) {
-			// In two-pane mode, show the detail view in this activity by
-			// adding or replacing the detail fragment using a
-			// fragment transaction.
-			//getChildFragmentManager().beginTransaction()
-			//.replace(R.id.feedback_list_container, fragment).commit();
-			
-			/*Se ne dovrebbe occupare il DetailContainerFragment, quindi non fa nulla*/
-		} else {
-			// In single-pane mode, simply start the detail fragment
-			// for the selected item ID.
-			FeedbackDetail fragment = new FeedbackDetail(owner,MasterFragment.ALL_REQUEST,null);
+			FeedbackDetail fragment = new FeedbackDetail(user,MasterFragment.ALL_REQUEST,null);
 			Fragment reqDetail=getChildFragmentManager().findFragmentByTag(RequestDetail.ID);
 
 			getChildFragmentManager().beginTransaction()

@@ -5,6 +5,7 @@ import it.polimi.appengine.entity.manager.model.User;
 import it.polimi.frontend.activity.MyApplication;
 import it.polimi.frontend.activity.R;
 import it.polimi.frontend.util.FeedbackAdapter;
+import it.polimi.frontend.util.QueryManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,8 +95,8 @@ public class FeedbackDetail extends Fragment implements OnClickListener, OnRatin
 		fb.setDescription(((EditText)getView().findViewById(R.id.description)).getEditableText().toString());
 		fb.setTo(owner);
 		fb.setRequest(requestID);
-		mListener.onFeedbackSent(fb);
-		
+		//mListener.onFeedbackSent(fb); //TODO pensare se convenga farlo inserire al parent
+		//QueryManager.getInstance().insertFeedback(fb); //...o qui direttamente
 	}
 
 	@Override

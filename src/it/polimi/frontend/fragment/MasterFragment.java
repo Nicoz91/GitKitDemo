@@ -17,7 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class MasterFragment extends Fragment implements OnRequestLoadedListener, RequestList.OnRequestSelectedListener, RequestDetail.OnUserSectionClickedListener,RequestDetail.OnUserPartecipantClickedListener{
+public class MasterFragment extends Fragment implements OnRequestLoadedListener, RequestList.OnRequestSelectedListener, RequestDetail.OnUserClickedListener{
 
 	private boolean twoPane;
 	private static View view;
@@ -25,14 +25,14 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 	public final static int OWNER_REQUEST=1;
 	public final static int JOINED_REQUEST=2;
 	private int mode;
-	
+
 	public MasterFragment(){
 		this.mode=0;
 	}
 	public MasterFragment(int mode){
 		this.mode=mode;
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		//PRIMA POSSIBILE SOLUZIONE (A problema di exception al cambio di tab)
@@ -52,7 +52,20 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 				requests = QueryManager.getInstance().getCurrentUser().getRequests();
 				break;
 			case JOINED_REQUEST:
-				//TODO
+				String mail=null;
+				if (QueryManager.getInstance().getCurrentUser()!=null){
+					User current =QueryManager.getInstance().getCurrentUser();
+					mail = current.getPwAccount() != null ? 
+							current.getPwAccount()
+							: current.getGmailAccount() != null ?
+									current.getGmailAccount() 
+									: current.getFbAccount() != null ?
+											current.getFbAccount()
+											: null;
+					requests = QueryManager.getInstance().getUserPartecipation(mail);
+				}
+				else
+					requests = new ArrayList<Request>();
 				break;
 			default: //Caso ALL_REQUEST + tutti gli altri possibili
 				//TODO
@@ -108,13 +121,13 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 			}
 			RequestDetail fragment = new RequestDetail(request,mode);
 			Fragment reqList=getChildFragmentManager().findFragmentByTag(RequestList.ID);
-			
+
 			getChildFragmentManager().beginTransaction()
 			.hide(reqList)
 			.addToBackStack(RequestDetail.ID)
 			.add(R.id.container,fragment,RequestDetail.ID)
 			.commit();
-			
+
 			getChildFragmentManager().addOnBackStackChangedListener(
 					new FragmentManager.OnBackStackChangedListener() {
 						public void onBackStackChanged() {
@@ -126,19 +139,19 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 	}
 
 	@Override
-	public void onUserSectionClicked(User owner,String requestId) {
+	public void onUserClicked(User user,String requestId) {
 		if (!twoPane) {
 			// In single-pane mode, simply start the detail fragment
 			// for the selected item ID.
-			FeedbackDetail fragment = new FeedbackDetail(owner,this.mode,requestId);
+			FeedbackDetail fragment = new FeedbackDetail(user,this.mode,requestId);
 			Fragment reqDetail=getChildFragmentManager().findFragmentByTag(RequestDetail.ID);
-			
+
 			getChildFragmentManager().beginTransaction()
 			.hide(reqDetail)
 			.addToBackStack(FeedbackDetail.ID)
 			.add(R.id.container,fragment,FeedbackDetail.ID)
 			.commit();
-			
+
 			getChildFragmentManager().addOnBackStackChangedListener(
 					new FragmentManager.OnBackStackChangedListener() {
 						public void onBackStackChanged() {
@@ -166,25 +179,6 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 				requestListFragment.setRequestAdapter(requests);
 			break;
 		}
-	}
-	@Override
-	public void onUserPartecipantClicked(User owner, String requestId) {
-		FeedbackDetail fragment = new FeedbackDetail(owner,this.mode,requestId);
-		Fragment reqDetail=getChildFragmentManager().findFragmentByTag(RequestDetail.ID);
-		
-		getChildFragmentManager().beginTransaction()
-		.hide(reqDetail)
-		.addToBackStack(FeedbackDetail.ID)
-		.add(R.id.container,fragment,FeedbackDetail.ID)
-		.commit();
-		
-		getChildFragmentManager().addOnBackStackChangedListener(
-				new FragmentManager.OnBackStackChangedListener() {
-					public void onBackStackChanged() {
-						//TODO
-						// Update your UI here.
-					}
-				});
 	}
 
 }

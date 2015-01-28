@@ -40,8 +40,7 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 	private int mode=0;
 	private Request request;
 	private ImageView profileImg;
-	private OnUserSectionClickedListener listener;
-	private OnUserPartecipantClickedListener partecipantListener;
+	private OnUserClickedListener listener;
 	private Button join,sendFb;
 	private ListView userPartecipant;
 	/**
@@ -94,8 +93,7 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 
 		}
 		//registrazione del parente in ascolto
-		listener = ParentFragmentUtil.getParent(this, OnUserSectionClickedListener.class);
-		partecipantListener = ParentFragmentUtil.getParent(this, OnUserPartecipantClickedListener.class);
+		listener = ParentFragmentUtil.getParent(this, OnUserClickedListener.class);
 		return rootView;
 	}
 
@@ -131,12 +129,8 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 	 * Interfaccia che deve implementare il master (fragment o activity) per mostrare i 
 	 * feedback dello user (in modo diverso a seconda del dispositivo).
 	 * */
-	public interface OnUserSectionClickedListener {
-		public void onUserSectionClicked(User owner, String requestId);
-	}
-
-	public interface OnUserPartecipantClickedListener {
-		public void onUserPartecipantClicked(User owner, String requestId);
+	public interface OnUserClickedListener {
+		public void onUserClicked(User user, String requestId);
 	}
 
 	@Override
@@ -144,7 +138,7 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 		System.out.println("Sono entrato nell'onclick");
 		switch (v.getId()) {
 		case R.id.userSection:
-			listener.onUserSectionClicked(request.getOwner(),request.getId());
+			listener.onUserClicked(request.getOwner(),request.getId());
 			break;
 		case R.id.joinReq:
 			if(request.getPartecipants()==null || !request.getPartecipants().contains((QueryManager.getInstance().getCurrentUser().getId())) ){
@@ -187,6 +181,6 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-		partecipantListener.onUserPartecipantClicked((User) userPartecipant.getAdapter().getItem(position),request.getId());
+		listener.onUserClicked((User) userPartecipant.getAdapter().getItem(position),request.getId());
 	}
 }

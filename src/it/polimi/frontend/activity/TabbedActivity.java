@@ -27,7 +27,8 @@ ActionBar.TabListener {
 	private static final int REQUEST_TAB=0;
 	private static final int MAP_TAB=1;
 	private static final int OWNER_TAB=2;
-	private MasterFragment masterFragment,masterFragmentOwner;
+	private static final int JOINED_TAB=3;
+	private MasterFragment masterFragment,masterFragmentOwner,masterFragmentJoined;
 	private RequestMap requestMap;
 	
 	
@@ -170,9 +171,13 @@ ActionBar.TabListener {
 			case OWNER_TAB:
 				masterFragmentOwner = new MasterFragment(MasterFragment.OWNER_REQUEST);
 				return masterFragmentOwner;
-			default:
+			case JOINED_TAB:
+				masterFragmentJoined = new MasterFragment(MasterFragment.JOINED_REQUEST);
+				return masterFragmentJoined;
+			case 4:
 				return PlaceholderFragment.newInstance(position + 1);
 			}
+			return null;
 		}
 
 		@Override
@@ -191,10 +196,11 @@ ActionBar.TabListener {
 				return "Map";
 			case OWNER_TAB:
 				return "Owner Request";
-			case 3:
+			case JOINED_TAB:
+				return "Joined Request";
+			default:
 				return getString(R.string.title_section3).toUpperCase(l);
 			}
-			return null;
 		}
 	}
 
@@ -243,6 +249,9 @@ ActionBar.TabListener {
 		} else if (masterFragmentOwner != null && mViewPager.getCurrentItem()==OWNER_TAB && masterFragmentOwner.getChildFragmentManager().getBackStackEntryCount() > 0){
 			// Get the fragment fragment manager - and pop the backstack
 			masterFragmentOwner.getChildFragmentManager().popBackStack();
+		} else if (masterFragmentJoined != null && mViewPager.getCurrentItem()==JOINED_TAB && masterFragmentJoined.getChildFragmentManager().getBackStackEntryCount() > 0){
+			// Get the fragment fragment manager - and pop the backstack
+			masterFragmentJoined.getChildFragmentManager().popBackStack();
 		}
 		// Else, nothing in the direct fragment back stack
 		else{
