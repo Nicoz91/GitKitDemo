@@ -1,20 +1,20 @@
 package it.polimi.frontend.activity;
 
-import java.util.Locale;
-
-import it.polimi.frontend.activity.R;
 import it.polimi.frontend.fragment.MasterFragment;
 import it.polimi.frontend.fragment.RequestMap;
-import it.polimi.frontend.util.QueryManager;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
+
+import java.util.Locale;
+
+import android.content.Intent;
+import android.database.DataSetObserver;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.content.Intent;
-import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -146,6 +146,34 @@ ActionBar.TabListener {
 			FragmentTransaction fragmentTransaction) {
 	}
 
+	@Override
+	public void onBackPressed() {
+		
+		// If the fragment exists and has some back-stack entry
+		if (masterFragment != null && mViewPager.getCurrentItem()==REQUEST_TAB && masterFragment.getChildFragmentManager().getBackStackEntryCount() > 0){
+			// Get the fragment fragment manager - and pop the backstack
+			masterFragment.getChildFragmentManager().popBackStack();
+		} else if(requestMap != null && mViewPager.getCurrentItem()==MAP_TAB && requestMap.getChildFragmentManager().getBackStackEntryCount() > 0){
+			requestMap.getChildFragmentManager().popBackStack();
+		} else if (masterFragmentOwner != null && mViewPager.getCurrentItem()==OWNER_TAB && masterFragmentOwner.getChildFragmentManager().getBackStackEntryCount() > 0){
+			// Get the fragment fragment manager - and pop the backstack
+			masterFragmentOwner.getChildFragmentManager().popBackStack();
+		} else if (masterFragmentJoined != null && mViewPager.getCurrentItem()==JOINED_TAB && masterFragmentJoined.getChildFragmentManager().getBackStackEntryCount() > 0){
+			// Get the fragment fragment manager - and pop the backstack
+			masterFragmentJoined.getChildFragmentManager().popBackStack();
+		}
+		// Else, nothing in the direct fragment back stack
+		else{
+			// Let super handle the back press
+			Intent i = new Intent(this, MainActivity.class);
+			i.putExtra("Reason", "Exit");
+			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(i);
+			this.finish();
+			//super.onBackPressed();
+		}
+	}
+	
 	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
 	 * one of the sections/tabs/pages.
@@ -192,16 +220,25 @@ ActionBar.TabListener {
 			Locale l = Locale.getDefault();
 			switch (position) {
 			case REQUEST_TAB:
-				return "Request List";
+				return getString(R.string.request_tab_title).toUpperCase(l);
 			case MAP_TAB:
-				return "Map";
+				return getString(R.string.map_tab_title).toUpperCase(l);
 			case OWNER_TAB:
-				return "Owner Request";
+				return getString(R.string.owner_tab_title).toUpperCase(l);
 			case JOINED_TAB:
-				return "Joined Request";
+				return getString(R.string.joined_tab_title).toUpperCase(l);
 			default:
 				return getString(R.string.title_section3).toUpperCase(l);
 			}
+		}
+		
+		/* Non so se sia realmente necessario, ma pare sia meglio fare override di questo 
+		 * metodo in caso di viewpager che contengono liste*/
+		@Override
+		public void unregisterDataSetObserver(DataSetObserver observer) {
+		    if (observer != null) {
+		        super.unregisterDataSetObserver(observer);
+		    }
 		}
 	}
 
@@ -237,33 +274,4 @@ ActionBar.TabListener {
 			return rootView;
 		}
 	}
-	
-	@Override
-	public void onBackPressed() {
-		
-		// If the fragment exists and has some back-stack entry
-		if (masterFragment != null && mViewPager.getCurrentItem()==REQUEST_TAB && masterFragment.getChildFragmentManager().getBackStackEntryCount() > 0){
-			// Get the fragment fragment manager - and pop the backstack
-			masterFragment.getChildFragmentManager().popBackStack();
-		} else if(requestMap != null && mViewPager.getCurrentItem()==MAP_TAB && requestMap.getChildFragmentManager().getBackStackEntryCount() > 0){
-			requestMap.getChildFragmentManager().popBackStack();
-		} else if (masterFragmentOwner != null && mViewPager.getCurrentItem()==OWNER_TAB && masterFragmentOwner.getChildFragmentManager().getBackStackEntryCount() > 0){
-			// Get the fragment fragment manager - and pop the backstack
-			masterFragmentOwner.getChildFragmentManager().popBackStack();
-		} else if (masterFragmentJoined != null && mViewPager.getCurrentItem()==JOINED_TAB && masterFragmentJoined.getChildFragmentManager().getBackStackEntryCount() > 0){
-			// Get the fragment fragment manager - and pop the backstack
-			masterFragmentJoined.getChildFragmentManager().popBackStack();
-		}
-		// Else, nothing in the direct fragment back stack
-		else{
-			// Let super handle the back press
-			Intent i = new Intent(this, MainActivity.class);
-			i.putExtra("Reason", "Exit");
-			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(i);
-			this.finish();
-			//super.onBackPressed();
-		}
-	}
-
 }

@@ -12,6 +12,10 @@
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
+    <string name="request_tab_title">Requests</string>
+    <string name="map_tab_title">Map</string>
+    <string name="owner_tab_title">Owner</string>
+    <string name="joined_tab_title">Joined</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="logout">Log out</string>
