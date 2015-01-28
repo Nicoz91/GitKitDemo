@@ -158,11 +158,12 @@ public class QueryManager {
 		return r;
 	}
 
-	public ArrayList<Request> getUserPartecipation(String email){
-		User u = this.getUserByEmail(email);
+	public ArrayList<Request> getUserPartecipation(){
+
 		ArrayList<Request> partecipation = new ArrayList<Request>();
 		for(Request r : requests){
-			if(u.getJoinedReq().contains(r.getId()))
+			if(user.getJoinedReq()!=null)
+			if(user.getJoinedReq().contains(r.getId()))
 				partecipation.add(r);
 		}
 		return partecipation;
@@ -175,6 +176,7 @@ public class QueryManager {
 	public ArrayList<User> getUserFromRequest(Request r){
 		ArrayList<User> ret = new ArrayList<User>();
 		for(User u : this.users){
+			if(r.getPartecipants()!=null)
 			if(r.getPartecipants().contains(u.getId()))
 				ret.add(u);		
 		}
@@ -186,9 +188,6 @@ public class QueryManager {
 		else{System.out.println("R id:"+r.getId());}
 		try {
 			new JoinRequest(r).execute().get();
-			if(r.getPartecipants()==null)
-				r.setPartecipants(new ArrayList<Long>());
-			r.getPartecipants().add(user.getId());
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -204,7 +203,6 @@ public class QueryManager {
 		else{System.out.println("R id:"+r.getId());}
 		try {
 			new RemoveJoinRequest(r).execute().get();
-			r.getPartecipants().remove(user.getId());
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -220,7 +218,6 @@ public class QueryManager {
 		else{System.out.println("R id:"+r.getId());}
 		try {
 			new RemoveOwnerRequest(r).execute().get();
-			r.getPartecipants().remove(user.getId());
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -490,7 +487,6 @@ public class QueryManager {
 			if(r.getPartecipants()==null)
 				r.setPartecipants(new ArrayList<Long>());
 			r.getPartecipants().add(u.getId());
-			r.setTitle("Cambiato");
 			System.out.println("I partecipant della R che sta per esser aggiunta "+ r.getPartecipants());
 			u.getJoinedReq().add(r.getId());
 			r.setOwner(null);
@@ -501,6 +497,7 @@ public class QueryManager {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			r.setOwner(u);
 			return u;
 		}
 
@@ -528,18 +525,40 @@ public class QueryManager {
 			else
 				System.out.println("Sto modificando: "+u.getName());
 
-			if(u.getJoinedReq()==null)
-				return null;
-			if(!u.getJoinedReq().contains(r.getId()))
-				return null;
+			if(u.getJoinedReq()==null){
+				u.setJoinedReq(new ArrayList<String>());
+				System.out.println("Torno null");
+				//return null;
+			}
+			
 			if(r.getPartecipants()==null)
 				r.setPartecipants(new ArrayList<Long>());
-			r.getPartecipants().remove(u.getId());
+			//r.getPartecipants().remove(u.getId());
+			boolean removed = false;
+			for(int i=0;i<r.getPartecipants().size();i++){
+				if(r.getPartecipants().get(i).longValue()==(user.getId())){
+					removed = true;
+					r.getPartecipants().remove(i);
+				}
+			}		
+			if(removed)	System.out.println("RIMOSSO CON SUCCESSO DALLA REQUEST");
+			else	System.out.println("NON E' STATO TROVATO NELLA REQUEST!!");
+			System.out.println("Il nuovo size e': "+r.getPartecipants().size());
+			removed = false;
+			for(int i=0;i<u.getJoinedReq().size();i++){
+				if(u.getJoinedReq().get(i).equals(r.getId())){
+					u.getJoinedReq().remove(i);
+					removed = true;
 
-			u.getJoinedReq().remove(r.getId());
+				}
+			}
+			if(removed)	System.out.println("RIMOSSO CON SUCCESSO DALLO USER");
+			else	System.out.println("NON E' STATO TROVATO NELLO USER!!");
 
+			r.setOwner(null);
 			try {
 				manager.updateUser(u).execute();
+				manager.updateRequest(r).execute();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

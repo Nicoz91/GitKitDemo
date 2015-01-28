@@ -20,7 +20,7 @@ import android.view.ViewGroup;
 public class MasterFragment extends Fragment implements OnRequestLoadedListener, RequestList.OnRequestSelectedListener, RequestDetail.OnUserClickedListener{
 
 	private boolean twoPane;
-	private static View view;
+	private View view;
 	public final static int ALL_REQUEST=0;
 	public final static int OWNER_REQUEST=1;
 	public final static int JOINED_REQUEST=2;
@@ -53,19 +53,8 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 				System.out.println("Dovrei aver recuperato le richieste dell'owner");
 				break;
 			case JOINED_REQUEST:
-				String mail=null;
-				if (QueryManager.getInstance().getCurrentUser()!=null){
-					User current =QueryManager.getInstance().getCurrentUser();
-					mail = current.getPwAccount() != null ? 
-							current.getPwAccount()
-							: current.getGmailAccount() != null ?
-									current.getGmailAccount() 
-									: current.getFbAccount() != null ?
-											current.getFbAccount()
-											: null;
-					requests = QueryManager.getInstance().getUserPartecipation(mail);
-				}
-				else
+				requests = QueryManager.getInstance().getUserPartecipation();
+				if(requests==null)
 					requests = new ArrayList<Request>();
 				break;
 			default: //Caso ALL_REQUEST + tutti gli altri possibili
