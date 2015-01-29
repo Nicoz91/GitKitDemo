@@ -162,9 +162,9 @@ public class QueryManager {
 
 		ArrayList<Request> partecipation = new ArrayList<Request>();
 		for(Request r : requests){
-			if(user.getJoinedReq()!=null)
-			if(user.getJoinedReq().contains(r.getId()))
-				partecipation.add(r);
+			if(r.getPartecipants()!=null)
+				if(r.getPartecipants().contains(user.getId()))
+					partecipation.add(r);
 		}
 		return partecipation;
 	}
@@ -177,8 +177,8 @@ public class QueryManager {
 		ArrayList<User> ret = new ArrayList<User>();
 		for(User u : this.users){
 			if(r.getPartecipants()!=null)
-			if(r.getPartecipants().contains(u.getId()))
-				ret.add(u);		
+				if(r.getPartecipants().contains(u.getId()))
+					ret.add(u);		
 		}
 		return ret;
 	}
@@ -236,7 +236,7 @@ public class QueryManager {
 		f.setEvaluation(3);
 		//f.setToId(user.getId());
 		f.setRequest("asdjQ");
-		
+
 		try {
 			new InsertFeedback(f).execute().get();
 		} catch (InterruptedException e) {
@@ -286,7 +286,10 @@ public class QueryManager {
 								r.setOwner(u);
 								if(r.getPartecipants()==null)
 									r.setPartecipants(new ArrayList<Long>());}
-							requests.addAll(ownerReq);
+							if(u.getPwAccount().equals(LoginSession.getUser().getEmail())) 
+								continue;
+							else
+								requests.addAll(ownerReq);
 						}
 
 						if(sentFeed!=null && sentFeed.size()>0){
@@ -530,7 +533,7 @@ public class QueryManager {
 				System.out.println("Torno null");
 				//return null;
 			}
-			
+
 			if(r.getPartecipants()==null)
 				r.setPartecipants(new ArrayList<Long>());
 			//r.getPartecipants().remove(u.getId());

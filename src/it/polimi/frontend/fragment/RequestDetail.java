@@ -68,8 +68,10 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 
 		join.setOnClickListener(this);
 		LinearLayout ll = (LinearLayout)rootView.findViewById(R.id.userSection);
-		if (mode==OWNER_REQUEST)
+		if (mode==OWNER_REQUEST){
 			ll.setVisibility(View.GONE);
+			join.setVisibility(View.GONE);
+			}
 		else
 			ll.setOnClickListener(this);
 
