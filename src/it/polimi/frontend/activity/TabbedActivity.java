@@ -141,36 +141,20 @@ ActionBar.TabListener {
 			FragmentTransaction fragmentTransaction) {
 		switch (tab.getPosition()) {
 		case REQUEST_TAB:
-			if (masterFragment!=null)
-				while(masterFragment.getChildFragmentManager().getBackStackEntryCount() > 0){
-					System.out.println("All: Prima del pop "+masterFragment.getChildFragmentManager().getBackStackEntryCount());
-					masterFragment.getChildFragmentManager().popBackStack();
-					System.out.println("All: Dopo il pop "+masterFragment.getChildFragmentManager().getBackStackEntryCount());
-				}
+			if (masterFragment!=null && masterFragment.getChildFragmentManager().getBackStackEntryCount() > 0)
+				masterFragment.getChildFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 			break;
 		case MAP_TAB:
-			if (requestMap!=null)
-				while(requestMap.getChildFragmentManager().getBackStackEntryCount() > 0){
-					System.out.println("Map: Prima del pop "+masterFragment.getChildFragmentManager().getBackStackEntryCount());
-					requestMap.getChildFragmentManager().popBackStack();
-					System.out.println("Map: Dopo il pop "+masterFragment.getChildFragmentManager().getBackStackEntryCount());
-				}
+			if (requestMap!=null && requestMap.getChildFragmentManager().getBackStackEntryCount() > 0)
+				requestMap.getChildFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 			break;
 		case OWNER_TAB:
-			if (masterFragmentOwner!=null)
-				while(masterFragmentOwner.getChildFragmentManager().getBackStackEntryCount() > 0){
-					System.out.println("Owner: Prima del pop "+masterFragment.getChildFragmentManager().getBackStackEntryCount());
-					masterFragmentOwner.getChildFragmentManager().popBackStack();
-					System.out.println("Owner: Dopo il pop "+masterFragment.getChildFragmentManager().getBackStackEntryCount());
-				}
+			if (masterFragmentOwner!=null && masterFragmentOwner.getChildFragmentManager().getBackStackEntryCount() > 0)
+				masterFragmentOwner.getChildFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 			break;
 		case JOINED_TAB:
-			if (masterFragmentJoined!=null)
-				while(masterFragmentJoined.getChildFragmentManager().getBackStackEntryCount() > 0){
-					System.out.println("Joined: Prima del pop "+masterFragment.getChildFragmentManager().getBackStackEntryCount());
-					masterFragmentJoined.getChildFragmentManager().popBackStack();
-					System.out.println("joined: Dopo il pop "+masterFragment.getChildFragmentManager().getBackStackEntryCount());
-				}
+			if (masterFragmentJoined!=null && masterFragmentJoined.getChildFragmentManager().getBackStackEntryCount() > 0)
+				masterFragmentJoined.getChildFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 			break;
 		default:
 			break;
