@@ -1,5 +1,6 @@
 package it.polimi.frontend.fragment;
 
+import it.polimi.appengine.entity.manager.model.Feedback;
 import it.polimi.appengine.entity.manager.model.Request;
 import it.polimi.appengine.entity.manager.model.User;
 import it.polimi.frontend.activity.HttpUtils;
@@ -90,9 +91,6 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 			((TextView)rootView.findViewById(R.id.descriptionLabel))
 			.setText(request.getDescription());
 			userPartecipant = (ListView) rootView.findViewById(R.id.partecipantsList);
-			
-			sendFb = (Button) rootView.findViewById(R.id.showPartecipant);
-			sendFb.setOnClickListener(this);
 
 		}
 		//registrazione del parente in ascolto

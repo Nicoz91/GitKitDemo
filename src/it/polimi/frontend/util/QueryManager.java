@@ -231,11 +231,6 @@ public class QueryManager {
 
 	public void insertFeedback(Feedback f){
 		System.out.println("Provo ad inserire un feed");
-		f = new Feedback();
-		f.setDescription("Male male");
-		f.setEvaluation(3);
-		//f.setToId(user.getId());
-		f.setRequest("asdjQ");
 
 		try {
 			new InsertFeedback(f).execute().get();
@@ -277,7 +272,22 @@ public class QueryManager {
 
 						ArrayList<Request> ownerReq = (ArrayList<Request>) u.getRequests();
 						ArrayList<Feedback> sentFeed = (ArrayList<Feedback>) u.getSentFb();
+						if(sentFeed!=null && sentFeed.size()>0){
+							System.out.println("SIZE DEI FEED INVIATI: "+sentFeed.size());
+							for(Feedback f: sentFeed){
+								f.setFrom(u);
+								for(User u1 : users){
+									if(f.getToId().equals(u1.getId())){
+										f.setTo(u1);
+										if(u1.getReceivedFb()==null)
+											u1.setReceivedFb(new ArrayList<Feedback>());
+										System.out.println("Assegno all'utente "+u1.getName()+" il feed"+f.getDescription());
+										u1.getReceivedFb().add(f);
+									}
+								}
 
+							}
+						}
 						if(ownerReq!=null && ownerReq.size()>0){
 							for(Request r : ownerReq){
 								//								Request req = manager.getRequest(r.getId()).execute();
@@ -290,21 +300,6 @@ public class QueryManager {
 								continue;
 							else
 								requests.addAll(ownerReq);
-						}
-
-						if(sentFeed!=null && sentFeed.size()>0){
-							for(Feedback f: sentFeed){
-								f.setFrom(u);
-								for(User u1 : users){
-									if(f.getToId()==u1.getId()){
-										f.setTo(u1);
-										if(u1.getReceivedFb()==null)
-											u1.setReceivedFb(new ArrayList<Feedback>());
-										u1.getReceivedFb().add(f);
-									}
-								}
-
-							}
 						}
 
 					}

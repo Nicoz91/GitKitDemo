@@ -61,17 +61,19 @@ public class FeedbackDetail extends Fragment implements OnClickListener, OnRatin
 		this.feedbackLV = (ListView)rootView.findViewById(R.id.feedbackList);
 		if (owner!=null){
 			List<Feedback> feedbacks = owner.getReceivedFb();
+
 			//feedback di prova per visualizzazione
 			if (feedbacks==null)
 				feedbacks= new ArrayList<Feedback>();
-			Feedback f = new Feedback();
-			User u = new User();
-			u.setName("Primo");
-			u.setSurname("Reviwer");
-			f.setFrom(u);
-			f.setEvaluation(3);
-			f.setDescription("Questa persona fa schifo. Ma comunque gli do 3 stelle.");
-			feedbacks.add(f);
+			System.out.println("Size dei feed ricevuti: "+feedbacks.size());
+//			Feedback f = new Feedback();
+//			User u = new User();
+//			u.setName("Primo");
+//			u.setSurname("Reviwer");
+//			f.setFrom(u);
+//			f.setEvaluation(3);
+//			f.setDescription("Questa persona fa schifo. Ma comunque gli do 3 stelle.");
+//			feedbacks.add(f);
 			Context c = getActivity();
 			if(c==null){ 
 				System.out.println("Il context è null ma noi bariamo");
@@ -93,10 +95,10 @@ public class FeedbackDetail extends Fragment implements OnClickListener, OnRatin
 		Feedback fb = new Feedback();
 		fb.setEvaluation(evaluation);
 		fb.setDescription(((EditText)getView().findViewById(R.id.description)).getEditableText().toString());
-		fb.setTo(owner);
+		fb.setToId(owner.getId());
 		fb.setRequest(requestID);
 		//mListener.onFeedbackSent(fb); //TODO pensare se convenga farlo inserire al parent
-		//QueryManager.getInstance().insertFeedback(fb); //...o qui direttamente
+		QueryManager.getInstance().insertFeedback(fb); //...o qui direttamente
 	}
 
 	@Override
