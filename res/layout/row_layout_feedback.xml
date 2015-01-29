@@ -23,7 +23,8 @@
             android:gravity="center"
             android:maxHeight="42dp"
             android:maxWidth="42dp"
-            android:scaleType="fitCenter" />
+            android:scaleType="fitCenter"
+            android:src="@drawable/default_photo" />
 
         <LinearLayout
             android:layout_width="match_parent"

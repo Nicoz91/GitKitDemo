@@ -17,7 +17,8 @@
         android:maxHeight="42dp"
         android:maxWidth="42dp"
         android:scaleType="fitCenter"
-        android:contentDescription="@string/iconDesc" />
+        android:contentDescription="@string/iconDesc"
+        android:src="@drawable/default_photo" />
 
     <LinearLayout
         android:layout_width="match_parent"
