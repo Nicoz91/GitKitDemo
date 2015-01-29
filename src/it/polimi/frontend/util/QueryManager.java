@@ -136,6 +136,18 @@ public class QueryManager {
 		return u;
 
 	}
+	
+	public void updateUser(){
+		try {
+			new UpdateUser().execute().get();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	public Request insertRequest(Request request){
 		Request r = null;
@@ -631,6 +643,37 @@ public class QueryManager {
 				e.printStackTrace();
 			}
 			return f;
+		}
+	}
+	
+	private class UpdateUser extends AsyncTask<Void, Void, User> {
+
+		@Override
+		protected User doInBackground(Void... params) {
+			User u = new User();
+			try {
+				u = manager.getUserByEmail(LoginSession.getUser().getEmail()).execute();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			if(u==null)
+				System.out.println("Utente null");
+			else
+				System.out.println("Sto modificando: "+u.getName());
+			u.setName(user.getName());
+			u.setSurname(user.getSurname());
+			u.setBday(user.getBday());
+			u.setPhotoURL(user.getPhotoURL());
+			u.setGender(user.getGender());
+			try {
+				manager.updateUser(u).execute();
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			System.out.println("Dovrei aver aggiornato correttamente l'utente");
+			return u;
 		}
 	}
 }
