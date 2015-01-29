@@ -1,6 +1,8 @@
 package it.polimi.frontend.fragment;
 
+import it.polimi.appengine.entity.manager.model.User;
 import it.polimi.frontend.activity.R;
+import it.polimi.frontend.util.QueryManager;
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -36,20 +38,37 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 	private boolean male;
 	private Menu menu;
 	private boolean editMode;
+	private User user;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_account_settings,
 				container, false);
 		setHasOptionsMenu(true);
+		user = QueryManager.getInstance().getCurrentUser();
 		nameET = (EditText) rootView.findViewById(R.id.name);
+		nameET.setText(user.getName());
 		surnameET = (EditText) rootView.findViewById(R.id.surname);
+		surnameET.setText(user.getSurname());
 		pwAccountET = (EditText) rootView.findViewById(R.id.pwAccount);
+		pwAccountET.setText(user.getPwAccount());
 		gmailAccountET = (EditText) rootView.findViewById(R.id.gmailAccount);
+		gmailAccountET.setText(user.getGmailAccount());
 		fbAccountET = (EditText) rootView.findViewById(R.id.fbAccount);
+		fbAccountET.setText(user.getFbAccount());
 		bDayET = (EditText) rootView.findViewById(R.id.bDay);
+		if (user.getBday()!=null){
+			Calendar c = Calendar.getInstance();
+			c.setTimeInMillis(user.getBday().getValue());
+			this.onDateSet(null, c.get(Calendar.YEAR),c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+		}
+		bDayET.setOnClickListener(this);
 		maleRB = (RadioButton) rootView.findViewById(R.id.radio_male);
 		femaleRB = (RadioButton) rootView.findViewById(R.id.radio_female);
+		if (user.getGender())
+			maleRB.performClick();
+		else 
+			femaleRB.performClick();
 		editMode=false;
 		editable(editMode);
 		return rootView;
@@ -81,10 +100,34 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 			menu.findItem(R.id.saveAccount).setVisible(false);
 			editMode=false;
 			editable(editMode);
+
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	private boolean hasChanged(){
+		boolean changed=false, dataEraPresente=false;
+		if (user.getBday()!=null){
+			Calendar c = Calendar.getInstance();
+			c.setTimeInMillis(user.getBday().getValue());
+			dataEraPresente=true;
+		}else{
+			dataEraPresente=false;
+		}
+		if (nameET.getEditableText().toString().equals(user.getName())
+				&& surnameET.getEditableText().toString().equals(user.getSurname())
+				&& pwAccountET.getEditableText().toString().equals(user.getPwAccount())
+				&& gmailAccountET.getEditableText().toString().equals(user.getGmailAccount())
+				&& fbAccountET.getEditableText().toString().equals(user.getFbAccount())
+				&& surnameET.getEditableText().toString().equals(user.getName())
+				&& male==user.getGender()
+				&& (!dataEraPresente && data==null) 
+				//TODO
+				)
+			changed=false;
+		return changed;
 	}
 
 	public void showDatePickerDialog(View v){
@@ -146,8 +189,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		fbAccountET.setFocusable(editable);
 		fbAccountET.setFocusableInTouchMode(editable);
 		fbAccountET.setClickable(editable);
-		bDayET.setFocusable(editable);
-		bDayET.setFocusableInTouchMode(!editable);
+
 		bDayET.setClickable(editable);
 		maleRB.setClickable(editable);
 		femaleRB.setClickable(editable);
