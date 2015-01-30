@@ -24,6 +24,9 @@ public class RequestList extends ListFragment /*implements OnRequestLoadedListen
 	private int listMode=0;
 	private List<Request> requests;
 
+	public RequestList(){
+	}
+	
 	public RequestList(List<Request> reqs, int mode){
 		requests=reqs;
 		this.listMode=mode;

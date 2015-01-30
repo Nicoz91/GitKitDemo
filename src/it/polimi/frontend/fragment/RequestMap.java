@@ -35,6 +35,16 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 	private boolean twoPane=false;
 	private static View view;
 
+	public RequestMap(){
+	}
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		// Retain this fragment across configuration changes.
+		setRetainInstance(true);
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (view != null) {

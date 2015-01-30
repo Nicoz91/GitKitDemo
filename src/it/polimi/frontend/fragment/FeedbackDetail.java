@@ -43,6 +43,10 @@ public class FeedbackDetail extends Fragment implements OnClickListener, OnRatin
 		public void onFeedbackSent(Feedback feedback);//TODO
 	}
 
+	public FeedbackDetail(){
+		
+	}
+	
 	public FeedbackDetail(User owner, int mode, String request){
 		this.owner=owner;
 		this.mode=mode;

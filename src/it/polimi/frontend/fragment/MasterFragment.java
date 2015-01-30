@@ -26,16 +26,25 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 	public final static int JOINED_REQUEST=2;
 	private int mode;
 
+	/**
+	 * Costruttore vuoto obbligatorio per cambiamenti di orientazione
+	 * */
 	public MasterFragment(){
-		this.mode=0;
 	}
 	public MasterFragment(int mode){
 		this.mode=mode;
 	}
 
 	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		// Retain this fragment across configuration changes.
+		setRetainInstance(true);
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		//PRIMA POSSIBILE SOLUZIONE (A problema di exception al cambio di tab)
+		this.mode = getArguments().getInt("mode");
 		QueryManager.getInstance().addListener(this);
 		if (view != null) {
 			ViewGroup parent = (ViewGroup) view.getParent();
