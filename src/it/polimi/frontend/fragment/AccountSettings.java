@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -103,17 +104,17 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		if (user.getPwAccount()!=null)
 			accountType[PW]=true;
 		else {
-			((TextView)rootView.findViewById(R.id.pwRow)).setVisibility(View.GONE);
+			((TableRow)rootView.findViewById(R.id.pwRow)).setVisibility(View.GONE);
 		}
 		if (user.getGmailAccount()!=null)
 			accountType[GMAIL]=true;
 		else {
-			((TextView)rootView.findViewById(R.id.gmailRow)).setVisibility(View.GONE);
+			((TableRow)rootView.findViewById(R.id.gmailRow)).setVisibility(View.GONE);
 		}
 		if (user.getFbAccount()!=null)
 			accountType[FB]=true;
 		else {
-			((TextView)rootView.findViewById(R.id.fbRow)).setVisibility(View.GONE);
+			((TableRow)rootView.findViewById(R.id.fbRow)).setVisibility(View.GONE);
 		}
 		//Setup NonEditable Mode
 		editMode=false;
@@ -146,8 +147,10 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 			menu.findItem(R.id.saveAccount).setVisible(false);
 			editMode=false;
 			editable(editMode);
-			if (hasChanged())
+			if (hasChanged()){
 				updateUser();
+				initializeView(getView());
+			}
 			else
 				Toast.makeText(getActivity().getApplicationContext(), "Nulla è cambiato.",
 						Toast.LENGTH_SHORT).show();
