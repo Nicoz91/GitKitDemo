@@ -18,6 +18,10 @@ public class DetailContainerFragment extends Fragment implements RequestDetail.O
 	private int mode=0;
 	private Request request;
 	
+	public DetailContainerFragment(){
+		
+	}
+	
 	public DetailContainerFragment(Request request,int mode){
 		this.request=request;
 		this.mode=mode;

@@ -209,19 +209,25 @@ ActionBar.TabListener {
 			// getItem is called to instantiate the fragment for the given page.
 			// Return a PlaceholderFragment (defined as a static inner class
 			// below).
+			Bundle args = new Bundle();
 			switch (position) {
 			case REQUEST_TAB:
-				masterFragment = new MasterFragment(MasterFragment.ALL_REQUEST);
+				masterFragment = new MasterFragment();
+				args.putInt("mode", MasterFragment.ALL_REQUEST);
+				masterFragment.setArguments(args);
 				return masterFragment;
 			case MAP_TAB:
 				requestMap = new RequestMap();
 				return requestMap;
 			case OWNER_TAB:
-				masterFragmentOwner = new MasterFragment(MasterFragment.OWNER_REQUEST);
-				System.out.println("Dovrei aver creato il masterfragment dell'owner");
+				masterFragmentOwner = new MasterFragment();
+				args.putInt("mode", MasterFragment.OWNER_REQUEST);
+				masterFragmentOwner.setArguments(args);
 				return masterFragmentOwner;
 			case JOINED_TAB:
-				masterFragmentJoined = new MasterFragment(MasterFragment.JOINED_REQUEST);
+				masterFragmentJoined = new MasterFragment();
+				args.putInt("mode", MasterFragment.JOINED_REQUEST);
+				masterFragmentJoined.setArguments(args);
 				return masterFragmentJoined;
 			//case 4:
 			//	return PlaceholderFragment.newInstance(position + 1);

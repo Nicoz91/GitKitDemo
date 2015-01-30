@@ -49,13 +49,14 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 	 * fragment (e.g. upon screen orientation changes).
 	 */
 	public RequestDetail() {
+		
 	}
 
 	public RequestDetail(Request request, int mode){
 		this.request=request;
 		this.mode=mode;
 	}
-
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_request_detail,
