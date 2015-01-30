@@ -125,6 +125,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.settings, menu);
 		this.menu=menu;
+		//
 		menu.findItem(R.id.editAccount).setVisible(true);
 		menu.findItem(R.id.saveAccount).setVisible(false);
 	}
