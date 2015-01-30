@@ -1,7 +1,14 @@
 package it.polimi.frontend.fragment;
 
+import java.util.Calendar;
+
+import com.googlecode.android.widgets.DateSlider.DateSlider;
+import com.googlecode.android.widgets.DateSlider.DateTimeSlider;
+import com.googlecode.android.widgets.DateSlider.labeler.TimeLabeler;
+
 import it.polimi.appengine.entity.manager.model.Request;
 import it.polimi.frontend.activity.R;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,11 +17,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.EditText;
 
 
 public class InsertRequest extends Fragment{
-
+	
+	static final int DEFAULTDATESELECTOR_ID = 0;
 	public final static String ID="InsertRequestFragmentID";
 	//private GoogleMap map;
 	private EditText title;

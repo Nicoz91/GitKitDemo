@@ -1,5 +1,12 @@
 package it.polimi.frontend.activity;
 
+import java.util.Calendar;
+
+import com.googlecode.android.widgets.DateSlider.DateSlider;
+import com.googlecode.android.widgets.DateSlider.DateTimeSlider;
+import com.googlecode.android.widgets.DateSlider.labeler.TimeLabeler;
+
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -31,7 +38,27 @@ public class RequestActivity extends ActionBarActivity {
 		fragmentTransaction.add(R.id.insRequestContainer, insert);
 //		fragmentTransaction.add(R.id.insRequestContainer, fragment2);
 		fragmentTransaction.commit();
+		showDialog(0);
 	}
+	
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        final Calendar c = Calendar.getInstance();
+    	return new DateTimeSlider(this,mDateTimeSetListener,c);
+    }
+    
+
+    private DateSlider.OnDateSetListener mDateTimeSetListener =
+        new DateSlider.OnDateSetListener() {
+            public void onDateSet(DateSlider view, Calendar selectedDate) {
+                // update the dateText view with the corresponding date
+                int minute = selectedDate.get(Calendar.MINUTE) /
+                        TimeLabeler.MINUTEINTERVAL*TimeLabeler.MINUTEINTERVAL;
+//                dateText.setText(String.format("The chosen date and time:%n%te. %tB %tY%n%tH:%02d",
+//                        selectedDate, selectedDate, selectedDate, selectedDate, minute));
+            }
+    };
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

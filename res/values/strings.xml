@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <string name="dateSliderTitle">Selected date</string>
     <string name="app_name">Gitkit Demo</string>
     <string name="profile_picture_desc">Profile picture</string>
     <string name="welcome">Welcome to Gitkit Demo</string>
