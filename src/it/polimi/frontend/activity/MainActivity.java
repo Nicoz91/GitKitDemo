@@ -251,6 +251,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		Intent i = getIntent();
 		if (i!=null && i.getStringExtra("Reason")!=null && i.getStringExtra("Reason").equals("Logout")){
 			LoginSession.reset();
+			QueryManager.destroy();
 			showSignInPage();
 		} else if (i!=null && i.getStringExtra("Reason")!=null && i.getStringExtra("Reason").equals("Exit")){
 			//System.runFinalizersOnExit(true);
