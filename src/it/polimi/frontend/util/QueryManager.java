@@ -17,6 +17,7 @@ import android.os.AsyncTask;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.identitytoolkit.demo.messageEndpoint.MessageEndpoint;
 
 public class QueryManager {
 
@@ -25,6 +26,7 @@ public class QueryManager {
 	private List<Request> requests;
 	private List<OnRequestLoadedListener> listeners;
 	private Manager manager;
+	private MessageEndpoint message;
 	private static QueryManager instance;
 	private ProgressDialog mProgressDialog;
 	private User user;
@@ -61,6 +63,10 @@ public class QueryManager {
 				AndroidHttp.newCompatibleTransport(), new JacksonFactory(), null);
 		managerBuilder = CloudEndpointUtils.updateBuilder(managerBuilder);
 		this.manager = managerBuilder.build();
+		MessageEndpoint.Builder messageBuilder = new MessageEndpoint.Builder(
+				AndroidHttp.newCompatibleTransport(), new JacksonFactory(), null);
+		messageBuilder = CloudEndpointUtils.updateBuilder(messageBuilder);
+		this.message = messageBuilder.build();
 	}
 
 	public static QueryManager getInstance(){
@@ -503,6 +509,8 @@ public class QueryManager {
 			try {
 				manager.updateUser(u).execute();
 				manager.updateRequest(r).execute();
+				message.notify("Notifica", u.getDevices().get(0)).execute();
+				message.notify("Notifica", u.getDevices().get(1)).execute();
 
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -572,6 +580,7 @@ public class QueryManager {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			r.setOwner(u);
 			return u;
 		}
 	}
