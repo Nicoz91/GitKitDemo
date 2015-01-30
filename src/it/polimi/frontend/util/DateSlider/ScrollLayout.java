@@ -129,7 +129,7 @@ public class ScrollLayout extends LinearLayout {
             Constructor<?> ctor = klazz.getConstructor(String.class);
             mLabeler = (Labeler)ctor.newInstance(labelerFormat);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to construct labeler at " + a.getPositionDescription(), e);
+            throw new RuntimeException("Failed to construct labeler at " + a.getPositionDescription()+" e poi "+a.getClass(), e);
         }
 
         // Determine the width and height of our children, using the labelers preferred

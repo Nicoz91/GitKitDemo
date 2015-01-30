@@ -7,17 +7,17 @@
     android:layout_height="fill_parent">
     <it.polimi.frontend.util.DateSlider.ScrollLayout
         style="@style/Scroller"
-        app:labelerClass="com.googlecode.android.widgets.DateSlider.labeler.MonthYearLabeler"
+        app:labelerClass="it.polimi.frontend.util.DateSlider.labeler.MonthYearLabeler"
         app:labelerFormat="%tb %tY"
         app:childWidth="180dp"/>
     <it.polimi.frontend.util.DateSlider.ScrollLayout
         style="@style/Scroller"
-        app:labelerClass="com.googlecode.android.widgets.DateSlider.labeler.DayDateLabeler"
+        app:labelerClass="it.polimi.frontend.util.DateSlider.labeler.DayDateLabeler"
         app:labelerFormat="%td %ta"
         app:childWidth="120dp"/>
     <it.polimi.frontend.util.DateSlider.ScrollLayout
         style="@style/Scroller"
-        app:labelerClass="com.googlecode.android.widgets.DateSlider.labeler.TimeLabeler"
+        app:labelerClass="it.polimi.frontend.util.DateSlider.labeler.TimeLabeler"
         app:labelerFormat="%tR"
         app:childWidth="80dp"/>
     <include layout="@layout/dialogbuttons"/>

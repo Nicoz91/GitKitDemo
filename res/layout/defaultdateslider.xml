@@ -8,13 +8,13 @@
     >
     <it.polimi.frontend.util.DateSlider.ScrollLayout
         style="@style/Scroller"
-        app:labelerClass="com.googlecode.android.widgets.DateSlider.labeler.MonthYearLabeler"
+        app:labelerClass="it.polimi.frontend.util.DateSlider.labeler.MonthYearLabeler"
         app:labelerFormat="%tb %tY"
         app:childWidth="90dp"
         />
     <it.polimi.frontend.util.DateSlider.ScrollLayout
         style="@style/Scroller"
-        app:labelerClass="com.googlecode.android.widgets.DateSlider.labeler.DayDateLabeler"
+        app:labelerClass="it.polimi.frontend.util.DateSlider.labeler.DayDateLabeler"
         app:labelerFormat="%td %ta"
         app:childWidth="45dp"
         />

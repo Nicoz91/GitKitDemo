@@ -7,12 +7,12 @@
     android:layout_height="fill_parent">
     <it.polimi.frontend.util.DateSlider.ScrollLayout
         style="@style/Scroller"
-        app:labelerClass="com.googlecode.android.widgets.DateSlider.labeler.HourLabeler"
+        app:labelerClass="it.polimi.frontend.util.DateSlider.labeler.HourLabeler"
         app:labelerFormat="%tk"
         app:childWidth="90dp"/>
     <it.polimi.frontend.util.DateSlider.ScrollLayout
         style="@style/Scroller"
-        app:labelerClass="com.googlecode.android.widgets.DateSlider.labeler.MinuteLabeler"
+        app:labelerClass="it.polimi.frontend.util.DateSlider.labeler.MinuteLabeler"
         app:labelerFormat="%tM"
         app:childWidth="45dp"/>
     <include layout="@layout/dialogbuttons"/>
