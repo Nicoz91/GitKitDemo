@@ -146,8 +146,10 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 			menu.findItem(R.id.saveAccount).setVisible(false);
 			editMode=false;
 			editable(editMode);
-			if (hasChanged())
+			if (hasChanged()){
 				updateUser();
+				initializeView(getView());
+			}
 			else
 				Toast.makeText(getActivity().getApplicationContext(), "Nulla è cambiato.",
 						Toast.LENGTH_SHORT).show();
