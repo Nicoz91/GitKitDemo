@@ -1,9 +1,8 @@
-package com.googlecode.android.widgets.DateSlider.labeler;
+package it.polimi.frontend.util.DateSlider.labeler;
 
+import it.polimi.frontend.util.DateSlider.timeview.DayTimeLayoutView;
+import it.polimi.frontend.util.DateSlider.timeview.TimeView;
 import android.content.Context;
-
-import com.googlecode.android.widgets.DateSlider.timeview.DayTimeLayoutView;
-import com.googlecode.android.widgets.DateSlider.timeview.TimeView;
 
 /**
  * A Labeler that displays days using DayTimeLayoutViews.

@@ -1,10 +1,10 @@
-package com.googlecode.android.widgets.DateSlider.timeview;
+package it.polimi.frontend.util.DateSlider.timeview;
+
+import it.polimi.frontend.util.DateSlider.TimeObject;
 
 import java.util.Calendar;
 
 import android.content.Context;
-
-import com.googlecode.android.widgets.DateSlider.TimeObject;
 
 /**
  * This is a subclass of the TimeLayoutView that represents a day. It uses

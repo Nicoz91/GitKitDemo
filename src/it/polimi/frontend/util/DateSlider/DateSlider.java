@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-package com.googlecode.android.widgets.DateSlider;
+package it.polimi.frontend.util.DateSlider;
 
 import java.util.Calendar;
 
@@ -29,8 +29,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import it.polimi.frontend.activity.R;
-
-import com.googlecode.android.widgets.DateSlider.SliderContainer.OnTimeChangeListener;
+import it.polimi.frontend.util.DateSlider.SliderContainer.OnTimeChangeListener;
 
 /**
  * A Dialog subclass that hosts a SliderContainer and a couple of buttons,

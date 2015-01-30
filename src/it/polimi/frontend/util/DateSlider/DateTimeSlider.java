@@ -16,14 +16,13 @@
  * limitations under the License.
  */
 
-package com.googlecode.android.widgets.DateSlider;
+package it.polimi.frontend.util.DateSlider;
 
 import java.util.Calendar;
 
 import android.content.Context;
 import it.polimi.frontend.activity.R;
-
-import com.googlecode.android.widgets.DateSlider.labeler.TimeLabeler;
+import it.polimi.frontend.util.DateSlider.labeler.TimeLabeler;
 
 public class DateTimeSlider extends DateSlider {
 

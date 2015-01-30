@@ -1,4 +1,4 @@
-package com.googlecode.android.widgets.DateSlider;
+package it.polimi.frontend.util.DateSlider;
 
 /**
  * Very simple helper class that defines a time unit with a label (text) its start-

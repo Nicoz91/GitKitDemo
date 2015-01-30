@@ -2,10 +2,6 @@ package it.polimi.frontend.activity;
 
 import java.util.Calendar;
 
-import com.googlecode.android.widgets.DateSlider.DateSlider;
-import com.googlecode.android.widgets.DateSlider.DateTimeSlider;
-import com.googlecode.android.widgets.DateSlider.labeler.TimeLabeler;
-
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +15,9 @@ import it.polimi.frontend.activity.R;
 import it.polimi.frontend.fragment.GetPositionMap;
 import it.polimi.frontend.fragment.InsertRequest;
 import it.polimi.frontend.util.QueryManager;
+import it.polimi.frontend.util.DateSlider.DateSlider;
+import it.polimi.frontend.util.DateSlider.DateTimeSlider;
+import it.polimi.frontend.util.DateSlider.labeler.TimeLabeler;
 public class RequestActivity extends ActionBarActivity {
 	
 	private InsertRequest insert;

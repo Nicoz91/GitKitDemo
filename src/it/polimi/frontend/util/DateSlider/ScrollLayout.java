@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package com.googlecode.android.widgets.DateSlider;
+package it.polimi.frontend.util.DateSlider;
 
 import java.lang.reflect.Constructor;
 
@@ -35,11 +35,9 @@ import android.view.ViewConfiguration;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.Scroller;
-
 import it.polimi.frontend.activity.R;
-
-import com.googlecode.android.widgets.DateSlider.labeler.Labeler;
-import com.googlecode.android.widgets.DateSlider.timeview.TimeView;
+import it.polimi.frontend.util.DateSlider.labeler.Labeler;
+import it.polimi.frontend.util.DateSlider.timeview.TimeView;
 
 /**
  * This is where most of the magic happens. This is a subclass of LinearLayout

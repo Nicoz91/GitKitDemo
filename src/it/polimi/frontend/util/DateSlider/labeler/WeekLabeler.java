@@ -1,4 +1,8 @@
-package com.googlecode.android.widgets.DateSlider.labeler;
+package it.polimi.frontend.util.DateSlider.labeler;
+
+import it.polimi.frontend.util.DateSlider.TimeObject;
+import it.polimi.frontend.util.DateSlider.timeview.TimeTextView;
+import it.polimi.frontend.util.DateSlider.timeview.TimeView;
 
 import java.util.Calendar;
 
@@ -6,10 +10,6 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.util.TypedValue;
 import android.view.Gravity;
-
-import com.googlecode.android.widgets.DateSlider.TimeObject;
-import com.googlecode.android.widgets.DateSlider.timeview.TimeTextView;
-import com.googlecode.android.widgets.DateSlider.timeview.TimeView;
 
 /**
  * A customized Labeler that displays weeks using a CustomTimeTextView

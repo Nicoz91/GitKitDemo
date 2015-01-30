@@ -1,8 +1,8 @@
-package com.googlecode.android.widgets.DateSlider.labeler;
+package it.polimi.frontend.util.DateSlider.labeler;
+
+import it.polimi.frontend.util.DateSlider.TimeObject;
 
 import java.util.Calendar;
-
-import com.googlecode.android.widgets.DateSlider.TimeObject;
 
 /**
  * A bunch of static helpers for manipulating dates and times. There are two

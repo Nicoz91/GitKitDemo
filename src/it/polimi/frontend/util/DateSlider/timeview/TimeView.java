@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 
-package com.googlecode.android.widgets.DateSlider.timeview;
+package it.polimi.frontend.util.DateSlider.timeview;
 
-import com.googlecode.android.widgets.DateSlider.TimeObject;
+import it.polimi.frontend.util.DateSlider.TimeObject;
 
 /**
  * This interface represents the views that will be placed in the ScrollLayout.

@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package com.googlecode.android.widgets.DateSlider;
+package it.polimi.frontend.util.DateSlider;
 
 import java.util.Calendar;
 

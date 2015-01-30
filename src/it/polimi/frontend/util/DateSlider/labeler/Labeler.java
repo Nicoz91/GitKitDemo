@@ -1,12 +1,12 @@
-package com.googlecode.android.widgets.DateSlider.labeler;
+package it.polimi.frontend.util.DateSlider.labeler;
+
+import it.polimi.frontend.util.DateSlider.TimeObject;
+import it.polimi.frontend.util.DateSlider.timeview.TimeTextView;
+import it.polimi.frontend.util.DateSlider.timeview.TimeView;
 
 import java.util.Calendar;
 
 import android.content.Context;
-
-import com.googlecode.android.widgets.DateSlider.TimeObject;
-import com.googlecode.android.widgets.DateSlider.timeview.TimeTextView;
-import com.googlecode.android.widgets.DateSlider.timeview.TimeView;
 
 /**
  * This is an abstract class whose job is create TimeViews that can be used

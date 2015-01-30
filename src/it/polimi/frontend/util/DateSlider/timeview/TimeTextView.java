@@ -1,12 +1,11 @@
-package com.googlecode.android.widgets.DateSlider.timeview;
+package it.polimi.frontend.util.DateSlider.timeview;
 
+import it.polimi.frontend.util.DateSlider.TimeObject;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.widget.TextView;
-
-import com.googlecode.android.widgets.DateSlider.TimeObject;
 
 /**
  * This is a simple implementation of a TimeView which is implemented

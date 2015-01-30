@@ -2,12 +2,11 @@ package it.polimi.frontend.fragment;
 
 import java.util.Calendar;
 
-import com.googlecode.android.widgets.DateSlider.DateSlider;
-import com.googlecode.android.widgets.DateSlider.DateTimeSlider;
-import com.googlecode.android.widgets.DateSlider.labeler.TimeLabeler;
-
 import it.polimi.appengine.entity.manager.model.Request;
 import it.polimi.frontend.activity.R;
+import it.polimi.frontend.util.DateSlider.DateSlider;
+import it.polimi.frontend.util.DateSlider.DateTimeSlider;
+import it.polimi.frontend.util.DateSlider.labeler.TimeLabeler;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
