@@ -505,6 +505,7 @@ public class QueryManager {
 			r.getPartecipants().add(u.getId());
 			System.out.println("I partecipant della R che sta per esser aggiunta "+ r.getPartecipants());
 			u.getJoinedReq().add(r.getId());
+			User oldOwner = r.getOwner();
 			r.setOwner(null);
 			try {
 				manager.updateUser(u).execute();
@@ -515,7 +516,7 @@ public class QueryManager {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			r.setOwner(u);
+			r.setOwner(oldOwner);
 			return u;
 		}
 
@@ -572,7 +573,7 @@ public class QueryManager {
 			}
 			if(removed)	System.out.println("RIMOSSO CON SUCCESSO DALLO USER");
 			else	System.out.println("NON E' STATO TROVATO NELLO USER!!");
-
+			User oldOwner = r.getOwner();
 			r.setOwner(null);
 			try {
 				manager.updateUser(u).execute();
@@ -580,7 +581,7 @@ public class QueryManager {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			r.setOwner(u);
+			r.setOwner(oldOwner);
 			return u;
 		}
 	}
