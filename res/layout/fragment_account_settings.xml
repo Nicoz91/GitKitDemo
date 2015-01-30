@@ -19,14 +19,14 @@
             android:src="@drawable/default_photo" />
 
         <TableLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:orientation="vertical" >
+            android:layout_weight="1">
 
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.0" >
+                android:layout_weight="1" >
 
                 <TextView
                     android:id="@+id/nameLabel"
@@ -34,18 +34,26 @@
                     android:layout_height="wrap_content"
                     android:text="@string/nameLabel" />
 
+                <TextView
+                    android:id="@+id/nameTV"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
                 <EditText
                     android:id="@+id/name"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:hint="@string/nameHint"
-                    android:inputType="text|textCapWords" />
+                    android:inputType="text|textCapWords"
+                    android:visibility="gone" />
             </TableRow>
 
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.0" >
+                android:layout_weight="1" >
 
                 <TextView
                     android:id="@+id/surnameLabel"
@@ -53,17 +61,26 @@
                     android:layout_height="wrap_content"
                     android:text="@string/surnameLabel" />
 
+                <TextView
+                    android:id="@+id/surnameTV"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
                 <EditText
                     android:id="@+id/surname"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:hint="@string/surnameHint"
-                    android:inputType="text|textCapWords" />
+                    android:inputType="text|textCapWords"
+                    android:visibility="gone" />
             </TableRow>
         </TableLayout>
     </TableRow>
 
     <TableRow
+        android:id="@+id/pwRow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1.0" >
@@ -74,15 +91,24 @@
             android:layout_height="wrap_content"
             android:text="@string/pwAccountLabel" />
 
+        <TextView
+            android:id="@+id/pwAccountTV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
         <EditText
             android:id="@+id/pwAccount"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:hint="@string/pwAccountHint"
-            android:inputType="text|textEmailAddress" />
+            android:inputType="text|textEmailAddress"
+            android:visibility="gone" />
     </TableRow>
 
     <TableRow
+        android:id="@+id/gmailRow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1.0" >
@@ -93,15 +119,24 @@
             android:layout_height="wrap_content"
             android:text="@string/gmailAccountLabel" />
 
+        <TextView
+            android:id="@+id/gmailAccountTV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
         <EditText
             android:id="@+id/gmailAccount"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:hint="@string/pwAccountHint"
-            android:inputType="text|textEmailAddress" />
+            android:inputType="text|textEmailAddress"
+            android:visibility="gone" />
     </TableRow>
 
     <TableRow
+        android:id="@+id/fbRow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1.0" >
@@ -112,12 +147,20 @@
             android:layout_height="wrap_content"
             android:text="@string/fbAccountLabel" />
 
+        <TextView
+            android:id="@+id/fbAccountTV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
         <EditText
             android:id="@+id/fbAccount"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:hint="@string/fbAccountHint"
-            android:inputType="text|textEmailAddress" />
+            android:inputType="text|textEmailAddress"
+            android:visibility="gone" />
     </TableRow>
 
     <TableRow
@@ -131,13 +174,21 @@
             android:layout_height="wrap_content"
             android:text="@string/bDayLabel" />
 
+        <TextView
+            android:id="@+id/bDayTV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
         <EditText
             android:id="@+id/bDay"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:focusableInTouchMode="false"
             android:hint="@string/bDayHint"
-            android:inputType="date" />
+            android:inputType="date"
+            android:visibility="gone" />
     </TableRow>
 
     <TableRow
@@ -160,14 +211,12 @@
                 android:id="@+id/radio_male"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onRadioButtonClicked"
                 android:text="@string/genderMale" />
 
             <RadioButton
                 android:id="@+id/radio_female"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onRadioButtonClicked"
                 android:text="@string/genderFemale" />
         </RadioGroup>
     </TableRow>
