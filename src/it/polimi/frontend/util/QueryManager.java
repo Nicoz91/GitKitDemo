@@ -139,6 +139,7 @@ public class QueryManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		this.user = user;
 		return u;
 
 	}
@@ -511,7 +512,7 @@ public class QueryManager {
 				manager.updateUser(u).execute();
 				manager.updateRequest(r).execute();
 				message.notify("Notifica", u.getDevices().get(0)).execute();
-				message.notify("Notifica", u.getDevices().get(1)).execute();
+//				message.notify("Notifica", u.getDevices().get(1)).execute();
 
 			} catch (IOException e) {
 				e.printStackTrace();

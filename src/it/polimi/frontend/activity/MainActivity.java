@@ -183,47 +183,40 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	}
 
 	private void showRegistrationPage(GitkitUser user){
-		setContentView(R.layout.profile);
-		showAccount(user);
-		User u = new User();
-		u.setName("John"+Math.random()*100);
-		u.setSurname("A"+Math.random()*100);
-		u.setPwAccount(user.getEmail());
-		ArrayList<String> dev = new ArrayList<String>();
-		dev.add(LoginSession.getDeviceId());
-		u.setDevices(dev);
-		if(u.getRequests()==null)
-			u.setRequests(new ArrayList<Request>());
-		Request req = new Request();
-		req.setDescription("Richiesta iniziale");
-		req.setTitle("Test"+Math.random()*100);
-		GeoPt geo = new GeoPt();
-		geo.setLatitude(45.38766f);
-		geo.setLongitude(9.22514f);
-		req.setPlace(geo);
-		u.getRequests().add(req);
-
-		System.out.println("Provo a registrare l'utente");
-		u  = QueryManager.getInstance().insertUser(u);
-		System.out.println("Registrazione effettuata con successo");
-		findViewById(R.id.sign_out).setOnClickListener(this);
-
-		findViewById(R.id.sign_out).setOnClickListener(this);
-		startActivity(new Intent(this, TabbedActivity.class));
+//		setContentView(R.layout.profile);
+//		showAccount(user);
+//		User u = new User();
+//		u.setName("John"+Math.random()*100);
+//		u.setSurname("A"+Math.random()*100);
+//		u.setPwAccount(user.getEmail());
+//		ArrayList<String> dev = new ArrayList<String>();
+//		dev.add(LoginSession.getDeviceId());
+//		u.setDevices(dev);
+//		if(u.getRequests()==null)
+//			u.setRequests(new ArrayList<Request>());
+//		Request req = new Request();
+//		req.setDescription("Richiesta iniziale");
+//		req.setTitle("Test"+Math.random()*100);
+//		GeoPt geo = new GeoPt();
+//		geo.setLatitude(45.38766f);
+//		geo.setLongitude(9.22514f);
+//		req.setPlace(geo);
+//		u.getRequests().add(req);
+//
+//		System.out.println("Provo a registrare l'utente");
+//		u  = QueryManager.getInstance().insertUser(u);
+//		System.out.println("Registrazione effettuata con successo");
+//		findViewById(R.id.sign_out).setOnClickListener(this);
+//
+//		findViewById(R.id.sign_out).setOnClickListener(this);
+		startActivity(new Intent(this, SettingsActivity.class));
 	}
 
 	private void showProfilePage(IdToken idToken, GitkitUser user) {
 		QueryManager.getInstance().loadRequest();
-		
-//		Request r = new Request();
-//		r.setDescription("Prova");
-//		r.setTitle("Non ti sdoppiare"+(int)(Math.random()*10));
-//		r = QueryManager.getInstance().insertRequest(r);
-//		if(r!=null)	System.out.println("Inserita correttamente");
-//		System.out.println("Dovrei ricevere una notifica...");
-		setContentView(R.layout.profile);
-		showAccount(user);
-		findViewById(R.id.sign_out).setOnClickListener(this);
+		//setContentView(R.layout.profile);
+		//showAccount(user);
+		//findViewById(R.id.sign_out).setOnClickListener(this);
 		startActivity(new Intent(this, TabbedActivity.class));
 	}
 

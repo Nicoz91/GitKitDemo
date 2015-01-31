@@ -1,13 +1,19 @@
 package it.polimi.frontend.fragment;
 
 import it.polimi.appengine.entity.manager.model.User;
+import it.polimi.frontend.activity.LoginSession;
+import it.polimi.frontend.activity.MainActivity;
 import it.polimi.frontend.activity.R;
+import it.polimi.frontend.activity.SettingsActivity;
+import it.polimi.frontend.activity.TabbedActivity;
 import it.polimi.frontend.util.QueryManager;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -42,14 +48,21 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 	private User user;
 	private final static int PW=0,GMAIL=1,FB=2;
 	private boolean accountType[]={false,false,false};
-
+	private boolean regMode=false;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_account_settings,
 				container, false);
 		setHasOptionsMenu(true);
 		user = QueryManager.getInstance().getCurrentUser();
+		if(user == null){
+			user = new User();
+			user.setPwAccount(LoginSession.getUser().getEmail());
+			user.setGender(true);
+			regMode = true;
+		}
 		initializeView(rootView);
+
 		return rootView;
 	}
 
@@ -99,7 +112,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 			maleRB.performClick();
 		else 
 			femaleRB.performClick();
-		
+
 		//Setup degli account visibili
 		if (user.getPwAccount()!=null)
 			accountType[PW]=true;
@@ -117,7 +130,11 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 			((TableRow)rootView.findViewById(R.id.fbRow)).setVisibility(View.GONE);
 		}
 		//Setup NonEditable Mode
-		editMode=false;
+		if(regMode)
+			editMode = true;
+		else
+			editMode=false;
+
 		editable(editMode);
 	}
 
@@ -126,8 +143,15 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		inflater.inflate(R.menu.settings, menu);
 		this.menu=menu;
 		//
-		menu.findItem(R.id.editAccount).setVisible(true);
-		menu.findItem(R.id.saveAccount).setVisible(false);
+		if(!regMode){
+			menu.findItem(R.id.editAccount).setVisible(true);
+			menu.findItem(R.id.saveAccount).setVisible(false);
+		}
+		else
+		{
+			menu.findItem(R.id.editAccount).setVisible(false);
+			menu.findItem(R.id.saveAccount).setVisible(true);
+		}
 	}
 
 	@Override
@@ -148,6 +172,15 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 			menu.findItem(R.id.saveAccount).setVisible(false);
 			editMode=false;
 			editable(editMode);
+			if(regMode){
+				registerUser();
+
+				QueryManager.getInstance().loadRequest();
+				startActivity(new Intent(getActivity(), TabbedActivity.class));
+				getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+				this.getActivity().finish();
+				return false;
+			}
 			if (hasChanged()){
 				updateUser();
 				initializeView(getView());
@@ -161,6 +194,17 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		}
 	}
 
+	private void registerUser(){
+		updateUser();
+		ArrayList<String> devices = new ArrayList<String>();
+		devices.add(LoginSession.getDeviceId());
+		user.setDevices(devices);
+		user  = QueryManager.getInstance().insertUser(user);
+		Toast.makeText(getActivity().getApplicationContext(), "Registrazione effettuata.",
+				Toast.LENGTH_SHORT).show();
+
+	}
+
 	private void updateUser(){
 		user.setName(nameET.getEditableText().toString());
 		user.setSurname(surnameET.getEditableText().toString());
@@ -169,9 +213,11 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		user.setFbAccount(accountET[FB].getEditableText().toString());
 		user.setGender(male);
 		user.setBday(new DateTime(data.getTimeInMillis()));
-		QueryManager.getInstance().updateUser();
-		Toast.makeText(getActivity().getApplicationContext(), "Dati utente aggiornati correttamente.",
-				Toast.LENGTH_SHORT).show();
+		if(!regMode){
+			QueryManager.getInstance().updateUser();
+			Toast.makeText(getActivity().getApplicationContext(), "Dati utente aggiornati correttamente.",
+					Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	private boolean hasChanged(){

@@ -66,12 +66,14 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 				container, false);
 		profileImg = (ImageView) rootView.findViewById(R.id.profileImg);
 		join = (Button) rootView.findViewById(R.id.joinReq);
+		sendFb = (Button) rootView.findViewById(R.id.showPartecipant);
 		if(request.getPartecipants()==null || !request.getPartecipants().contains((QueryManager.getInstance().getCurrentUser().getId())))
 			join.setText("Partecipa");
 		else
 			join.setText("Cancella");
 
 		join.setOnClickListener(this);
+		sendFb.setOnClickListener(this);
 		LinearLayout ll = (LinearLayout)rootView.findViewById(R.id.userSection);
 		if (mode==OWNER_REQUEST){
 			ll.setVisibility(View.GONE);
