@@ -12,6 +12,7 @@ import it.polimi.frontend.util.UserAdapter;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -51,14 +52,14 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 	 * fragment (e.g. upon screen orientation changes).
 	 */
 	public RequestDetail() {
-		
+
 	}
 
 	public RequestDetail(Request request, int mode){
 		this.request=request;
 		this.mode=mode;
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_request_detail,
@@ -77,7 +78,7 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 		if (mode==OWNER_REQUEST){
 			ll.setVisibility(View.GONE);
 			join.setVisibility(View.GONE);
-			}
+		}
 		else
 			ll.setOnClickListener(this);
 
@@ -105,6 +106,30 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 			//Titolo richiesta
 			((TextView)rootView.findViewById(R.id.titleLabel))
 			.setText("Titolo: "+request.getTitle());
+			//Tempo richiesta
+			if (request.getStart()!=null && request.getEnd()!=null){
+				//Start date
+				Calendar start = Calendar.getInstance();
+				start.setTimeInMillis(request.getStart().getValue());
+				String dataInizio = start.get(Calendar.DAY_OF_MONTH)+" "+
+						start.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.ITALIAN)
+						+" "+start.get(Calendar.YEAR);
+				//Duration
+				long durationMs = request.getStart().getValue()-request.getEnd().getValue();
+				long duration = durationMs / 1000;
+				long h = duration / 3600;
+				long m = (duration - h * 3600) / 60;
+				long s = duration - (h * 3600 + m * 60);
+				String durationValue;
+				if (h == 0)
+					durationValue = m+"m:"+s+"s";
+				else 
+					durationValue = h+"h:"+m+"m:"+s+"s";
+				((TextView)rootView.findViewById(R.id.timeLabel))
+				.setText("Data: "+dataInizio+", Durata: "+durationValue);
+			} else 
+				((TextView)rootView.findViewById(R.id.timeLabel))
+				.setText("Tempi non specificati.");
 			//Descrizione
 			((TextView)rootView.findViewById(R.id.descriptionLabel))
 			.setText(request.getDescription());
@@ -183,21 +208,21 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 	private int getAge(Calendar dob, Calendar now){
 		int age=0;
 		age = now.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
-	    if ((dob.get(Calendar.MONTH) > now.get(Calendar.MONTH))
-	        || (dob.get(Calendar.MONTH) == now.get(Calendar.MONTH) && dob.get(Calendar.DAY_OF_MONTH) > now
-	            .get(Calendar.DAY_OF_MONTH))) {
-	      age--;
-	    }
+		if ((dob.get(Calendar.MONTH) > now.get(Calendar.MONTH))
+				|| (dob.get(Calendar.MONTH) == now.get(Calendar.MONTH) && dob.get(Calendar.DAY_OF_MONTH) > now
+				.get(Calendar.DAY_OF_MONTH))) {
+			age--;
+		}
 		return age;
 	}
-	
+
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 		listener.onUserClicked((User) userPartecipant.getAdapter().getItem(position),request.getId());
 	}
-	
+
 	private class JoinTask extends AsyncTask<Boolean, Void, Boolean>{
-		
+
 		@Override
 		protected void onPreExecute() {
 			showDialog();
@@ -214,7 +239,7 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 			System.out.println("Prima della return");
 			return arg[0];
 		}
-		
+
 		@Override
 		protected void onPostExecute(Boolean add) {
 			hideDialog();
@@ -227,7 +252,7 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 						Toast.LENGTH_SHORT).show();
 		}
 	}
-	
+
 	private class ProfileImageTask extends AsyncTask<String, Void, Bitmap>{
 		@Override
 		protected Bitmap doInBackground(String... arg) {
@@ -238,7 +263,7 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 				return null;
 			}
 		}
-		
+
 		@Override
 		protected void onPostExecute(Bitmap bitmap) {
 			if (bitmap != null && profileImg!=null) {
@@ -246,7 +271,7 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 			}
 		}
 	}
-	
+
 	/** 
 	 * Metodi per mostrare o meno il progressDialog
 	 * */

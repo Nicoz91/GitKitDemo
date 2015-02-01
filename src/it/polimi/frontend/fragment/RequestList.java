@@ -128,7 +128,7 @@ public class RequestList extends ListFragment /*implements OnRequestLoadedListen
 		}
 		else 
 			System.out.println("Tutto ok inizializzo l'adapter");
-		RequestAdapter adapter = new RequestAdapter(c,0,reqs);
+		RequestAdapter adapter = new RequestAdapter(c,0,reqs,this.listMode);
 		setListAdapter(adapter);
 	}
 
