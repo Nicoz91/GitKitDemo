@@ -67,17 +67,20 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 		profileImg = (ImageView) rootView.findViewById(R.id.profileImg);
 		join = (Button) rootView.findViewById(R.id.joinReq);
 		sendFb = (Button) rootView.findViewById(R.id.showPartecipant);
+		if(mode!=OWNER_REQUEST){
 		if(request.getPartecipants()==null || !request.getPartecipants().contains((QueryManager.getInstance().getCurrentUser().getId())))
 			join.setText("Partecipa");
 		else
 			join.setText("Cancella");
-
+		}else{
+			join.setText("Cancella la richiesta");
+		}
 		join.setOnClickListener(this);
 		sendFb.setOnClickListener(this);
 		LinearLayout ll = (LinearLayout)rootView.findViewById(R.id.userSection);
 		if (mode==OWNER_REQUEST){
 			ll.setVisibility(View.GONE);
-			join.setVisibility(View.GONE);
+			//join.setVisibility(View.GONE);
 		}
 		else
 			ll.setOnClickListener(this);
@@ -167,6 +170,7 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 			listener.onUserClicked(request.getOwner(),request.getId());
 			break;
 		case R.id.joinReq:
+			if(mode!=OWNER_REQUEST){
 			if(request.getPartecipants()==null || !request.getPartecipants().contains((QueryManager.getInstance().getCurrentUser().getId())) ){
 				QueryManager.getInstance().joinRequest(request);
 				//new JoinTask().execute(true);
@@ -176,6 +180,9 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 				QueryManager.getInstance().removeJoinRequest(request);
 				//new JoinTask().execute(false);
 				join.setText("Partecipa");
+			}
+			}else{
+				QueryManager.getInstance().removeOwnerRequest(request);
 			}
 			break;
 		case R.id.showPartecipant:
