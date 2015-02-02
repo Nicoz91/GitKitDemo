@@ -52,6 +52,7 @@ public class RequestAdapter extends ArrayAdapter<Request>{
 			switch (listMode) {
 			case OWNER_REQUEST:
 				textView.setText(reqs.get(position).getTitle());
+				((ImageView) rowView.findViewById(R.id.imgIcon)).setVisibility(View.GONE);
 				if (reqs.get(position).getStart()!=null && reqs.get(position).getEnd()!=null){
 					//Start date
 					Calendar start = Calendar.getInstance();
