@@ -2,11 +2,10 @@ package it.polimi.frontend.fragment;
 
 import it.polimi.appengine.entity.manager.model.User;
 import it.polimi.frontend.activity.LoginSession;
-import it.polimi.frontend.activity.MainActivity;
 import it.polimi.frontend.activity.R;
-import it.polimi.frontend.activity.SettingsActivity;
 import it.polimi.frontend.activity.TabbedActivity;
 import it.polimi.frontend.util.QueryManager;
+import it.polimi.frontend.util.TextValidator;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -44,11 +43,12 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 	private RadioButton femaleRB;
 	private boolean male;
 	private Menu menu;
-	private boolean editMode;
+	private boolean editMode=false;
 	private User user;
 	private final static int PW=0,GMAIL=1,FB=2;
 	private boolean accountType[]={false,false,false};
-	private boolean regMode=false;
+	private boolean regMode=false, valid=true;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_account_settings,
@@ -72,14 +72,66 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		//Setup EditText
 		nameET = (EditText) rootView.findViewById(R.id.name);
 		nameET.setText(user.getName());
+		nameET.addTextChangedListener(new TextValidator(nameET){
+			@Override
+			public void validate(TextView textView, String text) {
+				if(text!=null && !text.equals("")){
+					valid=true;
+				} else {
+					valid=false;
+					textView.setError("Il nome non può essere vuoto.");
+				}
+			}
+		});
 		surnameET = (EditText) rootView.findViewById(R.id.surname);
 		surnameET.setText(user.getSurname());
+		surnameET.addTextChangedListener(new TextValidator(surnameET){
+			@Override
+			public void validate(TextView textView, String text) {
+				if(text!=null && !text.equals("")){
+					valid=true;
+				} else {
+					valid=false;
+					textView.setError("Il cognome non può essere vuoto.");
+				}
+			}
+		});
+		//Setup degli account visibili
+		if (user.getPwAccount()!=null && !user.getPwAccount().equals(""))
+			accountType[PW]=true;
+		else {
+			((TableRow)rootView.findViewById(R.id.pwRow)).setVisibility(View.GONE);
+		}
+		if (user.getGmailAccount()!=null && !user.getGmailAccount().equals(""))
+			accountType[GMAIL]=true;
+		else {
+			((TableRow)rootView.findViewById(R.id.gmailRow)).setVisibility(View.GONE);
+		}
+		if (user.getFbAccount()!=null && !user.getFbAccount().equals(""))
+			accountType[FB]=true;
+		else {
+			((TableRow)rootView.findViewById(R.id.fbRow)).setVisibility(View.GONE);
+		}
 		accountET[PW] = (EditText) rootView.findViewById(R.id.pwAccount);
 		accountET[PW].setText(user.getPwAccount());
 		accountET[GMAIL] = (EditText) rootView.findViewById(R.id.gmailAccount);
 		accountET[GMAIL].setText(user.getGmailAccount());
 		accountET[FB] = (EditText) rootView.findViewById(R.id.fbAccount);
 		accountET[FB].setText(user.getFbAccount());
+		for (int i=0; i<accountET.length;i++){
+			if (accountType[i])
+				accountET[i].addTextChangedListener(new TextValidator(accountET[i]){
+					@Override
+					public void validate(TextView textView, String text) {
+						if(text!=null && !text.equals("") && android.util.Patterns.EMAIL_ADDRESS.matcher(text).matches()){
+							valid=true;
+						} else {
+							valid=false;
+							textView.setError("Mail non valida.");
+						}
+					}
+				});
+		}
 
 		//Setup TextView
 		nameTV = (TextView) rootView.findViewById(R.id.nameTV);
@@ -97,11 +149,27 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		bDayET = (EditText) rootView.findViewById(R.id.bDay);
 		bDayTV = (TextView) rootView.findViewById(R.id.bDayTV);
 		if (user.getBday()!=null){
-			Calendar c = Calendar.getInstance();
-			c.setTimeInMillis(user.getBday().getValue());
-			this.onDateSet(null, c.get(Calendar.YEAR),c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+			data = Calendar.getInstance();
+			data.setTimeInMillis(user.getBday().getValue());
+			bDayET.setText(data.get(Calendar.DAY_OF_MONTH)+" "+
+					data.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.ITALIAN)
+					+" "+data.get(Calendar.YEAR));
+			bDayTV.setText(data.get(Calendar.DAY_OF_MONTH)+" "+
+					data.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.ITALIAN)
+					+" "+data.get(Calendar.YEAR));
 		}
 		bDayET.setOnClickListener(this);
+		bDayET.addTextChangedListener(new TextValidator(bDayET){
+			@Override
+			public void validate(TextView textView, String text) {
+				if(data!=null && data.after(Calendar.getInstance())){
+					valid=false;
+					textView.setError("Non puoi venire dal futuro.");
+				} else {
+					valid=true;
+				}
+			}
+		});
 
 		//Setup gender
 		maleRB = (RadioButton) rootView.findViewById(R.id.radio_male);
@@ -113,22 +181,6 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		else 
 			femaleRB.performClick();
 
-		//Setup degli account visibili
-		if (user.getPwAccount()!=null)
-			accountType[PW]=true;
-		else {
-			((TableRow)rootView.findViewById(R.id.pwRow)).setVisibility(View.GONE);
-		}
-		if (user.getGmailAccount()!=null)
-			accountType[GMAIL]=true;
-		else {
-			((TableRow)rootView.findViewById(R.id.gmailRow)).setVisibility(View.GONE);
-		}
-		if (user.getFbAccount()!=null)
-			accountType[FB]=true;
-		else {
-			((TableRow)rootView.findViewById(R.id.fbRow)).setVisibility(View.GONE);
-		}
 		//Setup NonEditable Mode
 		if(regMode)
 			editMode = true;
@@ -146,9 +198,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		if(!regMode){
 			menu.findItem(R.id.editAccount).setVisible(true);
 			menu.findItem(R.id.saveAccount).setVisible(false);
-		}
-		else
-		{
+		} else {
 			menu.findItem(R.id.editAccount).setVisible(false);
 			menu.findItem(R.id.saveAccount).setVisible(true);
 		}
@@ -168,10 +218,6 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 			editable(editMode);
 			return true;
 		case R.id.saveAccount:
-			menu.findItem(R.id.editAccount).setVisible(true);
-			menu.findItem(R.id.saveAccount).setVisible(false);
-			editMode=false;
-			editable(editMode);
 			if(regMode){
 				registerUser();
 
@@ -182,12 +228,24 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 				return false;
 			}
 			if (hasChanged()){
-				updateUser();
-				initializeView(getView());
-			}
-			else
+				if (valid){
+					menu.findItem(R.id.editAccount).setVisible(true);
+					menu.findItem(R.id.saveAccount).setVisible(false);
+					editMode=false;
+					editable(editMode);
+					updateUser();
+					initializeView(getView());
+				} else 
+					Toast.makeText(getActivity().getApplicationContext(), "Qualcosa non va nei campi inseriti.",
+							Toast.LENGTH_SHORT).show();
+			} else{
 				Toast.makeText(getActivity().getApplicationContext(), "Nulla è cambiato.",
 						Toast.LENGTH_SHORT).show();
+				menu.findItem(R.id.editAccount).setVisible(true);
+				menu.findItem(R.id.saveAccount).setVisible(false);
+				editMode=false;
+				editable(editMode);
+			}
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -259,9 +317,10 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		bDayET.setText(data.get(Calendar.DAY_OF_MONTH)+" "+
 				data.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.ITALIAN)
 				+" "+data.get(Calendar.YEAR));
-		bDayTV.setText(data.get(Calendar.DAY_OF_MONTH)+" "+
-				data.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.ITALIAN)
-				+" "+data.get(Calendar.YEAR));
+		if(!editMode)
+			bDayTV.setText(data.get(Calendar.DAY_OF_MONTH)+" "+
+					data.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.ITALIAN)
+					+" "+data.get(Calendar.YEAR));
 	}
 
 	@Override

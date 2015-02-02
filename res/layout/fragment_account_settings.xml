@@ -30,21 +30,22 @@
 
                 <TextView
                     android:id="@+id/nameLabel"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/nameLabel" />
+                    android:text="@string/nameLabel"
+                    android:layout_weight="1" />
 
                 <TextView
                     android:id="@+id/nameTV"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:layout_weight="2" />
 
                 <EditText
                     android:id="@+id/name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:hint="@string/nameHint"
                     android:inputType="text|textCapWords"
                     android:visibility="gone" />
@@ -57,7 +58,8 @@
 
                 <TextView
                     android:id="@+id/surnameLabel"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="@string/surnameLabel" />
 
@@ -65,13 +67,13 @@
                     android:id="@+id/surnameTV"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:layout_weight="2" />
 
                 <EditText
                     android:id="@+id/surname"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:hint="@string/surnameHint"
                     android:inputType="text|textCapWords"
                     android:visibility="gone" />
@@ -87,7 +89,8 @@
 
         <TextView
             android:id="@+id/pwAccountLabel"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="@string/pwAccountLabel" />
 
@@ -95,13 +98,13 @@
             android:id="@+id/pwAccountTV"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="2" />
 
         <EditText
             android:id="@+id/pwAccount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:hint="@string/pwAccountHint"
             android:inputType="text|textEmailAddress"
             android:visibility="gone" />
@@ -115,7 +118,8 @@
 
         <TextView
             android:id="@+id/gmailAccountLabel"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="@string/gmailAccountLabel" />
 
@@ -123,13 +127,13 @@
             android:id="@+id/gmailAccountTV"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="2" />
 
         <EditText
             android:id="@+id/gmailAccount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:hint="@string/pwAccountHint"
             android:inputType="text|textEmailAddress"
             android:visibility="gone" />
@@ -143,7 +147,8 @@
 
         <TextView
             android:id="@+id/fbAccountLabel"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="@string/fbAccountLabel" />
 
@@ -151,13 +156,13 @@
             android:id="@+id/fbAccountTV"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="2" />
 
         <EditText
             android:id="@+id/fbAccount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:hint="@string/fbAccountHint"
             android:inputType="text|textEmailAddress"
             android:visibility="gone" />
@@ -170,7 +175,8 @@
 
         <TextView
             android:id="@+id/bDayLabel"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="@string/bDayLabel" />
 
@@ -178,13 +184,13 @@
             android:id="@+id/bDayTV"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="2" />
 
         <EditText
             android:id="@+id/bDay"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:focusableInTouchMode="false"
             android:hint="@string/bDayHint"
             android:inputType="date"
