@@ -27,25 +27,26 @@ public class GetPositionMap extends Fragment{
 	private LatLng position;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		LocationManager locationmanager;
-		
-		String context=Context.LOCATION_SERVICE;
-		locationmanager=(LocationManager) this.getActivity().getSystemService(context);
-		String provider=LocationManager.NETWORK_PROVIDER;
-		Location location= locationmanager.getLastKnownLocation(provider);
-		Double lat=location.getLatitude();
-        Double lon=location.getLongitude();
-        System.out.println("Lat: "+lat+ " Lon: "+lon);
-		LatLng pos = new LatLng(lat,lon);
-		View rootView = inflater.inflate(R.layout.fragment_position_map,
+				View rootView = inflater.inflate(R.layout.fragment_position_map,
 				container, false);
+
 		map = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapPosition)).getMap();
+		map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+			@Override
+			public void onMapClick(LatLng point) {
+				if(marker==null){
+					marker = new MarkerOptions().draggable(true).position(
+							new LatLng(point.latitude, point.longitude)).title("Posizione Richiesta");
+					map.addMarker(marker);
+					position = new LatLng(point.latitude,point.longitude);
+				}
+				else{
+					marker = new MarkerOptions().draggable(true).position(
+							new LatLng(point.latitude, point.longitude)).title("Posizione Richiesta");
+				}
 
-		marker = new MarkerOptions().draggable(true).position(pos)
-				.title("Casa dello studente")
-				.snippet("Tutti alla casa");
-
-		map.addMarker(marker);
+			}
+		});
 
 		map.setOnMarkerDragListener(new OnMarkerDragListener() {
 			@Override
@@ -57,7 +58,7 @@ public class GetPositionMap extends Fragment{
 				// TODO Auto-generated method stub
 				map.animateCamera(CameraUpdateFactory.newLatLng(arg0.getPosition()));
 				position = arg0.getPosition();
-				
+
 			}
 			@Override
 			public void onMarkerDrag(Marker arg0) {
@@ -66,8 +67,14 @@ public class GetPositionMap extends Fragment{
 		});
 
 		// Move the camera instantly to hamburg with a zoom of 15.
-		map.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 15));
 
+		LocationManager locationmanager;
+        String context=Context.LOCATION_SERVICE;
+        locationmanager=(LocationManager) getActivity().getSystemService(context);
+        String provider=LocationManager.NETWORK_PROVIDER;
+        Location location= locationmanager.getLastKnownLocation(provider);
+        
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(45.4766, 9.22414), 15));
 		// Zoom in, animating the camera.
 		map.animateCamera(CameraUpdateFactory.zoomTo(100), 2000, null);
 

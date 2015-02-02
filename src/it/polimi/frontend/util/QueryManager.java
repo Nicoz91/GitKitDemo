@@ -126,6 +126,13 @@ public class QueryManager {
 		return u;
 
 	}
+	
+	public void notifyListener(){
+		System.out.println("NOTIFICO I LISTENER PER AGGIORNARE LE VIEW");
+		for (OnRequestLoadedListener l : listeners){
+			l.onRequestLoaded(requests);
+		}
+	}
 
 	public User insertUser(User user){
 		User u = null;
@@ -156,10 +163,10 @@ public class QueryManager {
 		}
 	}
 
-	public Request insertRequest(Request request){
-		Request r = null;
+	public void insertRequest(Request request){
 		try {
-			r = new InsertRequest(request).execute().get();
+			new InsertRequest(request).execute().get();
+			notifyListener();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -167,25 +174,20 @@ public class QueryManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		requests.add(r);
-		System.out.println("Aggiorno la view");
-		System.out.println("Size: "+listeners.size());
-		for (OnRequestLoadedListener l : listeners){
-			System.out.println("Classe: "+l.getClass().toString());
-			l.onRequestLoaded(requests);
-		}
-		return r;
 	}
 
 	public ArrayList<Request> getUserPartecipation(){
 
-		ArrayList<Request> partecipation = new ArrayList<Request>();
-		for(Request r : requests){
-			if(r.getPartecipants()!=null)
-				if(r.getPartecipants().contains(user.getId()))
-					partecipation.add(r);
-		}
-		return partecipation;
+//		ArrayList<Request> partecipation = new ArrayList<Request>();
+//		for(Request r : requests){
+//			if(r.getPartecipants()!=null)
+//				if(r.getPartecipants().contains(user.getId()))
+//					partecipation.add(r);
+//		}
+//return partecipation;
+	if(user.getRequests()!=null)
+	return (ArrayList<Request>) user.getRequests();
+	else return new ArrayList<Request>();
 	}
 
 	public User getCurrentUser(){
@@ -237,6 +239,13 @@ public class QueryManager {
 		else{System.out.println("R id:"+r.getId());}
 		try {
 			new RemoveOwnerRequest(r).execute().get();
+			for(int i=0;i<user.getRequests().size();i++){
+				if(user.getRequests().get(i).getId().equals(r.getId())){
+					user.getRequests().remove(i);
+					break;
+				}
+				
+			}
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -472,10 +481,17 @@ public class QueryManager {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			return r.setOwner(u);
+			r.setOwner(user);
+			addRequest(user,r);
+			
+			return r;
 		}
 
-
+private void addRequest(User u, Request r){
+	if(u.getRequests()==null)
+		u.setRequests(new ArrayList<Request>());
+	u.getRequests().add(r);
+}
 
 	}
 	private class JoinRequest extends AsyncTask<Void, Void, User> {
@@ -607,12 +623,19 @@ public class QueryManager {
 			else
 				System.out.println("Sto modificando: "+u.getName());
 
-			if(u.getRequests()==null)
-				return null;
-			if(!u.getRequests().contains(r.getId()))
-				return null;
+			if(u.getRequests()==null){
+				System.out.println("Request è null quindi non modifico nulla");
+				return null;}
+			
+			for(int i=0;i<u.getRequests().size();i++){
+				if(u.getRequests().get(i).getId().equals(r.getId())){
+					u.getRequests().remove(i);
+					break;
+				}
+				
+			}
 
-			u.getRequests().remove(r.getId());
+			//u.getRequests().remove(r.getId());
 
 			try {
 				manager.updateUser(u).execute();

@@ -169,7 +169,8 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 		RequestList requestListFragment = (RequestList)getChildFragmentManager().findFragmentByTag(RequestList.ID);
 		switch (mode) {
 		case OWNER_REQUEST:
-			//TODO
+			if (requestListFragment!=null)
+				requestListFragment.setRequestAdapter(QueryManager.getInstance().getUserPartecipation());
 			break;
 		case JOINED_REQUEST:
 			//TODO
