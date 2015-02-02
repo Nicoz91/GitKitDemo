@@ -68,9 +68,9 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 		join = (Button) rootView.findViewById(R.id.joinReq);
 		sendFb = (Button) rootView.findViewById(R.id.showPartecipant);
 		if(request.getPartecipants()==null || !request.getPartecipants().contains((QueryManager.getInstance().getCurrentUser().getId())))
-			join.setText("Partecipa");
+			join.setText(getString(R.string.join));// ="Partecipa"
 		else
-			join.setText("Cancella");
+			join.setText(getString(R.string.cancel)); //="Cancella partecipazione"
 
 		join.setOnClickListener(this);
 		sendFb.setOnClickListener(this);
@@ -170,18 +170,18 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 			if(request.getPartecipants()==null || !request.getPartecipants().contains((QueryManager.getInstance().getCurrentUser().getId())) ){
 				QueryManager.getInstance().joinRequest(request);
 				//new JoinTask().execute(true);
-				join.setText("Cancella");
+				join.setText(getString(R.string.cancel));
 			}
 			else{
 				QueryManager.getInstance().removeJoinRequest(request);
 				//new JoinTask().execute(false);
-				join.setText("Partecipa");
+				join.setText(getString(R.string.join));
 			}
 			break;
 		case R.id.showPartecipant:
 			System.out.println("Sono entrato nell'onclick di showPartecipant");
-			if (sendFb.getText().toString().equals("Mostra Partecipanti")){
-				sendFb.setText("Nascondi Partecipanti");
+			if (sendFb.getText().toString().equals(getString(R.string.showPartecipants))){
+				sendFb.setText(getString(R.string.hidePartecipants));
 				userPartecipant.setVisibility(View.VISIBLE);
 
 				userPartecipant.setOnItemClickListener(this);
@@ -197,7 +197,7 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 				userPartecipant.setAdapter(new UserAdapter(c,0,users));
 			}else{
 				userPartecipant.setVisibility(View.GONE);
-				sendFb.setText("Mostra Partecipanti");
+				sendFb.setText(getString(R.string.showPartecipants));
 			}
 			break;
 		default:

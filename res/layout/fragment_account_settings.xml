@@ -33,13 +33,15 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/nameLabel"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    style="@style/titleTextStyle" />
 
                 <TextView
                     android:id="@+id/nameTV"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2" />
+                    android:layout_weight="2"
+                    style="@style/baseTextStyle" />
 
                 <EditText
                     android:id="@+id/name"
@@ -48,7 +50,8 @@
                     android:layout_weight="2"
                     android:hint="@string/nameHint"
                     android:inputType="text|textCapWords"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    style="@style/baseTextStyle" />
             </TableRow>
 
             <TableRow
@@ -61,13 +64,15 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="@string/surnameLabel" />
+                    android:text="@string/surnameLabel"
+                    style="@style/titleTextStyle" />
 
                 <TextView
                     android:id="@+id/surnameTV"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2" />
+                    android:layout_weight="2"
+                    style="@style/baseTextStyle" />
 
                 <EditText
                     android:id="@+id/surname"
@@ -76,7 +81,8 @@
                     android:layout_weight="2"
                     android:hint="@string/surnameHint"
                     android:inputType="text|textCapWords"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    style="@style/baseTextStyle" />
             </TableRow>
         </TableLayout>
     </TableRow>
@@ -92,13 +98,15 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="@string/pwAccountLabel" />
+            android:text="@string/pwAccountLabel"
+            style="@style/titleTextStyle" />
 
         <TextView
             android:id="@+id/pwAccountTV"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2" />
+            android:layout_weight="2"
+            style="@style/baseTextStyle" />
 
         <EditText
             android:id="@+id/pwAccount"
@@ -107,7 +115,8 @@
             android:layout_weight="2"
             android:hint="@string/pwAccountHint"
             android:inputType="text|textEmailAddress"
-            android:visibility="gone" />
+            android:visibility="gone"
+            style="@style/baseTextStyle" />
     </TableRow>
 
     <TableRow
@@ -121,13 +130,15 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="@string/gmailAccountLabel" />
+            android:text="@string/gmailAccountLabel"
+            style="@style/titleTextStyle" />
 
         <TextView
             android:id="@+id/gmailAccountTV"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2" />
+            android:layout_weight="2"
+            style="@style/baseTextStyle" />
 
         <EditText
             android:id="@+id/gmailAccount"
@@ -136,7 +147,8 @@
             android:layout_weight="2"
             android:hint="@string/pwAccountHint"
             android:inputType="text|textEmailAddress"
-            android:visibility="gone" />
+            android:visibility="gone"
+            style="@style/baseTextStyle" />
     </TableRow>
 
     <TableRow
@@ -150,13 +162,15 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="@string/fbAccountLabel" />
+            android:text="@string/fbAccountLabel"
+            style="@style/titleTextStyle" />
 
         <TextView
             android:id="@+id/fbAccountTV"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2" />
+            android:layout_weight="2"
+            style="@style/baseTextStyle" />
 
         <EditText
             android:id="@+id/fbAccount"
@@ -165,7 +179,8 @@
             android:layout_weight="2"
             android:hint="@string/fbAccountHint"
             android:inputType="text|textEmailAddress"
-            android:visibility="gone" />
+            android:visibility="gone"
+            style="@style/baseTextStyle" />
     </TableRow>
 
     <TableRow
@@ -178,13 +193,15 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="@string/bDayLabel" />
+            android:text="@string/bDayLabel"
+            style="@style/titleTextStyle" />
 
         <TextView
             android:id="@+id/bDayTV"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2" />
+            android:layout_weight="2"
+            style="@style/baseTextStyle" />
 
         <EditText
             android:id="@+id/bDay"
@@ -194,7 +211,8 @@
             android:focusableInTouchMode="false"
             android:hint="@string/bDayHint"
             android:inputType="date"
-            android:visibility="gone" />
+            android:visibility="gone"
+            style="@style/baseTextStyle" />
     </TableRow>
 
     <TableRow
@@ -206,7 +224,8 @@
             android:id="@+id/genderLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/genderLabel" />
+            android:text="@string/genderLabel"
+            style="@style/titleTextStyle" />
 
         <RadioGroup
             android:layout_width="match_parent"

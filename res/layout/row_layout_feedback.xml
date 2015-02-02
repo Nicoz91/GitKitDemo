@@ -35,7 +35,8 @@
                 android:id="@+id/reviewer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="nome di prova" />
+                android:text="nome di prova"
+                style="@style/baseTextStyle" />
 
             <RatingBar
                 android:id="@+id/valutazione"
@@ -50,6 +51,7 @@
         android:id="@+id/comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Commento di prova" />
+        android:text="Commento di prova"
+        style="@style/baseTextStyle" />
 
 </LinearLayout>

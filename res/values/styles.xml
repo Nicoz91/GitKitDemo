@@ -21,13 +21,26 @@
     <style name="rowstyle">
         <item name="android:background">@drawable/row_background</item>
         <item name="android:paddingLeft">15dp</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">@dimen/baseTextSize</item>
     </style>
-    
-        <style name="Scroller">
+
+    <style name="Scroller">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@drawable/slider_back</item>
         <item name="android:layout_margin">3dp</item>
     </style>
+
+    <!-- Styles generici per i testi in giro nell'app -->
+    <style name="baseTextStyle">
+        <item name="android:textSize">@dimen/baseTextSize</item>
+        <item name="android:gravity">left</item>
+    </style>
+
+    <style name="titleTextStyle" parent="baseTextStyle">
+        <item name="android:textColor">@color/blue</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">right</item>
+    </style>
+
 </resources>

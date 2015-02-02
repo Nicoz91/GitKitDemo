@@ -17,14 +17,16 @@
             android:id="@+id/insert_title_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/insert_title_label" />
+            android:text="@string/insert_title_label"
+            style="@style/titleTextStyle" />
 
         <EditText
             android:id="@+id/insert_title_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="@string/insert_title_edit"
-            android:inputType="text|textCapWords" />
+            android:inputType="text|textCapWords"
+            style="@style/baseTextStyle" />
     </TableRow>
 
     <TableRow
@@ -36,14 +38,16 @@
             android:id="@+id/insert_description_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/insert_description_label" />
+            android:text="@string/insert_description_label"
+            style="@style/titleTextStyle" />
 
         <EditText
             android:id="@+id/insert_description_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="@string/insert_description_edit"
-            android:inputType="text|textCapWords" />
+            android:inputType="text|textCapWords"
+            style="@style/baseTextStyle" />
     </TableRow>
 
     <TableRow
@@ -55,14 +59,16 @@
             android:id="@+id/insert_tag_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/insert_tag_label" />
+            android:text="@string/insert_tag_label"
+            style="@style/titleTextStyle" />
 
         <EditText
             android:id="@+id/insert_tag_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="@string/insert_tag_edit"
-            android:inputType="text|textEmailAddress" />
+            android:inputType="text|textEmailAddress"
+            style="@style/baseTextStyle" />
     </TableRow>
 
     <TableRow
@@ -74,7 +80,8 @@
             android:id="@+id/insert_start_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/insert_start_label" />
+            android:text="@string/insert_start_label"
+            style="@style/titleTextStyle" />
 
         <EditText
             android:id="@+id/insert_start_edit"
@@ -83,7 +90,8 @@
             android:clickable="true"
             android:focusableInTouchMode="false"
             android:hint="@string/insert_start_edit"
-            android:inputType="date" />
+            android:inputType="date"
+            style="@style/baseTextStyle" />
     </TableRow>
 
     <TableRow
@@ -95,7 +103,8 @@
             android:id="@+id/insert_end_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/insert_end_label" />
+            android:text="@string/insert_end_label"
+            style="@style/titleTextStyle" />
 
         <EditText
             android:id="@+id/insert_end_edit"
@@ -104,7 +113,8 @@
             android:clickable="true"
             android:focusableInTouchMode="false"
             android:hint="@string/insert_end_edit"
-            android:inputType="date" />
+            android:inputType="date"
+            style="@style/baseTextStyle" />
     </TableRow>
 
     <TableRow
@@ -116,14 +126,16 @@
             android:id="@+id/insert_max_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/insert_max_label" />
+            android:text="@string/insert_max_label"
+            style="@style/titleTextStyle" />
 
         <EditText
             android:id="@+id/insert_max_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="@string/insert_max_edit"
-            android:inputType="text|textCapWords" />
+            android:inputType="text|textCapWords"
+            style="@style/baseTextStyle" />
     </TableRow>
 
 </TableLayout>
