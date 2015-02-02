@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import it.polimi.appengine.entity.manager.model.Request;
 import it.polimi.frontend.activity.R;
 import it.polimi.frontend.fragment.GetPositionMap;
@@ -24,6 +25,7 @@ public class RequestActivity extends ActionBarActivity {
 	private GetPositionMap map;
 	private Menu menu;
 	private Request req;
+	private String dateText;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,27 +39,36 @@ public class RequestActivity extends ActionBarActivity {
 		fragmentTransaction.add(R.id.insRequestContainer, insert);
 //		fragmentTransaction.add(R.id.insRequestContainer, fragment2);
 		fragmentTransaction.commit();
-		showDialog(0);
 	}
 	
+	public void getDate(EditText t){
+		
+	}
 
     @Override
     protected Dialog onCreateDialog(int id) {
         final Calendar c = Calendar.getInstance();
-    	return new DateTimeSlider(this,mDateTimeSetListener,c);
+        switch(id){
+        case 0:	return new DateTimeSlider(this,startTime,c);
+        default : return new DateTimeSlider(this,endTime,c);
+        }
+
     }
     
 
-    private DateSlider.OnDateSetListener mDateTimeSetListener =
+    private DateSlider.OnDateSetListener startTime =
         new DateSlider.OnDateSetListener() {
             public void onDateSet(DateSlider view, Calendar selectedDate) {
-                // update the dateText view with the corresponding date
-                int minute = selectedDate.get(Calendar.MINUTE) /
-                        TimeLabeler.MINUTEINTERVAL*TimeLabeler.MINUTEINTERVAL;
-//                dateText.setText(String.format("The chosen date and time:%n%te. %tB %tY%n%tH:%02d",
-//                        selectedDate, selectedDate, selectedDate, selectedDate, minute));
+                insert.onStartDateSelected(selectedDate);
             }
     };
+    
+    private DateSlider.OnDateSetListener endTime =
+            new DateSlider.OnDateSetListener() {
+                public void onDateSet(DateSlider view, Calendar selectedDate) {
+                    insert.onEndDateSelected(selectedDate);
+                }
+        };
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

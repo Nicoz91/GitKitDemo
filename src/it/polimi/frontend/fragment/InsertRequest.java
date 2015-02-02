@@ -21,7 +21,7 @@ import android.widget.EditText;
 
 
 public class InsertRequest extends Fragment{
-	
+
 	static final int DEFAULTDATESELECTOR_ID = 0;
 	public final static String ID="InsertRequestFragmentID";
 	//private GoogleMap map;
@@ -33,7 +33,7 @@ public class InsertRequest extends Fragment{
 	private EditText max;
 	private View root;
 	private Menu menu;
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -46,11 +46,37 @@ public class InsertRequest extends Fragment{
 		description = (EditText)rootView.findViewById(R.id.insert_description_edit);
 		tag = (EditText) rootView.findViewById(R.id.insert_tag_edit);
 		start = (EditText) rootView.findViewById(R.id.insert_start_edit);
+		start.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				getActivity().showDialog(0);
+			}
+		});
 		end = (EditText) rootView.findViewById(R.id.insert_end_edit);
+		end.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				getActivity().showDialog(1);
+			}
+		});
 		max = (EditText) rootView.findViewById(R.id.insert_max_edit);
 		return rootView;
 	}
+
+	public void onStartDateSelected(Calendar selectedDate){
+		int minute = selectedDate.get(Calendar.MINUTE) /
+				TimeLabeler.MINUTEINTERVAL*TimeLabeler.MINUTEINTERVAL;
+		start.setText(String.format("%n%te. %tB %tY%n%tH:%02d",
+				selectedDate, selectedDate, selectedDate, selectedDate, minute));
+	}
 	
+	public void onEndDateSelected(Calendar selectedDate){
+		int minute = selectedDate.get(Calendar.MINUTE) /
+				TimeLabeler.MINUTEINTERVAL*TimeLabeler.MINUTEINTERVAL;
+		end.setText(String.format("%n%te. %tB %tY%n%tH:%02d",
+				selectedDate, selectedDate, selectedDate, selectedDate, minute));
+	}
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.insert, menu);
@@ -76,7 +102,7 @@ public class InsertRequest extends Fragment{
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
 	public void assignAttribute(Request req){
 		req.setTitle(title.getText().toString());
 		req.setDescription(description.getText().toString());
