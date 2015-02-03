@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="dateSliderTitle">Selected date</string>
     <string name="app_name">Gitkit Demo</string>
     <string name="profile_picture_desc">Profile picture</string>
@@ -60,4 +61,6 @@
     <string name="insert_end_edit">Fine</string>
     <string name="insert_max_label">Partecipanti:</string>
     <string name="insert_max_edit">1</string>
+    <string name="title_activity_wait">WaitActivity</string>
+
 </resources>
