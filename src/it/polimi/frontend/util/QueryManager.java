@@ -86,14 +86,20 @@ public class QueryManager {
 	}
 
 	public List<Request> getRequests(){
+		if(requests == null)
+			return new ArrayList<Request>();
 		return requests;
 	}
 
 	public List<User> getUsers() {
+		if(users == null)
+			return new ArrayList<User>();
 		return users;
 	}
 
 	public List<Feedback> getFeedback() {
+		if(feedbacks == null)
+			return new ArrayList<Feedback>();
 		return feedbacks;
 	}
 
@@ -206,6 +212,7 @@ public class QueryManager {
 
 		try {
 			new JoinRequest(r).execute().get();
+			notifyListener();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -222,6 +229,7 @@ public class QueryManager {
 
 		try {
 			new RemoveJoinRequest(r).execute().get();
+			notifyListener();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -244,6 +252,7 @@ public class QueryManager {
 				}
 
 			}
+			notifyListener();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -260,6 +269,7 @@ public class QueryManager {
 
 		try {
 			new InsertFeedback(f).execute().get();
+			notifyListener();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

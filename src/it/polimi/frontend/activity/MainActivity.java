@@ -25,12 +25,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
+
 import com.google.identitytoolkit.GitkitClient;
 import com.google.identitytoolkit.GitkitUser;
 import com.google.identitytoolkit.IdToken;
+
 import it.polimi.appengine.entity.manager.model.User;
 import it.polimi.frontend.activity.R;
+import it.polimi.frontend.util.ConnectionHandler;
 import it.polimi.frontend.util.QueryManager;
+
 import java.util.ArrayList;
 
 public class MainActivity extends FragmentActivity implements OnClickListener {
@@ -52,6 +56,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			System.out.println("Impossibile registrare l'app");
 			//TODO ricominciare fino a che non viene registrata!
 		}
+		
+		if(!ConnectionHandler.getInstance().isConnected())
+			Toast.makeText(MainActivity.this, "Problemi di connettività. Controllare la connessione!", Toast.LENGTH_LONG).show();
 
 
 		// Step 1: Create a GitkitClient.
