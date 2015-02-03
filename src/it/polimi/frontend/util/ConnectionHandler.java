@@ -3,15 +3,20 @@ package it.polimi.frontend.util;
 import it.polimi.frontend.activity.MyApplication;
 import it.polimi.frontend.activity.TabbedActivity;
 import it.polimi.frontend.activity.WaitActivity;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.widget.Toast;
 
 public class ConnectionHandler extends BroadcastReceiver {
+	
+	private boolean state;
+	
+	public ConnectionHandler(){
+		state = isConnected();
+	}
+	
 
 	public static boolean isConnected(){
         ConnectivityManager cm =
@@ -32,13 +37,16 @@ public class ConnectionHandler extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		System.out.println("Ho ricevuto il cambio di connettività");
-		if(!isConnected(context))
+		if(isConnected(context) && !state)
 		{
-			context.startActivity(new Intent(context, WaitActivity.class));
-		}
-		else
-		{
+			state = true;
 			context.startActivity(new Intent(context, TabbedActivity.class));
+			QueryManager.getInstance().loadRequest();
+
+		}
+		if(!isConnected(context) && state){
+			state = false;
+			context.startActivity(new Intent(context, WaitActivity.class));
 		}
 //        if(isConnected(context)) Toast.makeText(context, "Connected.", Toast.LENGTH_LONG).show();
 //        else Toast.makeText(context, "Lost connect.", Toast.LENGTH_LONG).show();
