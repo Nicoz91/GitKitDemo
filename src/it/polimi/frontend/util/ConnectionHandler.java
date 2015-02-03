@@ -38,13 +38,7 @@ public class ConnectionHandler extends BroadcastReceiver {
 		}
 		else
 		{
-			try{
-			Activity a = (Activity)context;
-			System.out.println("La classe da chiudere: "+a.getClass());
-			a.finish();
-			}catch(Exception e){
-				e.printStackTrace();
-			}
+			context.startActivity(new Intent(context, TabbedActivity.class));
 		}
 //        if(isConnected(context)) Toast.makeText(context, "Connected.", Toast.LENGTH_LONG).show();
 //        else Toast.makeText(context, "Lost connect.", Toast.LENGTH_LONG).show();
