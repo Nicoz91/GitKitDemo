@@ -44,7 +44,7 @@ public class RequestAdapter extends ArrayAdapter<Request>{
 		} else {
 			rowView = convertView;
 		}
-		System.out.println("Position: "+position);
+//		System.out.println("Position: "+position);
 		try{
 			
 			TextView textView = (TextView) rowView.findViewById(R.id.txtTitle);
@@ -90,7 +90,8 @@ public class RequestAdapter extends ArrayAdapter<Request>{
 			
 
 		}catch(Exception e){
-			System.out.println("Trovata eccezione cerco di recuperare");
+			System.out.println("Trovata eccezione: Probabilmente uno dei campi null");
+			e.printStackTrace();
 		}
 		return rowView;
 	}

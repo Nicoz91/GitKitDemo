@@ -8,12 +8,10 @@ import it.polimi.frontend.activity.R;
 import it.polimi.frontend.util.ParentFragmentUtil;
 import it.polimi.frontend.util.QueryManager;
 import it.polimi.frontend.util.UserAdapter;
-
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -32,8 +30,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-//import android.support.v7.app.ActionBarActivity;
-import android.widget.Toast;
 
 public class RequestDetail extends Fragment implements OnClickListener, OnItemClickListener{
 
@@ -164,7 +160,6 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 
 	@Override
 	public void onClick(View v) {
-		System.out.println("Sono entrato nell'onclick");
 		switch (v.getId()) {
 		case R.id.userSection:
 			listener.onUserClicked(request.getOwner(),request.getId());
@@ -186,7 +181,6 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 			}
 			break;
 		case R.id.showPartecipant:
-			System.out.println("Sono entrato nell'onclick di showPartecipant");
 			if (sendFb.getText().toString().equals("Mostra Partecipanti")){
 				sendFb.setText("Nascondi Partecipanti");
 				userPartecipant.setVisibility(View.VISIBLE);
@@ -196,11 +190,9 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 				List<User> users = QueryManager.getInstance().getUserFromRequest(request);
 				Context c = getActivity();
 				if(c==null){ 
-					System.out.println("Il context è null ma noi bariamo");
+//					System.out.println("Il context è null ma noi bariamo");
 					c = MyApplication.getContext();
 				}
-				else 
-					System.out.println("Tutto ok inizializzo l'adapter");
 				userPartecipant.setAdapter(new UserAdapter(c,0,users));
 			}else{
 				userPartecipant.setVisibility(View.GONE);
@@ -228,37 +220,6 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 		listener.onUserClicked((User) userPartecipant.getAdapter().getItem(position),request.getId());
 	}
 
-	private class JoinTask extends AsyncTask<Boolean, Void, Boolean>{
-
-		@Override
-		protected void onPreExecute() {
-			showDialog();
-			super.onPreExecute();
-		}
-
-		@Override
-		protected Boolean doInBackground(Boolean... arg) {
-			System.out.println("prima dell'invocazione su queryManager");
-			if (arg[0].booleanValue())
-				QueryManager.getInstance().joinRequest(request);
-			else
-				QueryManager.getInstance().removeJoinRequest(request);
-			System.out.println("Prima della return");
-			return arg[0];
-		}
-
-		@Override
-		protected void onPostExecute(Boolean add) {
-			hideDialog();
-			System.out.println("Dovrei aver nascosto il dialog");
-			if (add.booleanValue())
-				Toast.makeText(getActivity().getApplicationContext(), "Inserita correttamente la partecipazione.",
-						Toast.LENGTH_SHORT).show();
-			else 
-				Toast.makeText(getActivity().getApplicationContext(), "Rimossa correttamente la partecipazione.",
-						Toast.LENGTH_SHORT).show();
-		}
-	}
 
 	private class ProfileImageTask extends AsyncTask<String, Void, Bitmap>{
 		@Override

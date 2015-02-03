@@ -73,27 +73,17 @@ public class FeedbackDetail extends Fragment implements OnClickListener, OnRatin
 				if(f.getFrom().equals(QueryManager.getInstance().getCurrentUser()) && f.getToId().equals(owner.getId()) && f.getRequest().equals(requestID))
 					sendFbForm.setVisibility(View.GONE);
 			}
-			System.out.println("Size dei feed ricevuti: "+feedbacks.size());
-			//			Feedback f = new Feedback();
-			//			User u = new User();
-			//			u.setName("Primo");
-			//			u.setSurname("Reviwer");
-			//			f.setFrom(u);
-			//			f.setEvaluation(3);
-			//			f.setDescription("Questa persona fa schifo. Ma comunque gli do 3 stelle.");
-			//			feedbacks.add(f);
+//			System.out.println("Size dei feed ricevuti: "+feedbacks.size());
 			Context c = getActivity();
 			if(c==null){ 
-				System.out.println("Il context è null ma noi bariamo");
+//				System.out.println("Il context è null ma noi bariamo");
 				c = MyApplication.getContext();
 			}
-			else 
-				System.out.println("Tutto ok inizializzo l'adapter");
 			FeedbackAdapter fba = new FeedbackAdapter(c,0,feedbacks);
 			feedbackLV.setAdapter(fba);
 		}else
 			System.out.println("Nessun Nome dell'owner");
-		System.out.println("Sono dentro l'onCreateView del FeedbackDetail Fragment");
+//		System.out.println("Sono dentro l'onCreateView del FeedbackDetail Fragment");
 		return rootView;
 	}
 

@@ -59,7 +59,7 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 			switch (mode) {
 			case OWNER_REQUEST:
 				requests = QueryManager.getInstance().getCurrentUser().getRequests();
-				System.out.println("Dovrei aver recuperato le richieste dell'owner");
+//				System.out.println("Dovrei aver recuperato le richieste dell'owner");
 				break;
 			case JOINED_REQUEST:
 				requests = QueryManager.getInstance().getUserPartecipation();
@@ -165,15 +165,16 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 	}
 	@Override
 	public void onRequestLoaded(List<Request> requests) {
-		System.out.println("Ho caricato: "+requests.size());
+//		System.out.println("Ho caricato: "+requests.size());
 		RequestList requestListFragment = (RequestList)getChildFragmentManager().findFragmentByTag(RequestList.ID);
 		switch (mode) {
 		case OWNER_REQUEST:
 			if (requestListFragment!=null)
-				requestListFragment.setRequestAdapter(QueryManager.getInstance().getUserPartecipation());
+				requestListFragment.setRequestAdapter(QueryManager.getInstance().getCurrentUser().getRequests());
 			break;
 		case JOINED_REQUEST:
-			//TODO
+			if (requestListFragment!=null)
+				requestListFragment.setRequestAdapter(QueryManager.getInstance().getUserPartecipation());
 			break;
 		default: //Caso ALL_REQUEST + tutti gli altri possibili
 			if (requestListFragment!=null)

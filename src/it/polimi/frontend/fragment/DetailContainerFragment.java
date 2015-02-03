@@ -35,7 +35,7 @@ public class DetailContainerFragment extends Fragment implements RequestDetail.O
 		RequestDetail fragment = new RequestDetail(request,mode);
 		getChildFragmentManager().beginTransaction()
 		.replace(R.id.request_detail_container, fragment,RequestDetail.ID).commit();
-		System.out.println("Dentro DetailContainerFragment. Dovrei aver creato RequestDetail.");
+//		System.out.println("Dentro DetailContainerFragment. Dovrei aver creato RequestDetail.");
 		return rootView;
 	}
 
@@ -44,6 +44,6 @@ public class DetailContainerFragment extends Fragment implements RequestDetail.O
 		FeedbackDetail fragment = new FeedbackDetail(user,this.mode,requestId);
 		getChildFragmentManager().beginTransaction()
 			.replace(R.id.feedback_list_container, fragment,FeedbackDetail.ID).commit();
-		System.out.println("Dentro DetailContainerFragment. Dovrei aver creato FeedbackDetail");
+//		System.out.println("Dentro DetailContainerFragment. Dovrei aver creato FeedbackDetail");
 	}
 }

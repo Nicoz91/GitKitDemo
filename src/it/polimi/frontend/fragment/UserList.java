@@ -32,7 +32,7 @@ public class UserList extends ListFragment {
 			setUserAdapter(users);
 		}
 		else{
-			System.out.println("Le richieste sono nulle? Le sto ancora caricando?");
+//			System.out.println("Le richieste sono nulle? Le sto ancora caricando?");
 			setUserAdapter(new ArrayList<User>());
 			//RequestLoader.getInstance().loadRequest();
 		}
@@ -53,11 +53,12 @@ public class UserList extends ListFragment {
 			user= users;
 		Context c = getActivity();
 		if(c==null){ 
-			System.out.println("Il context è null ma noi bariamo");
+//			System.out.println("Il context è null ma noi bariamo");
 			c = MyApplication.getContext();
 		}
-		else 
-			System.out.println("Tutto ok inizializzo l'adapter");
+		else {
+//			System.out.println("Tutto ok inizializzo l'adapter");
+			}
 		UserAdapter adapter = new UserAdapter(c,0,user);
 		setListAdapter(adapter);
 	}

@@ -39,7 +39,7 @@ public class UserAdapter extends ArrayAdapter<User>{
 		} else {
 			rowView = convertView;
 		}
-		System.out.println("Position: "+position);
+//		System.out.println("Position: "+position);
 		try{
 			TextView textView = (TextView) rowView.findViewById(R.id.nomeCognome);
 			textView.setText(users.get(position).getName()+" "+
@@ -56,7 +56,8 @@ public class UserAdapter extends ArrayAdapter<User>{
 			}
 
 		}catch(Exception e){
-			System.out.println("Trovata eccezione cerco di recuperare");
+			System.out.println("Trovata eccezione: Probabilmente uno dei campi è null");
+			e.printStackTrace();
 		}
 		return rowView;
 	}

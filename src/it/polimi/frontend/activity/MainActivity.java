@@ -17,34 +17,20 @@
 package it.polimi.frontend.activity;
 
 import android.support.v4.app.FragmentActivity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.identitytoolkit.GitkitClient;
 import com.google.identitytoolkit.GitkitUser;
 import com.google.identitytoolkit.IdToken;
-
-import it.polimi.appengine.entity.manager.Manager;
-import it.polimi.appengine.entity.manager.model.GeoPt;
-import it.polimi.appengine.entity.manager.model.Request;
 import it.polimi.appengine.entity.manager.model.User;
 import it.polimi.frontend.activity.R;
 import it.polimi.frontend.util.QueryManager;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainActivity extends FragmentActivity implements OnClickListener {
@@ -55,6 +41,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		//Carico i cookie
 		LoginSession.setPrefs(PreferenceManager.getDefaultSharedPreferences(this));
 		GitkitUser session = LoginSession.getUser();
 		IdToken sessionToken = LoginSession.getIdToken();
@@ -112,8 +99,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			showProfilePage(sessionToken,session);
 		}else
 			showSignInPage();
-
-
 	}
 
 	// Step 3: Override the onActivityResult method.
@@ -128,7 +113,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		if(u!=null){
 			ArrayList<String> dev = (ArrayList<String>) u.getDevices();
 			if(dev==null || !dev.contains(LoginSession.getDeviceId()) ){
-				System.out.println("Faccio l'update su: "+u.getId());
+//				System.out.println("Faccio l'update su: "+u.getId());
 				u = QueryManager.getInstance().updateUserDevices(u);
 				if(u!=null)
 					return true;
@@ -183,40 +168,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	}
 
 	private void showRegistrationPage(GitkitUser user){
-//		setContentView(R.layout.profile);
-//		showAccount(user);
-//		User u = new User();
-//		u.setName("John"+Math.random()*100);
-//		u.setSurname("A"+Math.random()*100);
-//		u.setPwAccount(user.getEmail());
-//		ArrayList<String> dev = new ArrayList<String>();
-//		dev.add(LoginSession.getDeviceId());
-//		u.setDevices(dev);
-//		if(u.getRequests()==null)
-//			u.setRequests(new ArrayList<Request>());
-//		Request req = new Request();
-//		req.setDescription("Richiesta iniziale");
-//		req.setTitle("Test"+Math.random()*100);
-//		GeoPt geo = new GeoPt();
-//		geo.setLatitude(45.38766f);
-//		geo.setLongitude(9.22514f);
-//		req.setPlace(geo);
-//		u.getRequests().add(req);
-//
-//		System.out.println("Provo a registrare l'utente");
-//		u  = QueryManager.getInstance().insertUser(u);
-//		System.out.println("Registrazione effettuata con successo");
-//		findViewById(R.id.sign_out).setOnClickListener(this);
-//
-//		findViewById(R.id.sign_out).setOnClickListener(this);
 		startActivity(new Intent(this, SettingsActivity.class));
 	}
 
 	private void showProfilePage(IdToken idToken, GitkitUser user) {
 		QueryManager.getInstance().loadRequest();
-		//setContentView(R.layout.profile);
-		//showAccount(user);
-		//findViewById(R.id.sign_out).setOnClickListener(this);
 		startActivity(new Intent(this, TabbedActivity.class));
 	}
 
@@ -247,42 +203,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			QueryManager.destroy();
 			showSignInPage();
 		} else if (i!=null && i.getStringExtra("Reason")!=null && i.getStringExtra("Reason").equals("Exit")){
-			//System.runFinalizersOnExit(true);
-			//android.os.Process.killProcess(android.os.Process.myPid()); 
-			//System.exit(0); 
 			QueryManager.destroy();
 			this.finish();
-		}
-	}
-
-	private void showAccount(GitkitUser user) {  
-		((TextView) findViewById(R.id.account_email)).setText(user.getEmail());
-
-		if (user.getDisplayName() != null) {
-			((TextView) findViewById(R.id.account_name)).setText(user.getDisplayName());
-		}
-
-		if (user.getPhotoUrl() != null) {
-			final ImageView pictureView = (ImageView) findViewById(R.id.account_picture);
-			new AsyncTask<String, Void, Bitmap>() {
-
-				@Override
-				protected Bitmap doInBackground(String... arg) {
-					try {
-						byte[] result = HttpUtils.get(arg[0]);
-						return BitmapFactory.decodeByteArray(result, 0, result.length);
-					} catch (IOException e) {
-						return null;
-					}
-				}
-
-				@Override
-				protected void onPostExecute(Bitmap bitmap) {
-					if (bitmap != null) {
-						pictureView.setImageBitmap(bitmap);
-					}
-				}
-			}.execute(user.getPhotoUrl());
 		}
 	}
 

@@ -83,7 +83,7 @@ public class RequestList extends ListFragment /*implements OnRequestLoadedListen
 			setRequestAdapter(requests);	
 		}
 		else{
-			System.out.println("Le richieste sono nulle? Le sto ancora caricando?");
+//			System.out.println("Le richieste sono nulle? Le sto ancora caricando?");
 			setRequestAdapter(new ArrayList<Request>());
 			//RequestLoader.getInstance().loadRequest();
 		}
@@ -107,15 +107,16 @@ public class RequestList extends ListFragment /*implements OnRequestLoadedListen
 
 	//@Override
 	public void onRequestLoaded(List<Request> requests) {
-		System.out.println("Ho ricevuto requests:");
-		if(requests==null)
-			System.out.println("Requests è nullo");
+//		System.out.println("Ho ricevuto requests:");
+		if(requests==null){
+//			System.out.println("Requests è nullo");
+		}
 		else
 			setRequestAdapter(requests);		
 	}
 
 	public void setRequestAdapter(List<Request> requests){
-		System.out.println("Setto le richieste");
+//		System.out.println("Setto le richieste");
 		List<Request> reqs;
 		if(requests == null)
 			reqs = new ArrayList<Request>();
@@ -123,11 +124,9 @@ public class RequestList extends ListFragment /*implements OnRequestLoadedListen
 			reqs= requests;
 		Context c = getActivity();
 		if(c==null){ 
-			System.out.println("Il context è null ma noi bariamo");
+//			System.out.println("Il context è null ma noi bariamo");
 			c = MyApplication.getContext();
 		}
-		else 
-			System.out.println("Tutto ok inizializzo l'adapter");
 		RequestAdapter adapter = new RequestAdapter(c,0,reqs,this.listMode);
 		setListAdapter(adapter);
 	}

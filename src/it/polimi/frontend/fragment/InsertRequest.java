@@ -4,10 +4,7 @@ import java.util.Calendar;
 
 import it.polimi.appengine.entity.manager.model.Request;
 import it.polimi.frontend.activity.R;
-import it.polimi.frontend.util.DateSlider.DateSlider;
-import it.polimi.frontend.util.DateSlider.DateTimeSlider;
 import it.polimi.frontend.util.DateSlider.labeler.TimeLabeler;
-import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -31,8 +28,6 @@ public class InsertRequest extends Fragment{
 	private EditText start;
 	private EditText end;
 	private EditText max;
-	private View root;
-	private Menu menu;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,8 +35,6 @@ public class InsertRequest extends Fragment{
 
 		View rootView = inflater.inflate(R.layout.fragment_insert_request,
 				container, false);
-		this.root = rootView;
-
 		title = (EditText) rootView.findViewById(R.id.insert_title_edit); 
 		description = (EditText)rootView.findViewById(R.id.insert_description_edit);
 		tag = (EditText) rootView.findViewById(R.id.insert_tag_edit);
@@ -80,7 +73,6 @@ public class InsertRequest extends Fragment{
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.insert, menu);
-		this.menu=menu;
 		menu.findItem(R.id.insert_next).setVisible(true);
 		menu.findItem(R.id.insert_cancel).setVisible(true);
 	}
@@ -93,7 +85,7 @@ public class InsertRequest extends Fragment{
 		int id = item.getItemId();
 		switch (id) {
 		case R.id.insert_next:
-			System.out.println("Vado avanti");
+//			System.out.println("Vado avanti");
 			return true;
 		case R.id.insert_cancel:
 

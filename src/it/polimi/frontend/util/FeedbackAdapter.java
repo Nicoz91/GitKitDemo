@@ -39,7 +39,7 @@ public class FeedbackAdapter extends ArrayAdapter<Feedback>{
 		} else {
 			rowView = convertView;
 		}
-		System.out.println("Position: "+position);
+//		System.out.println("Position: "+position);
 		try{
 			TextView reviewer = (TextView) rowView.findViewById(R.id.reviewer);
 			reviewer.setText(feedbacks.get(position).getFrom().getName()+" "+
@@ -56,7 +56,8 @@ public class FeedbackAdapter extends ArrayAdapter<Feedback>{
 			}
 
 		}catch(Exception e){
-			System.out.println("Trovata eccezione cerco di recuperare");
+			System.out.println("Trovata eccezione: Probabilmente uno dei campi null");
+			e.printStackTrace();
 		}
 		return rowView;
 	}

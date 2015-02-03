@@ -2,9 +2,7 @@ package it.polimi.frontend.activity;
 
 import it.polimi.frontend.fragment.MasterFragment;
 import it.polimi.frontend.fragment.RequestMap;
-
 import java.util.Locale;
-
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
@@ -131,7 +129,6 @@ ActionBar.TabListener {
 		// When the given tab is selected, switch to the corresponding page in
 		// the ViewPager.
 		mViewPager.setCurrentItem(tab.getPosition(),false);
-//		addNotification();
 	}
 	
 

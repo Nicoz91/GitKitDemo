@@ -65,11 +65,11 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 	}
 
 	private void setRequestMark(List<Request> requests){
-		System.out.println("Setto le posizioni sulla mappa");
-		System.out.println("Size: "+requests.size());
+//		System.out.println("Setto le posizioni sulla mappa");
+//		System.out.println("Size: "+requests.size());
 		for(Request r:requests){
 			if(r.getPlace()!=null){
-				System.out.println("setto "+r.getPlace().getLatitude());
+//				System.out.println("setto "+r.getPlace().getLatitude());
 				Marker m = map.addMarker(new MarkerOptions().position(new LatLng(r.getPlace().getLatitude(), r.getPlace().getLongitude()))
 						.title(r.getTitle())
 						.snippet(r.getDescription()));
@@ -97,10 +97,6 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 		else{
 			//RequestLoader.getInstance().loadRequest();
 		}
-
-		map.addMarker(new MarkerOptions().position(CASA_STUDENTE)
-				.title("Casa dello studente")
-				.snippet("Tutti alla casa"));
 
 		// Move the camera instantly to hamburg with a zoom of 15.
 		map.moveCamera(CameraUpdateFactory.newLatLngZoom(CASA_STUDENTE, 15));

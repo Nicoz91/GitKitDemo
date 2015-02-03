@@ -3,7 +3,6 @@ package it.polimi.frontend.activity;
 import java.util.Calendar;
 
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -18,14 +17,12 @@ import it.polimi.frontend.fragment.InsertRequest;
 import it.polimi.frontend.util.QueryManager;
 import it.polimi.frontend.util.DateSlider.DateSlider;
 import it.polimi.frontend.util.DateSlider.DateTimeSlider;
-import it.polimi.frontend.util.DateSlider.labeler.TimeLabeler;
 public class RequestActivity extends ActionBarActivity {
 	
 	private InsertRequest insert;
 	private GetPositionMap map;
 	private Menu menu;
 	private Request req;
-	private String dateText;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
