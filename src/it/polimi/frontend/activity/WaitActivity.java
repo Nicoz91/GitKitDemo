@@ -2,6 +2,7 @@ package it.polimi.frontend.activity;
 
 import it.polimi.frontend.util.ConnectionHandler;
 import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,8 +38,14 @@ public class WaitActivity extends ActionBarActivity {
 	public void onBackPressed() {
 		if(ConnectionHandler.isConnected())
 			super.onBackPressed();
-		else
-			return;
+		else{
+			Intent i = new Intent(this, MainActivity.class);
+			i.putExtra("Reason", "Exit");
+			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(i);
+			this.finish();
+			//super.onBackPressed();
+			}
 	}
 	
 	
