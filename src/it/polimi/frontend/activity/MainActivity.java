@@ -42,24 +42,19 @@ import java.util.ArrayList;
 public class MainActivity extends FragmentActivity implements OnClickListener {
 
 	private GitkitClient client;
+	private ConnectionHandler ch;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-		registerReceiver(new ConnectionHandler(),new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+		ch = new ConnectionHandler();
+		registerReceiver(ch,new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 		//Carico i cookie
 		LoginSession.setPrefs(PreferenceManager.getDefaultSharedPreferences(this));
 		GitkitUser session = LoginSession.getUser();
 		IdToken sessionToken = LoginSession.getIdToken();
-		//Provo a registrare l'id così lo trovo già salvato in shared dopo
-		try {
-			GCMIntentService.register(MyApplication.getContext());
-		} catch (Exception e) {
-			System.out.println("Impossibile registrare l'app");
-			//TODO ricominciare fino a che non viene registrata!
-		}
+
 
 		//		if(!ConnectionHandler.getInstance().isConnected())
 		//			Toast.makeText(MainActivity.this, "Problemi di connettività. Controllare la connessione!", Toast.LENGTH_LONG).show();
@@ -105,6 +100,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			}
 		}).build();
 
+		//Controllo se è presente la connessione
+		if(!ConnectionHandler.isConnected()){
+			startActivity(new Intent(this, WaitActivity.class));
+			return;
+		}
 		//Controllo se è attiva una sessione
 		if(session!=null && sessionToken!=null){
 			showProfilePage(sessionToken,session);
@@ -122,6 +122,13 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		//Se l'utente è già salvato allora associo il device
 		User u = checkUser(user);
 		if(u!=null){
+			//Provo a registrare l'id così lo trovo già salvato in shared dopo
+			try {
+				GCMIntentService.register(MyApplication.getContext());
+			} catch (Exception e) {
+				System.out.println("Impossibile registrare l'app");
+				//TODO ricominciare fino a che non viene registrata!
+			}
 			ArrayList<String> dev = (ArrayList<String>) u.getDevices();
 			if(dev==null || !dev.contains(LoginSession.getDeviceId()) ){
 				//				System.out.println("Faccio l'update su: "+u.getId());
@@ -222,6 +229,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	@Override
 	protected void onDestroy() {
 		QueryManager.destroy();
+		if(ch!=null)
+			this.unregisterReceiver(ch);
 		super.onDestroy();
 	}
 

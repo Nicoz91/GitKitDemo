@@ -76,10 +76,6 @@ public class QueryManager {
 		return instance;
 	}
 
-	public void loadData(){
-		new LoadDataTask().execute();
-	}
-
 	public void loadRequest(){
 		//		System.out.println("Mi connetto per scaricare le richieste...");
 		new LoadDataTask().execute();
@@ -323,6 +319,7 @@ public class QueryManager {
 		@Override
 		protected ArrayList<Request> doInBackground(Void... params) {
 			System.out.println("Sto scaricando gli utenti");
+			requests = new ArrayList<Request>();
 			try {
 				users = (ArrayList<User>) manager.listUser().execute().getItems();
 				try{
