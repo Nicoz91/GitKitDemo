@@ -18,7 +18,9 @@ package it.polimi.frontend.activity;
 
 import android.support.v4.app.FragmentActivity;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -45,6 +47,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+		registerReceiver(new ConnectionHandler(),new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 		//Carico i cookie
 		LoginSession.setPrefs(PreferenceManager.getDefaultSharedPreferences(this));
 		GitkitUser session = LoginSession.getUser();
@@ -56,9 +60,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			System.out.println("Impossibile registrare l'app");
 			//TODO ricominciare fino a che non viene registrata!
 		}
-		
-		if(!ConnectionHandler.getInstance().isConnected())
-			Toast.makeText(MainActivity.this, "Problemi di connettività. Controllare la connessione!", Toast.LENGTH_LONG).show();
+
+		//		if(!ConnectionHandler.getInstance().isConnected())
+		//			Toast.makeText(MainActivity.this, "Problemi di connettività. Controllare la connessione!", Toast.LENGTH_LONG).show();
 
 
 		// Step 1: Create a GitkitClient.
@@ -120,7 +124,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		if(u!=null){
 			ArrayList<String> dev = (ArrayList<String>) u.getDevices();
 			if(dev==null || !dev.contains(LoginSession.getDeviceId()) ){
-//				System.out.println("Faccio l'update su: "+u.getId());
+				//				System.out.println("Faccio l'update su: "+u.getId());
 				u = QueryManager.getInstance().updateUserDevices(u);
 				if(u!=null)
 					return true;
@@ -221,6 +225,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		super.onDestroy();
 	}
 
-	
+
 
 }
