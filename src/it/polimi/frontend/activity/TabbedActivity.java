@@ -113,20 +113,20 @@ ActionBar.TabListener {
         }
 	}
 	
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	//@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.tabbed, menu);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+		//if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			SearchManager searchManager =
 					(SearchManager) getSystemService(Context.SEARCH_SERVICE);
 			SearchView searchView =
 					(SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.searchRequest));
 			searchView.setSearchableInfo(
 					searchManager.getSearchableInfo(getComponentName()));
-			searchView.setIconifiedByDefault(false);
-		}
+			//searchView.setIconifiedByDefault(false);
+		//}
 		return true;
 	}
 
@@ -154,7 +154,7 @@ ActionBar.TabListener {
 			startActivity(i);
 			return true;
 		case R.id.searchRequest:
-			onSearchRequested();
+			//onSearchRequested();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
