@@ -2,6 +2,7 @@ package it.polimi.frontend.activity;
 
 import it.polimi.frontend.fragment.MasterFragment;
 import it.polimi.frontend.fragment.RequestMap;
+import it.polimi.frontend.util.QueryManager;
 
 import java.util.Locale;
 
@@ -126,6 +127,24 @@ ActionBar.TabListener {
 			searchView.setSearchableInfo(
 					searchManager.getSearchableInfo(getComponentName()));
 			//searchView.setIconifiedByDefault(false);
+		    SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+
+				@Override
+				public boolean onQueryTextChange(String tag) {
+					masterFragment.onRequestLoaded(QueryManager.getInstance().queryRequest(tag));
+					requestMap.onRequestLoaded(QueryManager.getInstance().queryRequest(tag));
+					return false;
+				}
+
+				@Override
+				public boolean onQueryTextSubmit(String tag) {
+					masterFragment.onRequestLoaded(QueryManager.getInstance().queryRequest(tag));
+					requestMap.onRequestLoaded(QueryManager.getInstance().queryRequest(tag));
+					return false;
+				}
+
+		    };
+		    searchView.setOnQueryTextListener(queryTextListener);
 		//}
 		return true;
 	}

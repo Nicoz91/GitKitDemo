@@ -80,6 +80,7 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 
 	@Override
 	public void onRequestLoaded(List<Request> requests) {
+		map.clear();
 		if(requests!=null && requests.size()>0)
 			setRequestMark(requests);
 

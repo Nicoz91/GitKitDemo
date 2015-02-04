@@ -135,6 +135,14 @@ public class QueryManager {
 			l.onRequestLoaded(requests);
 		}
 	}
+	
+	public void notifyListener(ArrayList<Request> req){
+		//		System.out.println("NOTIFICO I LISTENER PER AGGIORNARE LE VIEW");
+		for (OnRequestLoadedListener l : listeners){
+			l.onRequestLoaded(req);
+		}
+	}
+	
 
 	public User insertUser(User user){
 		User u = null;
@@ -278,9 +286,10 @@ public class QueryManager {
 	public ArrayList<Request> queryRequest(String tag){
 		ArrayList<Request> result = new ArrayList<Request>();
 		for(Request r : requests){
-			if(	r.getTitle().contains(tag)		
-				|| r.getDescription().contains(tag)
-				|| r.getType().contains(tag)){
+			if(	r.getTitle().toLowerCase().contains(tag.toLowerCase())		
+			//	|| r.getDescription().contains(tag)
+			//	|| r.getType().contains(tag)
+					){
 				result.add(r);
 			}
 		}
