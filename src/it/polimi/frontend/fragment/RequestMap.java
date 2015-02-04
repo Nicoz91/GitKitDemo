@@ -2,7 +2,9 @@ package it.polimi.frontend.fragment;
 
 import it.polimi.appengine.entity.manager.model.Request;
 import it.polimi.appengine.entity.manager.model.User;
+import it.polimi.frontend.activity.MyApplication;
 import it.polimi.frontend.activity.R;
+import it.polimi.frontend.util.GPSTracker;
 import it.polimi.frontend.util.QueryManager;
 import it.polimi.frontend.util.QueryManager.OnRequestLoadedListener;
 
@@ -10,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,13 +26,15 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class RequestMap extends Fragment implements OnRequestLoadedListener, OnMapReadyCallback, OnInfoWindowClickListener,RequestDetail.OnUserClickedListener {
 
-	static final LatLng CASA_STUDENTE = new LatLng(45.4766, 9.22414);
+	private LatLng position;
 	private GoogleMap map;
 	private Map<Marker,Request> markers;
 	private boolean twoPane=false;
@@ -37,14 +42,27 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 
 	public RequestMap(){
 	}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// Retain this fragment across configuration changes.
+		GPSTracker gps = new GPSTracker(MyApplication.getContext());
+
+		// check if GPS enabled     
+		if(gps.canGetLocation()){
+			double latitude = gps.getLatitude();
+			double longitude = gps.getLongitude();
+			position = new LatLng(latitude, longitude);
+		}else{
+			// can't get location
+			// GPS or Network is not enabled
+			// Ask user to enable GPS/network in settings
+			gps.showSettingsAlert();    
+			position = new LatLng(45.4766, 9.22414);
+		}
 		setRetainInstance(true);
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if (view != null) {
@@ -65,11 +83,11 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 	}
 
 	private void setRequestMark(List<Request> requests){
-//		System.out.println("Setto le posizioni sulla mappa");
-//		System.out.println("Size: "+requests.size());
+		//		System.out.println("Setto le posizioni sulla mappa");
+		//		System.out.println("Size: "+requests.size());
 		for(Request r:requests){
 			if(r.getPlace()!=null){
-//				System.out.println("setto "+r.getPlace().getLatitude());
+				//				System.out.println("setto "+r.getPlace().getLatitude());
 				Marker m = map.addMarker(new MarkerOptions().position(new LatLng(r.getPlace().getLatitude(), r.getPlace().getLongitude()))
 						.title(r.getTitle())
 						.snippet(r.getDescription()));
@@ -81,6 +99,16 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 	@Override
 	public void onRequestLoaded(List<Request> requests) {
 		map.clear();
+		CircleOptions circleOptions = new CircleOptions().center(position) // set center
+				.radius(200) // set radius in meters
+				.fillColor(Color.TRANSPARENT) // default
+				.zIndex(2)
+				.strokeColor(0x10000000).strokeWidth(3);
+	
+
+		map.addCircle(circleOptions);
+
+		map.addMarker(new MarkerOptions().position(position).title("Ti Trovi qui!").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 		if(requests!=null && requests.size()>0)
 			setRequestMark(requests);
 
@@ -98,12 +126,13 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 		else{
 			//RequestLoader.getInstance().loadRequest();
 		}
+		
 
 		// Move the camera instantly to hamburg with a zoom of 15.
-		map.moveCamera(CameraUpdateFactory.newLatLngZoom(CASA_STUDENTE, 15));
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15));
 
 		// Zoom in, animating the camera.
-		map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+		map.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
 		map.setOnInfoWindowClickListener(this);
 	}
 

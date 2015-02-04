@@ -115,7 +115,6 @@ public class QueryManager {
 
 	public User updateUserDevices(User user){
 		User u = null;
-
 		try {
 			u= new UpdateUserDevice(user).execute().get();
 		} catch (InterruptedException e) {
