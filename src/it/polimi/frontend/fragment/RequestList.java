@@ -45,55 +45,10 @@ public class RequestList extends Fragment implements OnItemClickListener,SwipeRe
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		//		new TestInsertTask().execute();
-		// new Query().execute();
-		/*
-		RequestLoader.getInstance().addListener(this);
-		List<Request> requests=null;
-
-		switch (listMode) {
-		case ALL_REQUEST:
-			requests = RequestLoader.getInstance().getRequests();			
-			break;
-		case OWNER_REQUEST:
-			if (owner!=null)
-				requests = owner.getRequests();	
-			else
-				System.out.println("RequestList: owner NULL");
-			break;
-		case JOINED_REQUEST:
-			if (owner!=null){
-				List<String> keys = owner.getJoinedReq();
-				requests = new ArrayList<Request>();
-				List<Request> allReqs = RequestLoader.getInstance().getRequests();
-				//Pseudo JOIN nested loop a mano in locale
-				if (allReqs!=null && allReqs.size()>0 && keys!=null && keys.size()>0)
-					for (Request r: allReqs)
-						for(String k: keys)
-							if(r.getId().equals(k)){
-								requests.add(r);
-								continue;
-							}
-			}
-			else
-				System.out.println("RequestList: owner NULL");			
-			break;
-		default:
-			requests = RequestLoader.getInstance().getRequests();
-			break;
-		}
-		if(requests!=null && requests.size()>0 ){
-			setRequestAdapter(requests);	
-		}
-		else{
-			System.out.println("Le richieste sono nulle? Le sto ancora caricando?");
-			//RequestLoader.getInstance().loadRequest();
-		}*/
 		View rootView = inflater.inflate(R.layout.fragment_request_list,
 				container, false);
 		swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefresh);
 		swipeRefresh.setOnRefreshListener(this);
-		//TODO
 		requestList = (ListView) rootView.findViewById(R.id.requestList);
 		requestList.setOnItemClickListener(this);
 		//Per attivare swipeRefresh solo se in cima alla lista 
@@ -111,6 +66,7 @@ public class RequestList extends Fragment implements OnItemClickListener,SwipeRe
 				swipeRefresh.setEnabled(firstVisibleItem == 0 && topRowVerticalPosition >= 0);
 			}
 		});
+		requestList.setEmptyView(rootView.findViewById(R.id.empty));
 		if(requests!=null && requests.size()>0 ){
 			setRequestAdapter(requests);	
 		}
@@ -135,16 +91,6 @@ public class RequestList extends Fragment implements OnItemClickListener,SwipeRe
 	 * */
 	public interface OnRequestSelectedListener {
 		public void onRequestSelected(int position, Request request);
-	}
-
-	//@Override
-	public void onRequestLoaded(List<Request> requests) {
-		//		System.out.println("Ho ricevuto requests:");
-		if(requests==null){
-			//			System.out.println("Requests è nullo");
-		}
-		else
-			setRequestAdapter(requests);		
 	}
 
 	public void setRequestAdapter(List<Request> requests){
@@ -174,7 +120,6 @@ public class RequestList extends Fragment implements OnItemClickListener,SwipeRe
 
 	@Override
 	public void onRefresh() {
-		// TODO Auto-generated method stub
 		QueryManager.getInstance().loadRequest();
 	}
 

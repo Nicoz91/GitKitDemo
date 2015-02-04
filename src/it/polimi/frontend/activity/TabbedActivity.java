@@ -2,17 +2,25 @@ package it.polimi.frontend.activity;
 
 import it.polimi.frontend.fragment.MasterFragment;
 import it.polimi.frontend.fragment.RequestMap;
+
 import java.util.Locale;
+
+import android.annotation.TargetApi;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,8 +36,8 @@ ActionBar.TabListener {
 	private static final int JOINED_TAB=3;
 	private MasterFragment masterFragment,masterFragmentOwner,masterFragmentJoined;
 	private RequestMap requestMap;
-	
-	
+
+
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
 	 * fragments for each of the sections. We use a {@link FragmentPagerAdapter}
@@ -43,14 +51,14 @@ ActionBar.TabListener {
 	 * The {@link ViewPager} that will host the section contents.
 	 */
 	ViewPager mViewPager;
-	
+
 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tabbed);
-
+		
 		// Set up the action bar.
 		final ActionBar actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -85,13 +93,39 @@ ActionBar.TabListener {
 					.setText(mSectionsPagerAdapter.getPageTitle(i))
 					.setTabListener(this));
 		}
-
+		//Siccome impostata come singleTop, così gestisce intent che arrivano per il search
+		handleIntent(getIntent());
 	}
 
+	@Override
+    protected void onNewIntent(Intent intent) {
+        handleIntent(intent);
+        super.onNewIntent(intent);
+    }
+	
+	private void handleIntent(Intent intent){
+		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            //TODO use the query to search your data somehow
+            //Probabile soluzione per noi: chiamare il metodo di search del QueryManager
+            //che alla fine del filtraggio notifica ai listener un nuovo ArrayList<Request>
+            //con i risultati filtrati
+        }
+	}
+	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.tabbed, menu);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			SearchManager searchManager =
+					(SearchManager) getSystemService(Context.SEARCH_SERVICE);
+			SearchView searchView =
+					(SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.searchRequest));
+			searchView.setSearchableInfo(
+					searchManager.getSearchableInfo(getComponentName()));
+		}
 		return true;
 	}
 
@@ -118,6 +152,9 @@ ActionBar.TabListener {
 			i = new Intent(this, RequestActivity.class);
 			startActivity(i);
 			return true;
+		case R.id.searchRequest:
+			onSearchRequested();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -130,7 +167,7 @@ ActionBar.TabListener {
 		// the ViewPager.
 		mViewPager.setCurrentItem(tab.getPosition(),false);
 	}
-	
+
 
 
 	@Override
@@ -165,7 +202,7 @@ ActionBar.TabListener {
 
 	@Override
 	public void onBackPressed() {
-		
+
 		// If the fragment exists and has some back-stack entry
 		if (masterFragment != null && mViewPager.getCurrentItem()==REQUEST_TAB && masterFragment.getChildFragmentManager().getBackStackEntryCount() > 0){
 			// Get the fragment fragment manager - and pop the backstack
@@ -190,7 +227,7 @@ ActionBar.TabListener {
 			//super.onBackPressed();
 		}
 	}
-	
+
 	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
 	 * one of the sections/tabs/pages.
@@ -226,8 +263,8 @@ ActionBar.TabListener {
 				args.putInt("mode", MasterFragment.JOINED_REQUEST);
 				masterFragmentJoined.setArguments(args);
 				return masterFragmentJoined;
-			//case 4:
-			//	return PlaceholderFragment.newInstance(position + 1);
+				//case 4:
+				//	return PlaceholderFragment.newInstance(position + 1);
 			}
 			return null;
 		}
@@ -254,14 +291,14 @@ ActionBar.TabListener {
 				return "";
 			}
 		}
-		
+
 		/* Non so se sia realmente necessario, ma pare sia meglio fare override di questo 
 		 * metodo in caso di viewpager che contengono liste*/
 		@Override
 		public void unregisterDataSetObserver(DataSetObserver observer) {
-		    if (observer != null) {
-		        super.unregisterDataSetObserver(observer);
-		    }
+			if (observer != null) {
+				super.unregisterDataSetObserver(observer);
+			}
 		}
 	}
 

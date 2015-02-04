@@ -4,6 +4,12 @@
     xmlns:compat="http://schemas.android.com/apk/res-auto"
     tools:context="com.google.identitytoolkit.demo.TabbedActivity" >
 
+    <item android:id="@+id/searchRequest"
+          android:title="@string/search_title"
+          android:icon="@android:drawable/ic_menu_search"
+          android:showAsAction="collapseActionView|ifRoom"
+          app:actionViewClass="android.support.v7.widget.SearchView" />
+    
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
