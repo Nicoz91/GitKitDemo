@@ -125,6 +125,7 @@ ActionBar.TabListener {
 					(SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.searchRequest));
 			searchView.setSearchableInfo(
 					searchManager.getSearchableInfo(getComponentName()));
+			searchView.setIconifiedByDefault(false);
 		}
 		return true;
 	}
