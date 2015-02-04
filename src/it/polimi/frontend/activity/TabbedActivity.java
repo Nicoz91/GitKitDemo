@@ -131,15 +131,15 @@ ActionBar.TabListener {
 
 				@Override
 				public boolean onQueryTextChange(String tag) {
-					masterFragment.onRequestLoaded(QueryManager.getInstance().queryRequest(tag));
-					requestMap.onRequestLoaded(QueryManager.getInstance().queryRequest(tag));
+					QueryManager.getInstance().queryRequest(tag);
+					QueryManager.getInstance().queryRequest(tag);
 					return false;
 				}
 
 				@Override
 				public boolean onQueryTextSubmit(String tag) {
-					masterFragment.onRequestLoaded(QueryManager.getInstance().queryRequest(tag));
-					requestMap.onRequestLoaded(QueryManager.getInstance().queryRequest(tag));
+					QueryManager.getInstance().queryRequest(tag);
+					QueryManager.getInstance().queryRequest(tag);
 					return false;
 				}
 

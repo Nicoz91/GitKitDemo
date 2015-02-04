@@ -282,18 +282,36 @@ public class QueryManager {
 			e.printStackTrace();
 		}
 	}
+
+	public void queryRequest(String tag){
+		new FilterTask(tag).execute();
+	}
 	
-	public ArrayList<Request> queryRequest(String tag){
-		ArrayList<Request> result = new ArrayList<Request>();
-		for(Request r : requests){
-			if(	r.getTitle().toLowerCase().contains(tag.toLowerCase())		
-			//	|| r.getDescription().contains(tag)
-			//	|| r.getType().contains(tag)
-					){
-				result.add(r);
-			}
+	private class FilterTask extends AsyncTask<Void, Void, ArrayList<Request>> {
+		private String tag;
+		public FilterTask(String tag){
+			this.tag = tag;
 		}
-		return result;
+		@Override
+		protected ArrayList<Request> doInBackground(Void... arg0) {
+			ArrayList<Request> result = new ArrayList<Request>();
+			for(Request r : requests){
+				if(	r.getTitle().toLowerCase().contains(tag.toLowerCase())		
+				//	|| r.getDescription().contains(tag)
+				//	|| r.getType().contains(tag)
+						){
+					result.add(r);
+				}
+			}
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(ArrayList<Request> result) {
+			notifyListener(result);
+		}
+		
+
 	}
 
 	public void addListener(OnRequestLoadedListener listener){
