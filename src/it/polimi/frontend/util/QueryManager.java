@@ -17,6 +17,7 @@ import android.os.AsyncTask;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.DateTime;
 import com.google.identitytoolkit.demo.messageEndpoint.MessageEndpoint;
 
 public class QueryManager {
@@ -285,6 +286,10 @@ public class QueryManager {
 	public void queryRequest(String tag){
 		new FilterTask(tag).execute();
 	}
+	
+	public void advancedQuery(String tag, DateTime startA, DateTime startB, DateTime endA, DateTime endB,int maxPA, int maxPB){
+		new AdvancedQuery(tag,startA,startB,endA,endB,maxPA,maxPB);
+	}
 
 	private class FilterTask extends AsyncTask<Void, Void, ArrayList<Request>> {
 		private String tag;
@@ -309,8 +314,61 @@ public class QueryManager {
 		protected void onPostExecute(ArrayList<Request> result) {
 			notifyListener(result);
 		}
+	}
+	
+	private class AdvancedQuery extends AsyncTask<Void, Void, ArrayList<Request>> {
+		private String tag;
+		private DateTime startA,startB,endA,endB;
+		private int maxPA;
+		private int maxPB;
 
+		public AdvancedQuery(String tag, DateTime startA, DateTime startB,DateTime endA, DateTime endB, int maxPA,int maxPB) {
+			super();
+			this.tag = tag;
+			this.startA = startA;
+			this.startB = startB;
+			this.endA = endA;
+			this.endB = endB;
+			this.maxPA = maxPA;
+			this.maxPB = maxPB;
+			
+		}
 
+		@Override
+		protected ArrayList<Request> doInBackground(Void... arg0) {
+			ArrayList<Request> result = new ArrayList<Request>();
+			ArrayList<Request> toRemove = new ArrayList<Request>();
+			result.addAll(requests);
+			
+			for(Request r : result){
+				boolean remove = false;
+				if(!(	r.getTitle().toLowerCase().contains(tag.toLowerCase())		
+							|| r.getDescription().contains(tag)
+							|| r.getType().contains(tag)
+						)){
+					remove = true; 
+				}
+				if(startA!=null && startB!=null)
+				if(!(r.getStart().getValue()>startA.getValue() && r.getStart().getValue()<startB.getValue() ))
+					remove = true;
+				
+				if(endA!=null && endB!=null)
+				if(!(r.getEnd().getValue()>endA.getValue() && r.getEnd().getValue()<endB.getValue() ))
+					remove = true;
+				
+				if(!(r.getMaxPartecipants()>maxPA && r.getMaxPartecipants()<maxPB))
+					remove = true;
+				
+				if(remove) toRemove.add(r);
+			}
+			result.removeAll(toRemove);
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(ArrayList<Request> result) {
+			notifyListener(result);
+		}
 	}
 
 	public void addListener(OnRequestLoadedListener listener){
