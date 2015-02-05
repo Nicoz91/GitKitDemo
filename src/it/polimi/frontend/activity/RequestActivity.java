@@ -88,13 +88,14 @@ public class RequestActivity extends ActionBarActivity {
 			this.finish();
 			return true;
 		case R.id.insert_next:
+			if(insert.assignAttribute(req)){
 			menu.findItem(R.id.insert_next).setVisible(false);
 			menu.findItem(R.id.insert_cancel).setVisible(false);
 			menu.findItem(R.id.insert_back).setVisible(true);
 			menu.findItem(R.id.insert_done).setVisible(true);
-			insert.assignAttribute(req);
 			fragmentTransaction.replace(R.id.insRequestContainer, map);
 			fragmentTransaction.commit();
+			}
 			return true;
 		case R.id.insert_back:
 			menu.findItem(R.id.insert_next).setVisible(true);
