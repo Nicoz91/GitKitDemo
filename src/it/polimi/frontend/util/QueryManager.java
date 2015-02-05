@@ -296,8 +296,8 @@ public class QueryManager {
 			ArrayList<Request> result = new ArrayList<Request>();
 			for(Request r : requests){
 				if(	r.getTitle().toLowerCase().contains(tag.toLowerCase())		
-						//	|| r.getDescription().contains(tag)
-						//	|| r.getType().contains(tag)
+							|| r.getDescription().contains(tag)
+							|| r.getType().contains(tag)
 						){
 					result.add(r);
 				}
@@ -408,6 +408,12 @@ public class QueryManager {
 								//								Request req = manager.getRequest(r.getId()).execute();
 								//								if(req==null) System.out.println("Non ho trovato nulla");
 								//								else System.out.println("Title: "+req.getTitle());
+								if(r.getTitle() == null)
+									r.setTitle("Nessun Titolo");
+								if(r.getDescription()==null)
+									r.setDescription("Nessuna Descrizione");
+								if(r.getType()==null)
+									r.setType("");
 								r.setOwner(u);
 								if(r.getPartecipants()==null)
 									r.setPartecipants(new ArrayList<Long>());}
