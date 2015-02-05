@@ -134,14 +134,14 @@ public class QueryManager {
 			l.onRequestLoaded(requests);
 		}
 	}
-	
+
 	public void notifyListener(ArrayList<Request> req){
 		//		System.out.println("NOTIFICO I LISTENER PER AGGIORNARE LE VIEW");
 		for (OnRequestLoadedListener l : listeners){
 			l.onRequestLoaded(req);
 		}
 	}
-	
+
 
 	public User insertUser(User user){
 		User u = null;
@@ -285,7 +285,7 @@ public class QueryManager {
 	public void queryRequest(String tag){
 		new FilterTask(tag).execute();
 	}
-	
+
 	private class FilterTask extends AsyncTask<Void, Void, ArrayList<Request>> {
 		private String tag;
 		public FilterTask(String tag){
@@ -296,8 +296,8 @@ public class QueryManager {
 			ArrayList<Request> result = new ArrayList<Request>();
 			for(Request r : requests){
 				if(	r.getTitle().toLowerCase().contains(tag.toLowerCase())		
-				//	|| r.getDescription().contains(tag)
-				//	|| r.getType().contains(tag)
+						//	|| r.getDescription().contains(tag)
+						//	|| r.getType().contains(tag)
 						){
 					result.add(r);
 				}
@@ -309,7 +309,7 @@ public class QueryManager {
 		protected void onPostExecute(ArrayList<Request> result) {
 			notifyListener(result);
 		}
-		
+
 
 	}
 
@@ -328,16 +328,52 @@ public class QueryManager {
 
 	private void adjustUserFeedback(Feedback f){
 		for(User u1 : users){
-//			System.out.println("Feed id: "+f.getToId()+" == User id:"+u1.getId()+" ?");
+			//			System.out.println("Feed id: "+f.getToId()+" == User id:"+u1.getId()+" ?");
 			if(f.getToId().equals(u1.getId())){
 				f.setTo(u1);
 				if(u1.getReceivedFb()==null)
 					u1.setReceivedFb(new ArrayList<Feedback>());										
-//				System.out.println("Assegno all'utente "+u1.getName()+" il feed"+f.getDescription());
+				//				System.out.println("Assegno all'utente "+u1.getName()+" il feed"+f.getDescription());
 				u1.getReceivedFb().add(f);
 			}
 		}
 	}
+
+	private User getUserFromId(Long id){
+		for(User u: users)
+			if(u.getId().equals(id))
+				return u;
+		return null;
+	}
+
+	private class PushMessage extends AsyncTask<Void, Void, Void> {
+
+		private String notify;
+		private User to;
+
+		public PushMessage(String message,User user){
+			super();
+			this.notify = message;
+			this.to  = user;
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			ArrayList<String> devices = (ArrayList<String>) to.getDevices();
+			if(devices == null) return null;
+			try {
+				for(String device : devices)
+					message.notify(notify, device).execute();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+
+	}
+
 
 	//Classi che effettuano le query
 	private class LoadDataTask extends AsyncTask<Void, Void,  ArrayList<Request>> {
@@ -535,10 +571,10 @@ public class QueryManager {
 
 		private boolean compareRequest(Request r1,Request r2){
 			try{
-			if(r1.getTitle().equals(r2.getTitle()))
-				return true;
-			else 
-				return false;
+				if(r1.getTitle().equals(r2.getTitle()))
+					return true;
+				else 
+					return false;
 			}catch(Exception e){
 				return false;
 			}
@@ -551,6 +587,7 @@ public class QueryManager {
 		}
 
 	}
+
 	private class JoinRequest extends AsyncTask<Void, Void, User> {
 		public Request r;
 
@@ -584,7 +621,7 @@ public class QueryManager {
 			try {
 				manager.updateUser(u).execute();
 				manager.updateRequest(r).execute();
-				message.notify("Notifica", u.getDevices().get(0)).execute();
+				new PushMessage(user.getName()+ " "+ user.getSurname() + " partecipa alla richiesta "+r.getTitle(),oldOwner).execute();
 				//				message.notify("Notifica", u.getDevices().get(1)).execute();
 
 			} catch (IOException e) {
@@ -627,21 +664,21 @@ public class QueryManager {
 			if(r.getPartecipants()==null)
 				r.setPartecipants(new ArrayList<Long>());
 			//r.getPartecipants().remove(u.getId());
-			boolean removed = false;
+			//			boolean removed = false;
 			for(int i=0;i<r.getPartecipants().size();i++){
 				if(r.getPartecipants().get(i).longValue()==(user.getId())){
-					removed = true;
+					//					removed = true;
 					r.getPartecipants().remove(i);
 				}
 			}		
 			//			if(removed)	System.out.println("RIMOSSO CON SUCCESSO DALLA REQUEST");
 			//			else	System.out.println("NON E' STATO TROVATO NELLA REQUEST!!");
 			//			System.out.println("Il nuovo size e': "+r.getPartecipants().size());
-			removed = false;
+			//			removed = false;
 			for(int i=0;i<u.getJoinedReq().size();i++){
 				if(u.getJoinedReq().get(i).equals(r.getId())){
 					u.getJoinedReq().remove(i);
-					removed = true;
+					//					removed = true;
 
 				}
 			}
@@ -652,6 +689,8 @@ public class QueryManager {
 			try {
 				manager.updateUser(u).execute();
 				manager.updateRequest(r).execute();
+				new PushMessage(user.getName()+ " "+ user.getSurname() + " non partecipa più alla richiesta "+r.getTitle(),oldOwner).execute();
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -696,6 +735,10 @@ public class QueryManager {
 
 			try {
 				manager.updateUser(u).execute();
+				ArrayList<User> partecipant = getUserFromRequest(r);
+				if(partecipant!=null)
+					for(User us : partecipant)
+						new PushMessage("Lutente "+ user.getName()+" "+user.getSurname()+" ha cancellato la richiesta a cui partecipavi.",us).execute();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -720,16 +763,21 @@ public class QueryManager {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			if(u==null)
-				System.out.println("Utente null");
-			else
-				System.out.println("Sto modificando: "+u.getName());
+			//			if(u==null)
+			//				System.out.println("Utente null");
+			//			else
+			//				System.out.println("Sto modificando: "+u.getName());
 			if(u.getSentFb()==null)
 				u.setSentFb(new ArrayList<Feedback>());
 			u.getSentFb().add(f);
-			System.out.println("Persisting?");
+			//			System.out.println("Persisting?");
 			try {
 				manager.updateUser(u).execute();
+				if(f.getTo()!=null)
+					new PushMessage("Lutente "+ user.getName()+" "+user.getSurname()+" ti ha lasciato un feedback.",f.getTo()).execute();
+				else
+					new PushMessage("Lutente "+ user.getName()+" "+user.getSurname()+" ti ha lasciato un feedback.",getUserFromId(f.getToId())).execute();
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
