@@ -1,29 +1,40 @@
 package it.polimi.frontend.fragment;
 
 import it.polimi.appengine.entity.manager.model.User;
+import it.polimi.frontend.activity.HttpUtils;
 import it.polimi.frontend.activity.LoginSession;
 import it.polimi.frontend.activity.R;
 import it.polimi.frontend.activity.TabbedActivity;
 import it.polimi.frontend.util.QueryManager;
 import it.polimi.frontend.util.TextValidator;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.PorterDuff;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -41,6 +52,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 	private TextView nameTV,surnameTV,accountTV[],bDayTV;
 	private RadioButton maleRB;
 	private RadioButton femaleRB;
+	private ImageView profileIV;
 	private boolean male;
 	private Menu menu;
 	private boolean editMode=false;
@@ -48,6 +60,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 	private final static int PW=0,GMAIL=1,FB=2;
 	private boolean accountType[]={false,false,false};
 	private boolean regMode=false, valid=true;
+	private String photoURL="";
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -181,6 +194,41 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		else 
 			femaleRB.performClick();
 
+		//Setup Image
+		profileIV = (ImageView) rootView.findViewById(R.id.account_picture);
+		profileIV.setOnClickListener(this);
+		//TODO possibile motivo per cui non mostra il dialog con l'edittext
+		profileIV.setOnTouchListener(new OnTouchListener() {
+			//Se in editMode, si comporterà al click come un button
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (editMode){
+					ImageView view;
+					switch (event.getAction()) {
+					case MotionEvent.ACTION_DOWN:
+						view = (ImageView) v;
+						//overlay is black with transparency of 0x77 (119)
+						view.getDrawable().setColorFilter(0x77000000,PorterDuff.Mode.SRC_ATOP);
+						view.invalidate();
+						//TODO inserendo qua il dialog funziona ma non sono sicuro sia modo corretto
+						showProfileURLDialog(v);
+						break;
+					case MotionEvent.ACTION_UP:
+					case MotionEvent.ACTION_CANCEL: 
+						view = (ImageView) v;
+						//clear the overlay
+						view.getDrawable().clearColorFilter();
+						view.invalidate();
+						break;
+					}
+					return true;
+				} else return true;
+			}
+		});
+		if (user.getPhotoURL()!=null){
+			photoURL = user.getPhotoURL();
+			new ProfileImageTask().execute(photoURL);
+		}
 		//Setup NonEditable Mode
 		if(regMode)
 			editMode = true;
@@ -271,6 +319,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		user.setFbAccount(accountET[FB].getEditableText().toString());
 		user.setGender(male);
 		user.setBday(new DateTime(data.getTimeInMillis()));
+		user.setPhotoURL(photoURL);
 		if(!regMode){
 			QueryManager.getInstance().updateUser();
 			Toast.makeText(getActivity().getApplicationContext(), "Dati utente aggiornati correttamente.",
@@ -286,7 +335,9 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 				&& accountET[GMAIL].getEditableText().toString().equals(accountTV[GMAIL].getText().toString())
 				&& accountET[FB].getEditableText().toString().equals(accountTV[FB].getText().toString())
 				&& male==user.getGender()
-				&& bDayET.getEditableText().toString().equals(bDayTV.getText().toString()))
+				&& bDayET.getEditableText().toString().equals(bDayTV.getText().toString())
+				&& ( (!photoURL.equals("") && photoURL.equals(user.getPhotoURL()))
+						|| (photoURL.equals("") && user.getPhotoURL()==null)) )
 			changed=false;
 		else
 			changed=true;
@@ -335,9 +386,46 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		case R.id.bDay:
 			showDatePickerDialog(v);
 			break;
+		case R.id.account_picture:
+			showProfileURLDialog(v);
+			break;
 		default:
 			break;
 		}
+	}
+
+	public void showProfileURLDialog(View v){
+		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+
+		alert.setTitle("Foto Profilo");
+		alert.setMessage("Inserisci l'URL di un'immagine che vorresti come immagine del profilo.");
+
+		// Set an EditText view to get user input 
+		final EditText input = new EditText(getActivity());
+		alert.setView(input);
+
+		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				String photoUrl = input.getEditableText().toString();
+				if (photoUrl!=null && !photoUrl.equals("")
+						&& android.util.Patterns.WEB_URL.matcher(photoUrl).matches()){
+					photoURL = photoUrl;
+					new ProfileImageTask().execute(photoUrl);
+				} else
+					Toast.makeText(getActivity().getApplicationContext(), "Immagine non aggiornata perchè non hai inserito un URL corretto.",
+							Toast.LENGTH_SHORT).show();
+			}
+		});
+
+		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				// Canceled.
+				Toast.makeText(getActivity().getApplicationContext(), "Aggiornamento immagine cancellato.",
+						Toast.LENGTH_SHORT).show();
+			}
+		});
+
+		alert.show();
 	}
 
 	private void editable(boolean editable){
@@ -370,6 +458,26 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		}
 		maleRB.setClickable(editable);
 		femaleRB.setClickable(editable);
+		//TODO possibile motivo per cui non mostra il dialog con l'edittext.
+		profileIV.setClickable(editable);
 	}
 
+	private class ProfileImageTask extends AsyncTask<String, Void, Bitmap>{
+		@Override
+		protected Bitmap doInBackground(String... arg) {
+			try {
+				byte[] result = HttpUtils.get(arg[0]);
+				return BitmapFactory.decodeByteArray(result, 0, result.length);
+			} catch (IOException e) {
+				return null;
+			}
+		}
+
+		@Override
+		protected void onPostExecute(Bitmap bitmap) {
+			if (bitmap != null && profileIV!=null) {
+				profileIV.setImageBitmap(bitmap);
+			}
+		}
+	}
 }
