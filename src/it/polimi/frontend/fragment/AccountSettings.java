@@ -61,11 +61,18 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 	private boolean accountType[]={false,false,false};
 	private boolean regMode=false, valid=true;
 	private String photoURL="";
+	private boolean twoPane;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_account_settings,
-				container, false);
+		twoPane = getResources().getBoolean(R.bool.isTablet);
+		View rootView;
+		if (twoPane)
+			rootView = inflater.inflate(R.layout.fragment_account_settings_two_pane,
+					container, false);
+		else
+			rootView = inflater.inflate(R.layout.fragment_account_settings,
+					container, false);
 		setHasOptionsMenu(true);
 		user = QueryManager.getInstance().getCurrentUser();
 		if(user == null){
