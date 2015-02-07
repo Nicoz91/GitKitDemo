@@ -82,11 +82,14 @@ public class GetPositionMap extends Fragment{
 		return rootView;
 	}
 
-	public void setPosition(Request req){
+	public boolean setPosition(Request req){
+		if(position==null)
+			return false;
 		GeoPt g = new GeoPt();
 		g.setLatitude((float)position.latitude);
 		g.setLongitude((float)position.longitude);
 		req.setPlace(g);
+		return true;
 	}
 
 

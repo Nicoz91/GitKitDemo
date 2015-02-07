@@ -164,9 +164,14 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 				((TextView)rootView.findViewById(R.id.type))
 				.setText(NON_SPECIFICATO);
 			//N° max partecipanti richiesta
-			if (request.getMaxPartecipants()!=0)
+			if(request.getMaxPartecipants()!=null){
+			if (request.getMaxPartecipants().intValue()!=0)
 				((TextView)rootView.findViewById(R.id.max))
 				.setText(request.getType());
+			else
+				((TextView)rootView.findViewById(R.id.max))
+				.setText(NON_SPECIFICATO);
+			}
 			else
 				((TextView)rootView.findViewById(R.id.max))
 				.setText(NON_SPECIFICATO);

@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 import it.polimi.appengine.entity.manager.model.Request;
 import it.polimi.frontend.activity.R;
 import it.polimi.frontend.fragment.GetPositionMap;
@@ -106,9 +107,14 @@ public class RequestActivity extends ActionBarActivity {
 			fragmentTransaction.commit();
 			return true;
 		case R.id.insert_done:
-			map.setPosition(req);
+
+			if(map.setPosition(req)){
 			QueryManager.getInstance().insertRequest(req);
 			this.finish();
+			}
+			else 
+				Toast.makeText(MyApplication.getContext(),"Inserisci una posizione sulla mappa",Toast.LENGTH_SHORT).show();
+
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
