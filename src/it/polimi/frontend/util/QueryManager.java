@@ -9,6 +9,8 @@ import it.polimi.frontend.activity.MyApplication;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -290,6 +292,20 @@ public class QueryManager {
 	public void advancedQuery(String tag, DateTime startA, DateTime startB, DateTime endA, DateTime endB,int maxPA, int maxPB){
 		new AdvancedQuery(tag,startA,startB,endA,endB,maxPA,maxPB);
 	}
+	
+	public void sortRequest(){
+		Collections.sort(requests, new Comparator<Request>(){
+			@Override
+			public int compare(Request r1, Request r2) {
+				if(r1.getStart().getValue()<r2.getStart().getValue())
+					return 1;
+				else if (r1.getStart().getValue()>r2.getStart().getValue())
+					return -1;
+				else return 0;
+			}
+			
+		});
+	}
 
 	private class FilterTask extends AsyncTask<Void, Void, ArrayList<Request>> {
 		private String tag;
@@ -490,6 +506,7 @@ public class QueryManager {
 				e.printStackTrace();
 				System.out.println("Requests null");
 			}
+			sortRequest();
 			return (ArrayList<Request>)requests;
 		}
 
