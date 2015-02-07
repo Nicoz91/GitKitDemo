@@ -160,7 +160,7 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 	}
 
 	@Override
-	public void onUserClicked(User user,String requestId) {
+	public void onUserClicked(User user,Request requestId) {
 		if (twoPane) {
 			// In two-pane mode, show the detail view in this activity by
 			// adding or replacing the detail fragment using a

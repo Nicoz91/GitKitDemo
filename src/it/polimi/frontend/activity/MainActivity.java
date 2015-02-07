@@ -50,6 +50,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		ch = new ConnectionHandler();
 		registerReceiver(ch,new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+		
 		//Carico i cookie
 		LoginSession.setPrefs(PreferenceManager.getDefaultSharedPreferences(this));
 		GitkitUser session = LoginSession.getUser();
@@ -75,17 +76,20 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			@Override
 			public void onSignIn(IdToken idToken, GitkitUser user) {
 
-				//Salvo i dati ricevuti nelle shared preferences
-				LoginSession.setUser(user);
-				LoginSession.setStringUser(user.toString());
-				LoginSession.setIdToken(idToken);
-				LoginSession.setStringToken(idToken.getTokenString());
 
 				//Controllo se l'utente ha già inserito i dati obbligatori
 				if(checkRegistration(user))
 					showProfilePage(idToken, user);
 				else
 					showRegistrationPage(user);
+				
+				//Salvo i dati ricevuti nelle shared preferences
+				LoginSession.setUser(user);
+				LoginSession.setStringUser(user.toString());
+				LoginSession.setIdToken(idToken);
+				LoginSession.setStringToken(idToken.getTokenString());
+
+				
 				// Now use the idToken to create a session for your user.
 				// To do so, you should exchange the idToken for either a Session Token or Cookie
 				// from your server.
@@ -105,8 +109,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			startActivity(new Intent(this, WaitActivity.class));
 			return;
 		}
+		System.out.println("Effettuo la query");
+	//	QueryManager.getInstance().getUserByEmail(session.getEmail());
+		System.out.println("Fine query");
 		//Controllo se è attiva una sessione
-		if(session!=null && sessionToken!=null){
+		if(session!=null && sessionToken!=null && QueryManager.getInstance().getUserByEmail(session.getEmail())!=null){
 			showProfilePage(sessionToken,session);
 		}else
 			showSignInPage();

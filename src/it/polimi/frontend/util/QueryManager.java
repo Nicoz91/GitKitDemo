@@ -9,6 +9,7 @@ import it.polimi.frontend.activity.MyApplication;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -288,11 +289,11 @@ public class QueryManager {
 	public void queryRequest(String tag){
 		new FilterTask(tag).execute();
 	}
-	
+
 	public void advancedQuery(String tag, DateTime startA, DateTime startB, DateTime endA, DateTime endB,int maxPA, int maxPB){
 		new AdvancedQuery(tag,startA,startB,endA,endB,maxPA,maxPB);
 	}
-	
+
 	public void sortRequest(){
 		Collections.sort(requests, new Comparator<Request>(){
 			@Override
@@ -303,7 +304,7 @@ public class QueryManager {
 					return -1;
 				else return 0;
 			}
-			
+
 		});
 	}
 
@@ -317,8 +318,8 @@ public class QueryManager {
 			ArrayList<Request> result = new ArrayList<Request>();
 			for(Request r : requests){
 				if(	r.getTitle().toLowerCase().contains(tag.toLowerCase())		
-							|| r.getDescription().contains(tag)
-							|| r.getType().contains(tag)
+						|| r.getDescription().contains(tag)
+						|| r.getType().contains(tag)
 						){
 					result.add(r);
 				}
@@ -331,7 +332,7 @@ public class QueryManager {
 			notifyListener(result);
 		}
 	}
-	
+
 	private class AdvancedQuery extends AsyncTask<Void, Void, ArrayList<Request>> {
 		private String tag;
 		private DateTime startA,startB,endA,endB;
@@ -347,7 +348,7 @@ public class QueryManager {
 			this.endB = endB;
 			this.maxPA = maxPA;
 			this.maxPB = maxPB;
-			
+
 		}
 
 		@Override
@@ -355,26 +356,26 @@ public class QueryManager {
 			ArrayList<Request> result = new ArrayList<Request>();
 			ArrayList<Request> toRemove = new ArrayList<Request>();
 			result.addAll(requests);
-			
+
 			for(Request r : result){
 				boolean remove = false;
 				if(!(	r.getTitle().toLowerCase().contains(tag.toLowerCase())		
-							|| r.getDescription().contains(tag)
-							|| r.getType().contains(tag)
+						|| r.getDescription().contains(tag)
+						|| r.getType().contains(tag)
 						)){
 					remove = true; 
 				}
 				if(startA!=null && startB!=null)
-				if(!(r.getStart().getValue()>startA.getValue() && r.getStart().getValue()<startB.getValue() ))
-					remove = true;
-				
+					if(!(r.getStart().getValue()>startA.getValue() && r.getStart().getValue()<startB.getValue() ))
+						remove = true;
+
 				if(endA!=null && endB!=null)
-				if(!(r.getEnd().getValue()>endA.getValue() && r.getEnd().getValue()<endB.getValue() ))
-					remove = true;
-				
+					if(!(r.getEnd().getValue()>endA.getValue() && r.getEnd().getValue()<endB.getValue() ))
+						remove = true;
+
 				if(!(r.getMaxPartecipants()>maxPA && r.getMaxPartecipants()<maxPB))
 					remove = true;
-				
+
 				if(remove) toRemove.add(r);
 			}
 			result.removeAll(toRemove);
@@ -482,6 +483,15 @@ public class QueryManager {
 								//								Request req = manager.getRequest(r.getId()).execute();
 								//								if(req==null) System.out.println("Non ho trovato nulla");
 								//								else System.out.println("Title: "+req.getTitle());
+								Calendar now = Calendar.getInstance();
+								if(r.getStart().getValue()>now.getTimeInMillis()){
+									System.out.println("Setto "+r.getTitle()+" attuale");
+									r.setPastRequest(false);
+								}
+								else{
+									System.out.println("Setto "+r.getTitle()+" passato");
+									r.setPastRequest(true);
+								}
 								if(r.getTitle() == null)
 									r.setTitle("Nessun Titolo");
 								if(r.getDescription()==null)
@@ -491,7 +501,7 @@ public class QueryManager {
 								r.setOwner(u);
 								if(r.getPartecipants()==null)
 									r.setPartecipants(new ArrayList<Long>());}
-							if(u.getPwAccount().equals(LoginSession.getUser().getEmail())) 
+							if(u.getPwAccount().equals(LoginSession.getUser().getEmail()) ) 
 								;//continue;
 							else
 								requests.addAll(ownerReq);

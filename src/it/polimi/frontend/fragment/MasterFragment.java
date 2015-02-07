@@ -69,6 +69,13 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 			default: //Caso ALL_REQUEST + tutti gli altri possibili
 				//TODO
 				requests = QueryManager.getInstance().getRequests();
+				ArrayList<Request>	present = new ArrayList<Request>();
+				for(Request req : requests)
+					if(!req.getPastRequest())
+						present.add(req);
+				
+				requests = present;
+				
 				break;
 			}
 			requestListFragment = new RequestList(requests, mode);
@@ -139,7 +146,7 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 	}
 
 	@Override
-	public void onUserClicked(User user,String requestId) {
+	public void onUserClicked(User user,Request requestId) {
 		if (!twoPane) {
 			// In single-pane mode, simply start the detail fragment
 			// for the selected item ID.
@@ -177,8 +184,13 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 				requestListFragment.setRequestAdapter(QueryManager.getInstance().getUserPartecipation());
 			break;
 		default: //Caso ALL_REQUEST + tutti gli altri possibili
+			ArrayList<Request>	present = new ArrayList<Request>();
+			for(Request req : requests)
+				if(!req.getPastRequest())
+					present.add(req);
+			
 			if (requestListFragment!=null)
-				requestListFragment.setRequestAdapter(requests);
+				requestListFragment.setRequestAdapter(present);
 			break;
 		}
 	}

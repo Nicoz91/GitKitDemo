@@ -1,6 +1,7 @@
 package it.polimi.frontend.fragment;
 
 import it.polimi.appengine.entity.manager.model.Feedback;
+import it.polimi.appengine.entity.manager.model.Request;
 import it.polimi.appengine.entity.manager.model.User;
 import it.polimi.frontend.activity.MyApplication;
 import it.polimi.frontend.activity.R;
@@ -37,20 +38,20 @@ public class FeedbackDetail extends Fragment implements OnClickListener, OnRatin
 	private User fromUser, toUser;
 	private OnFeedbackSentListener mListener;
 	private LinearLayout sendFbForm;
-	private String requestID;
+	private Request request;
 
 	public interface OnFeedbackSentListener{
 		public void onFeedbackSent(Feedback feedback);//TODO
 	}
 
 	public FeedbackDetail(){
-		
+
 	}
-	
-	public FeedbackDetail(User owner, int mode, String request){
+
+	public FeedbackDetail(User owner, int mode, Request request){
 		this.owner=owner;
 		this.mode=mode;
-		this.requestID=request;
+		this.request=request;
 	}
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -68,22 +69,24 @@ public class FeedbackDetail extends Fragment implements OnClickListener, OnRatin
 			//feedback di prova per visualizzazione
 			if (feedbacks==null)
 				feedbacks= new ArrayList<Feedback>();
-			
-			for(Feedback f : feedbacks){
-				if(f.getFrom().equals(QueryManager.getInstance().getCurrentUser()) && f.getToId().equals(owner.getId()) && f.getRequest().equals(requestID))
-					sendFbForm.setVisibility(View.GONE);
-			}
-//			System.out.println("Size dei feed ricevuti: "+feedbacks.size());
+			if(!request.getPastRequest())
+				sendFbForm.setVisibility(View.GONE);
+			else
+				for(Feedback f : feedbacks){
+					if(f.getFrom().equals(QueryManager.getInstance().getCurrentUser()) && f.getToId().equals(owner.getId()) && f.getRequest().equals(request.getId()))
+						sendFbForm.setVisibility(View.GONE);
+				}
+			//			System.out.println("Size dei feed ricevuti: "+feedbacks.size());
 			Context c = getActivity();
 			if(c==null){ 
-//				System.out.println("Il context è null ma noi bariamo");
+				//				System.out.println("Il context è null ma noi bariamo");
 				c = MyApplication.getContext();
 			}
 			FeedbackAdapter fba = new FeedbackAdapter(c,0,feedbacks);
 			feedbackLV.setAdapter(fba);
 		}else
 			System.out.println("Nessun Nome dell'owner");
-//		System.out.println("Sono dentro l'onCreateView del FeedbackDetail Fragment");
+		//		System.out.println("Sono dentro l'onCreateView del FeedbackDetail Fragment");
 		return rootView;
 	}
 
@@ -94,9 +97,22 @@ public class FeedbackDetail extends Fragment implements OnClickListener, OnRatin
 		fb.setEvaluation(evaluation);
 		fb.setDescription(((EditText)getView().findViewById(R.id.description)).getEditableText().toString());
 		fb.setToId(owner.getId());
-		fb.setRequest(requestID);
+		fb.setRequest(request.getId());
 		//mListener.onFeedbackSent(fb); //TODO pensare se convenga farlo inserire al parent
 		QueryManager.getInstance().insertFeedback(fb); //...o qui direttamente
+		if (owner!=null){
+			List<Feedback> feedbacks = owner.getReceivedFb();
+			//feedback di prova per visualizzazione
+			if (feedbacks==null)
+				feedbacks= new ArrayList<Feedback>();
+			Context c = getActivity();
+			if(c==null){ 
+				//				System.out.println("Il context è null ma noi bariamo");
+				c = MyApplication.getContext();
+			}
+			FeedbackAdapter fba = new FeedbackAdapter(c,0,feedbacks);
+			feedbackLV.setAdapter(fba);
+		}
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package it.polimi.frontend.fragment;
 
+import it.polimi.appengine.entity.manager.model.Feedback;
 import it.polimi.appengine.entity.manager.model.Request;
 import it.polimi.appengine.entity.manager.model.User;
 import it.polimi.frontend.activity.HttpUtils;
@@ -8,10 +9,13 @@ import it.polimi.frontend.activity.R;
 import it.polimi.frontend.util.ParentFragmentUtil;
 import it.polimi.frontend.util.QueryManager;
 import it.polimi.frontend.util.UserAdapter;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -47,6 +51,7 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 	private String CANCELLA_PART,PARTECIPA;
 	private String CANCELLA_REQ;
 	private String NON_SPECIFICATO;
+	private String LASCIA_FEED;
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
 	 * fragment (e.g. upon screen orientation changes).
@@ -70,15 +75,22 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 		PARTECIPA=getString(R.string.join);
 		CANCELLA_REQ=getString(R.string.cancelRequest);
 		NON_SPECIFICATO=getString(R.string.not_specified);
-
+		LASCIA_FEED = getString(R.string.insertFeedback);
 		profileImg = (ImageView) rootView.findViewById(R.id.profileImg);
 		join = (Button) rootView.findViewById(R.id.joinReq);
 		sendFb = (Button) rootView.findViewById(R.id.showPartecipant);
 		if(mode!=OWNER_REQUEST){
-			if(request.getPartecipants()==null || !request.getPartecipants().contains((QueryManager.getInstance().getCurrentUser().getId())))
-				join.setText(PARTECIPA);
-			else
-				join.setText(CANCELLA_PART);
+			if(request.getPastRequest()){
+				if(alreadyInsertFeed())
+					join.setVisibility(View.GONE);
+				else
+					join.setText(LASCIA_FEED);
+			}else{
+				if(request.getPartecipants()==null || !request.getPartecipants().contains((QueryManager.getInstance().getCurrentUser().getId())))
+					join.setText(PARTECIPA);
+				else
+					join.setText(CANCELLA_PART);
+			}
 		} else
 			join.setText(CANCELLA_REQ);
 		join.setOnClickListener(this);
@@ -170,6 +182,23 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 		return rootView;
 	}
 
+	private boolean alreadyInsertFeed(){
+		User owner = request.getOwner();
+		if (owner!=null){
+			List<Feedback> feedbacks = owner.getReceivedFb();
+			//feedback di prova per visualizzazione
+			if (feedbacks==null)
+				feedbacks= new ArrayList<Feedback>();
+
+			for(Feedback f : feedbacks){
+				if(f.getFrom().equals(QueryManager.getInstance().getCurrentUser()) && f.getToId().equals(owner.getId()) && f.getRequest().equals(request.getId()))
+					return true;
+			}
+			return false;
+		}
+		return false;
+	}
+
 	public void setRequest(Request request){
 		this.request=request;
 		refresh();
@@ -185,17 +214,20 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 	 * feedback dello user (in modo diverso a seconda del dispositivo).
 	 * */
 	public interface OnUserClickedListener {
-		public void onUserClicked(User user, String requestId);
+		public void onUserClicked(User user, Request request);
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.userSection:
-			listener.onUserClicked(request.getOwner(),request.getId());
+			listener.onUserClicked(request.getOwner(),request);
 			break;
 		case R.id.joinReq:
 			if(mode!=OWNER_REQUEST){
+				if(join.getText().equals(LASCIA_FEED)){
+					listener.onUserClicked(request.getOwner(),request);
+				}else{
 				if(request.getPartecipants()==null || !request.getPartecipants().contains((QueryManager.getInstance().getCurrentUser().getId())) ){
 					QueryManager.getInstance().joinRequest(request);
 					//new JoinTask().execute(true);
@@ -206,6 +238,7 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 					//new JoinTask().execute(false);
 					join.setText(PARTECIPA);
 				}
+				}
 			}else{
 				QueryManager.getInstance().removeOwnerRequest(request);
 			}
@@ -214,7 +247,6 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 			if (sendFb.getText().toString().equals(MOSTRA)){
 				sendFb.setText(NASCONDI);
 				userPartecipant.setVisibility(View.VISIBLE);
-
 				List<User> users = QueryManager.getInstance().getUserFromRequest(request);
 				if (users!=null && users.size()>0)
 					getView().findViewById(R.id.empty).setVisibility(View.GONE);
@@ -250,7 +282,7 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-		listener.onUserClicked((User) userPartecipant.getAdapter().getItem(position),request.getId());
+		listener.onUserClicked((User) userPartecipant.getAdapter().getItem(position),request);
 	}
 
 
