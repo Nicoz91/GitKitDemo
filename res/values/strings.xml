@@ -42,7 +42,8 @@
     <string name="edit">Modifica</string>
     <string name="save">Salva</string>
     <string name="join">Partecipa</string>
-    <string name="cancel">Cancella partecipazione</string>
+    <string name="cancelPartecipation">Cancella partecipazione</string>
+    <string name="cancelRequest">Cancella la richiesta</string>
     <string name="showPartecipants">Mostra Partecipanti</string>
     <string name="hidePartecipants">Nascondi Partecipanti</string>
     <string name="commentTitle">Commento: </string>
@@ -63,7 +64,16 @@
     <string name="insert_max_edit">1</string>
     <string name="title_activity_wait">WaitActivity</string>
     <string name="no_data">Non ci sono richieste da visualizzare.</string>
+    <string name="no_user">Nessuno ha ancora partecipato.</string>
     <string name="search_hint">Cerca tra le richieste.</string>
     <string name="search_title">Cerca</string>
+    <string name="startDateLabel">Data:</string>
+    <string name="durationLabel">Durata:</string>
+    <string name="typeLabel">Tipo:</string>
+    <string name="maxLabel">N° max:</string>
+    <string name="not_specified">Non specificato</string>
+    <string name="detailMale">Maschio, \u0020</string>
+    <string name="detailFemale">Femmina, \u0020</string>
+    <string name="detailYears">\u0020 anni</string>
 
 </resources>

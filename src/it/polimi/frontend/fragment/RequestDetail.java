@@ -43,6 +43,10 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 	private OnUserClickedListener listener;
 	private Button join,sendFb;
 	private ListView userPartecipant;
+	private String MOSTRA,NASCONDI;
+	private String CANCELLA_PART,PARTECIPA;
+	private String CANCELLA_REQ;
+	private String NON_SPECIFICATO;
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
 	 * fragment (e.g. upon screen orientation changes).
@@ -60,17 +64,23 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_request_detail,
 				container, false);
+		MOSTRA=getString(R.string.showPartecipants);
+		NASCONDI=getString(R.string.hidePartecipants);
+		CANCELLA_PART=getString(R.string.cancelPartecipation);
+		PARTECIPA=getString(R.string.join);
+		CANCELLA_REQ=getString(R.string.cancelRequest);
+		NON_SPECIFICATO=getString(R.string.not_specified);
+
 		profileImg = (ImageView) rootView.findViewById(R.id.profileImg);
 		join = (Button) rootView.findViewById(R.id.joinReq);
 		sendFb = (Button) rootView.findViewById(R.id.showPartecipant);
 		if(mode!=OWNER_REQUEST){
-		if(request.getPartecipants()==null || !request.getPartecipants().contains((QueryManager.getInstance().getCurrentUser().getId())))
-			join.setText("Partecipa");
-		else
-			join.setText("Cancella");
-		}else{
-			join.setText("Cancella la richiesta");
-		}
+			if(request.getPartecipants()==null || !request.getPartecipants().contains((QueryManager.getInstance().getCurrentUser().getId())))
+				join.setText(PARTECIPA);
+			else
+				join.setText(CANCELLA_PART);
+		} else
+			join.setText(CANCELLA_REQ);
 		join.setOnClickListener(this);
 		sendFb.setOnClickListener(this);
 		LinearLayout ll = (LinearLayout)rootView.findViewById(R.id.userSection);
@@ -91,29 +101,34 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 			//Age and sex
 			String subText="";
 			if (request.getOwner().getGender())
-				subText+="M, ";
+				subText+=getString(R.string.detailMale);
 			else
-				subText+="F, ";
+				subText+=getString(R.string.detailFemale);
 			if (request.getOwner().getBday()!=null){
 				Calendar dob = Calendar.getInstance();	
 				dob.setTimeInMillis(request.getOwner().getBday().getValue());
 				Calendar now = Calendar.getInstance();
-				subText+=getAge(dob,now);
+				subText+=getAge(dob,now)+getString(R.string.detailYears);
 			} else 
-				subText+="Età non specificata";
+				subText+=NON_SPECIFICATO;
 			((TextView)rootView.findViewById(R.id.ageSexLabel)).setText(subText);
 			//Titolo richiesta
-			((TextView)rootView.findViewById(R.id.titleLabel))
-			.setText("Titolo: "+request.getTitle());
-			//Tempo richiesta
-			if (request.getStart()!=null && request.getEnd()!=null){
-				//Start date
+			((TextView)rootView.findViewById(R.id.title))
+			.setText(request.getTitle());
+			//Start date
+			if(request.getStart()!=null){
 				Calendar start = Calendar.getInstance();
 				start.setTimeInMillis(request.getStart().getValue());
 				String dataInizio = start.get(Calendar.DAY_OF_MONTH)+" "+
 						start.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.ITALIAN)
 						+" "+start.get(Calendar.YEAR);
-				//Duration
+				((TextView)rootView.findViewById(R.id.date))
+				.setText(dataInizio);
+			} else
+				((TextView)rootView.findViewById(R.id.date))
+				.setText(NON_SPECIFICATO);
+			//Duration
+			if(request.getEnd()!=null){
 				long durationMs = request.getStart().getValue()-request.getEnd().getValue();
 				long duration = durationMs / 1000;
 				long h = duration / 3600;
@@ -124,15 +139,30 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 					durationValue = m+"m:"+s+"s";
 				else 
 					durationValue = h+"h:"+m+"m:"+s+"s";
-				((TextView)rootView.findViewById(R.id.timeLabel))
-				.setText("Data: "+dataInizio+", Durata: "+durationValue);
+				((TextView)rootView.findViewById(R.id.duration))
+				.setText(durationValue);
 			} else 
-				((TextView)rootView.findViewById(R.id.timeLabel))
-				.setText("Tempi non specificati.");
+				((TextView)rootView.findViewById(R.id.duration))
+				.setText(NON_SPECIFICATO);
+			//Tipo richiesta
+			if (request.getType()!=null)
+				((TextView)rootView.findViewById(R.id.type))
+				.setText(request.getType());
+			else
+				((TextView)rootView.findViewById(R.id.type))
+				.setText(NON_SPECIFICATO);
+			//N° max partecipanti richiesta
+			if (request.getMaxPartecipants()!=0)
+				((TextView)rootView.findViewById(R.id.max))
+				.setText(request.getType());
+			else
+				((TextView)rootView.findViewById(R.id.max))
+				.setText(NON_SPECIFICATO);
 			//Descrizione
 			((TextView)rootView.findViewById(R.id.descriptionLabel))
 			.setText(request.getDescription());
 			userPartecipant = (ListView) rootView.findViewById(R.id.partecipantsList);
+			userPartecipant.setOnItemClickListener(this);
 
 		}
 		//registrazione del parente in ascolto
@@ -166,37 +196,40 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 			break;
 		case R.id.joinReq:
 			if(mode!=OWNER_REQUEST){
-			if(request.getPartecipants()==null || !request.getPartecipants().contains((QueryManager.getInstance().getCurrentUser().getId())) ){
-				QueryManager.getInstance().joinRequest(request);
-				//new JoinTask().execute(true);
-				join.setText("Cancella");
-			}
-			else{
-				QueryManager.getInstance().removeJoinRequest(request);
-				//new JoinTask().execute(false);
-				join.setText("Partecipa");
-			}
+				if(request.getPartecipants()==null || !request.getPartecipants().contains((QueryManager.getInstance().getCurrentUser().getId())) ){
+					QueryManager.getInstance().joinRequest(request);
+					//new JoinTask().execute(true);
+					join.setText(CANCELLA_PART);
+				}
+				else{
+					QueryManager.getInstance().removeJoinRequest(request);
+					//new JoinTask().execute(false);
+					join.setText(PARTECIPA);
+				}
 			}else{
 				QueryManager.getInstance().removeOwnerRequest(request);
 			}
 			break;
 		case R.id.showPartecipant:
-			if (sendFb.getText().toString().equals("Mostra Partecipanti")){
-				sendFb.setText("Nascondi Partecipanti");
+			if (sendFb.getText().toString().equals(MOSTRA)){
+				sendFb.setText(NASCONDI);
 				userPartecipant.setVisibility(View.VISIBLE);
 
-				userPartecipant.setOnItemClickListener(this);
-
 				List<User> users = QueryManager.getInstance().getUserFromRequest(request);
+				if (users!=null && users.size()>0)
+					getView().findViewById(R.id.empty).setVisibility(View.GONE);
+				else
+					getView().findViewById(R.id.empty).setVisibility(View.VISIBLE);
 				Context c = getActivity();
 				if(c==null){ 
-//					System.out.println("Il context è null ma noi bariamo");
+					//					System.out.println("Il context è null ma noi bariamo");
 					c = MyApplication.getContext();
 				}
 				userPartecipant.setAdapter(new UserAdapter(c,0,users));
 			}else{
 				userPartecipant.setVisibility(View.GONE);
-				sendFb.setText("Mostra Partecipanti");
+				getView().findViewById(R.id.empty).setVisibility(View.GONE);
+				sendFb.setText(MOSTRA);
 			}
 			break;
 		default:
