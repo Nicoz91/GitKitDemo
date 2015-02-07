@@ -34,14 +34,14 @@
     <!-- Styles generici per i testi in giro nell'app -->
     <style name="baseTextStyle">
         <item name="android:textSize">@dimen/baseTextSize</item>
-        <item name="android:gravity">left</item>
+        <item name="android:gravity">center_vertical|left</item>
         <item name="android:paddingLeft">5dp</item>
     </style>
 
     <style name="titleTextStyle" parent="baseTextStyle">
         <item name="android:textColor">@color/blue</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:gravity">right</item>
+        <item name="android:gravity">center_vertical|right</item>
     </style>
 
 </resources>

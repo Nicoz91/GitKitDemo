@@ -67,12 +67,8 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		twoPane = getResources().getBoolean(R.bool.isTablet);
 		View rootView;
-		if (twoPane)
-			rootView = inflater.inflate(R.layout.fragment_account_settings_two_pane,
-					container, false);
-		else
-			rootView = inflater.inflate(R.layout.fragment_account_settings,
-					container, false);
+		rootView = inflater.inflate(R.layout.fragment_account_settings,
+				container, false);
 		setHasOptionsMenu(true);
 		user = QueryManager.getInstance().getCurrentUser();
 		if(user == null){
