@@ -15,18 +15,18 @@
 
         <TextView
             android:id="@+id/insert_title_label"
+            style="@style/titleTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/insert_title_label"
-            style="@style/titleTextStyle" />
+            android:text="@string/insert_title_label" />
 
         <EditText
             android:id="@+id/insert_title_edit"
+            style="@style/baseTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="@string/insert_title_edit"
-            android:inputType="text|textCapWords"
-            style="@style/baseTextStyle" />
+            android:inputType="text|textCapWords" />
     </TableRow>
 
     <TableRow
@@ -36,18 +36,23 @@
 
         <TextView
             android:id="@+id/insert_description_label"
+            style="@style/titleTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/insert_description_label"
-            style="@style/titleTextStyle" />
+            android:text="@string/insert_description_label" />
 
         <EditText
             android:id="@+id/insert_description_edit"
+            style="@style/baseTextStyle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
+            android:gravity="top"
             android:hint="@string/insert_description_edit"
-            android:inputType="text|textCapWords"
-            style="@style/baseTextStyle" />
+            android:inputType="textMultiLine"
+            android:lines="5"
+            android:maxLines="5"
+            android:scrollHorizontally="false" >
+        </EditText>
     </TableRow>
 
     <TableRow
@@ -57,18 +62,17 @@
 
         <TextView
             android:id="@+id/insert_tag_label"
+            style="@style/titleTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/insert_tag_label"
-            style="@style/titleTextStyle" />
+            android:text="@string/insert_tag_label" />
 
         <EditText
             android:id="@+id/insert_tag_edit"
+            style="@style/baseTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="@string/insert_tag_edit"
-            android:inputType="text|textEmailAddress"
-            style="@style/baseTextStyle" />
+            android:hint="@string/insert_tag_edit" />
     </TableRow>
 
     <TableRow
@@ -78,20 +82,20 @@
 
         <TextView
             android:id="@+id/insert_start_label"
+            style="@style/titleTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/insert_start_label"
-            style="@style/titleTextStyle" />
+            android:text="@string/insert_start_label" />
 
         <EditText
             android:id="@+id/insert_start_edit"
+            style="@style/baseTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
             android:focusableInTouchMode="false"
             android:hint="@string/insert_start_edit"
-            android:inputType="date"
-            style="@style/baseTextStyle" />
+            android:inputType="date" />
     </TableRow>
 
     <TableRow
@@ -101,20 +105,20 @@
 
         <TextView
             android:id="@+id/insert_end_label"
+            style="@style/titleTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/insert_end_label"
-            style="@style/titleTextStyle" />
+            android:text="@string/insert_end_label" />
 
         <EditText
             android:id="@+id/insert_end_edit"
+            style="@style/baseTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
             android:focusableInTouchMode="false"
             android:hint="@string/insert_end_edit"
-            android:inputType="date"
-            style="@style/baseTextStyle" />
+            android:inputType="date" />
     </TableRow>
 
     <TableRow
@@ -124,18 +128,18 @@
 
         <TextView
             android:id="@+id/insert_max_label"
+            style="@style/titleTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/insert_max_label"
-            style="@style/titleTextStyle" />
+            android:text="@string/insert_max_label" />
 
         <EditText
             android:id="@+id/insert_max_edit"
+            style="@style/baseTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="@string/insert_max_edit"
-            android:inputType="text|textCapWords"
-            style="@style/baseTextStyle" />
+            android:inputType="number" />
     </TableRow>
 
 </TableLayout>
