@@ -19,7 +19,7 @@
             android:id="@+id/insert_title_label"
             style="@style/titleTextStyle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="@string/insert_title_label" />
 
         <EditText
@@ -27,7 +27,7 @@
             style="@style/baseTextStyle"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:hint="@string/insert_title_edit"
             android:inputType="text|textCapWords" />
     </TableRow>
@@ -41,7 +41,7 @@
             android:id="@+id/insert_description_label"
             style="@style/titleTextStyle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="@string/insert_description_label" />
 
         <EditText
@@ -49,7 +49,7 @@
             style="@style/baseTextStyle"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="top"
             android:hint="@string/insert_description_edit"
             android:inputType="textCapSentences|textMultiLine"
@@ -69,14 +69,14 @@
             android:id="@+id/insert_tag_label"
             style="@style/titleTextStyle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="@string/insert_tag_label" />
 
         <EditText
             android:id="@+id/insert_tag_edit"
             style="@style/baseTextStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:hint="@string/insert_tag_edit" />
     </TableRow>
 
@@ -89,7 +89,7 @@
             android:id="@+id/insert_start_label"
             style="@style/titleTextStyle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="@string/insert_start_label" />
 
         <EditText
@@ -97,7 +97,7 @@
             style="@style/baseTextStyle"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:clickable="true"
             android:focusableInTouchMode="false"
             android:hint="@string/insert_start_edit"
@@ -113,7 +113,7 @@
             android:id="@+id/insert_end_label"
             style="@style/titleTextStyle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="@string/insert_end_label" />
 
         <EditText
@@ -121,7 +121,7 @@
             style="@style/baseTextStyle"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:clickable="true"
             android:focusableInTouchMode="false"
             android:hint="@string/insert_end_edit"
@@ -137,7 +137,7 @@
             android:id="@+id/insert_max_label"
             style="@style/titleTextStyle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="@string/insert_max_label" />
 
         <EditText
@@ -145,7 +145,7 @@
             style="@style/baseTextStyle"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:hint="@string/insert_max_edit"
             android:inputType="number" />
     </TableRow>
