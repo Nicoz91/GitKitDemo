@@ -34,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class RequestDetail extends Fragment implements OnClickListener, OnItemClickListener{
 
@@ -165,12 +166,16 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 				.setText(NON_SPECIFICATO);
 			//N° max partecipanti richiesta
 			if(request.getMaxPartecipants()!=null){
-			if (request.getMaxPartecipants().intValue()!=0)
-				((TextView)rootView.findViewById(R.id.max))
-				.setText(request.getType());
-			else
-				((TextView)rootView.findViewById(R.id.max))
-				.setText(NON_SPECIFICATO);
+				if (request.getMaxPartecipants().intValue()!=0){
+					int part = 0;
+					if(request.getPartecipants()!=null)
+						part = request.getPartecipants().size();
+					((TextView)rootView.findViewById(R.id.max))
+					.setText(part+"/"+request.getMaxPartecipants());
+				}
+				else
+					((TextView)rootView.findViewById(R.id.max))
+					.setText(NON_SPECIFICATO);
 			}
 			else
 				((TextView)rootView.findViewById(R.id.max))
@@ -233,16 +238,18 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 				if(join.getText().equals(LASCIA_FEED)){
 					listener.onUserClicked(request.getOwner(),request);
 				}else{
-				if(request.getPartecipants()==null || !request.getPartecipants().contains((QueryManager.getInstance().getCurrentUser().getId())) ){
-					QueryManager.getInstance().joinRequest(request);
-					//new JoinTask().execute(true);
-					join.setText(CANCELLA_PART);
-				}
-				else{
-					QueryManager.getInstance().removeJoinRequest(request);
-					//new JoinTask().execute(false);
-					join.setText(PARTECIPA);
-				}
+					if(request.getPartecipants()==null || !request.getPartecipants().contains((QueryManager.getInstance().getCurrentUser().getId())) ){
+						if(QueryManager.getInstance().joinRequest(request))
+							join.setText(CANCELLA_PART);
+						else
+							Toast.makeText(MyApplication.getContext(),"Richiesta al completo! Impossibile partecipare.",Toast.LENGTH_SHORT).show();
+
+					}
+					else{
+						QueryManager.getInstance().removeJoinRequest(request);
+						//new JoinTask().execute(false);
+						join.setText(PARTECIPA);
+					}
 				}
 			}else{
 				QueryManager.getInstance().removeOwnerRequest(request);

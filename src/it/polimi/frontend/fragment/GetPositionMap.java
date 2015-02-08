@@ -76,7 +76,7 @@ public class GetPositionMap extends Fragment{
         
 		map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(45.4766, 9.22414), 15));
 		// Zoom in, animating the camera.
-		map.animateCamera(CameraUpdateFactory.zoomTo(100), 2000, null);
+		map.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
 
 
 		return rootView;

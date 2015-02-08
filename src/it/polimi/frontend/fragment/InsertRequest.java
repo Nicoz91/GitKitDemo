@@ -151,7 +151,7 @@ public class InsertRequest extends Fragment{
 	}
 
 	public boolean assignAttribute(Request req){
-		try{
+
 		if(title.getText().equals("") || description.getText().equals("") || tag.getText().equals(""))
 			return false;
 		if(startDate.getTimeInMillis()>endDate.getTimeInMillis()){
@@ -163,11 +163,8 @@ public class InsertRequest extends Fragment{
 		req.setType(tag.getText().toString());
 		req.setStart(new DateTime(startDate.getTimeInMillis()));
 		req.setEnd(new DateTime(endDate.getTimeInMillis()));
-		req.setMaxPartecipants(Integer.getInteger(max.getText().toString()));	
-		}catch(Exception e){
-			e.printStackTrace();
-			return false;
-		}
+		req.setMaxPartecipants(Integer.parseInt(max.getText().toString()));	
+
 		return valid;
 	}
 }

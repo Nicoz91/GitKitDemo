@@ -15,8 +15,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -213,20 +215,21 @@ public class QueryManager {
 		return ret;
 	}
 
-	public void joinRequest(Request r){
+	public boolean joinRequest(Request r){
 		//		if(r==null){System.out.println("R è null... strano");}
 		//		else{System.out.println("R id:"+r.getId());}
-
+		boolean ok;
 		try {
-			new JoinRequest(r).execute().get();
+			ok = new JoinRequest(r).execute().get();
 			notifyListener();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return false;
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return false;
 		}
+		return ok;
 	}
 
 	public void removeJoinRequest(Request r){
@@ -679,7 +682,7 @@ public class QueryManager {
 
 	}
 
-	private class JoinRequest extends AsyncTask<Void, Void, User> {
+	private class JoinRequest extends AsyncTask<Void, Void, Boolean> {
 		public Request r;
 
 		public JoinRequest(Request r){
@@ -687,18 +690,28 @@ public class QueryManager {
 		}
 
 		@Override
-		protected User doInBackground(Void... params) {
+		protected Boolean doInBackground(Void... params) {
 			User u = new User();
+			Request newReq = new Request();
 			try {
 				u = manager.getUserByEmail(LoginSession.getUser().getEmail()).execute();
+				newReq = manager.getRequest(r.getId()).execute();
+				if(newReq!=null)
+					System.out.println("Ho caricato la richiesta corretta e aggiornata");
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
+			}
+			if(newReq.getPartecipants()!=null && newReq.getPartecipants().size()>=newReq.getMaxPartecipants()){
+				System.out.println("Non puoi partecipare");
+				return false;
 			}
 			//			if(u==null)
 			//				System.out.println("Utente null");
 			//			else
 			//				System.out.println("Sto modificando: "+u.getName());
+
+			r.setPartecipants(newReq.getPartecipants());
 
 			if(u.getJoinedReq()==null)
 				u.setJoinedReq(new ArrayList<String>());
@@ -717,9 +730,10 @@ public class QueryManager {
 
 			} catch (IOException e) {
 				e.printStackTrace();
+				return false;
 			}
 			r.setOwner(oldOwner);
-			return u;
+			return true;
 		}
 
 
