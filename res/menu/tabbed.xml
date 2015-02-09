@@ -11,6 +11,12 @@
           app:actionViewClass="android.support.v7.widget.SearchView" />
     
     <item
+        android:id="@+id/insertRequest"
+        android:orderInCategory="100"
+        android:title="@string/insertRequest"
+        android:icon="@android:drawable/ic_menu_add"
+        app:showAsAction="ifRoom"/>
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:icon="@android:drawable/ic_menu_preferences"
@@ -22,10 +28,5 @@
         android:title="@string/logout"
         app:showAsAction="ifRoom"/>
     
-    <item
-        android:id="@+id/insertRequest"
-        android:orderInCategory="100"
-        android:title="@string/insertRequest"
-        app:showAsAction="ifRoom"/>
 
 </menu>
