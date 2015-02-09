@@ -24,6 +24,8 @@ import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
 import com.google.identitytoolkit.demo.messageEndpoint.MessageEndpoint;
+import com.google.identitytoolkit.demo.messageEndpoint.model.CollectionResponseMessageData;
+import com.google.identitytoolkit.demo.messageEndpoint.model.MessageData;
 
 public class QueryManager {
 
@@ -288,6 +290,19 @@ public class QueryManager {
 			e.printStackTrace();
 		}
 	}
+	
+	public ArrayList<String> getNotification(){
+		try {
+			return new NotificationTask().execute().get();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	public void queryRequest(String tag){
 		new FilterTask(tag).execute();
@@ -440,8 +455,10 @@ public class QueryManager {
 			ArrayList<String> devices = (ArrayList<String>) to.getDevices();
 			if(devices == null) return null;
 			try {
-				for(String device : devices)
-					message.notify(notify, device).execute();
+				for(String device : devices){
+					message.notify(notify, device,to.getId()).execute();
+					System.out.println("Sto per chiamare la query...");
+				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -919,6 +936,25 @@ public class QueryManager {
 			}
 			//			System.out.println("Dovrei aver aggiornato correttamente l'utente");
 			return u;
+		}
+	}
+	
+	private class NotificationTask extends AsyncTask<Void, Void, ArrayList<String>> {
+
+		@Override
+		protected ArrayList<String> doInBackground(Void... params) {
+			CollectionResponseMessageData not = null;
+			try {
+				not = message.getNotification(user.getId()).execute();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			ArrayList<String> notification = new ArrayList<String>();
+			if(not!=null)
+			for(MessageData md : not.getItems())
+				notification.add(md.getMessage());
+			return notification;
 		}
 	}
 }

@@ -155,6 +155,10 @@
             android:name=".WaitActivity"
             android:label="@string/title_activity_wait" >
         </activity>
+        <activity
+            android:name=".NotificationActivity"
+            android:label="@string/title_activity_notification" >
+        </activity>
     </application>
 
 </manifest>

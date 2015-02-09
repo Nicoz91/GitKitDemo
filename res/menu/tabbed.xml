@@ -4,22 +4,27 @@
     xmlns:compat="http://schemas.android.com/apk/res-auto"
     tools:context="com.google.identitytoolkit.demo.TabbedActivity" >
 
-    <item android:id="@+id/searchRequest"
-          android:title="@string/search_title"
-          android:icon="@android:drawable/ic_menu_search"
-          app:showAsAction="ifRoom|collapseActionView"
-          app:actionViewClass="android.support.v7.widget.SearchView" />
-    
+    <item
+        android:id="@+id/searchRequest"
+        android:icon="@android:drawable/ic_menu_search"
+        android:title="@string/search_title"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="ifRoom|collapseActionView"/>
     <item
         android:id="@+id/insertRequest"
+        android:icon="@android:drawable/ic_menu_add"
         android:orderInCategory="100"
         android:title="@string/insertRequest"
-        android:icon="@android:drawable/ic_menu_add"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/showNotification"
+        android:orderInCategory="100"
+        android:title="N"
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_settings"
-        android:orderInCategory="100"
         android:icon="@android:drawable/ic_menu_preferences"
+        android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="ifRoom"/>
     <item
@@ -27,6 +32,5 @@
         android:orderInCategory="100"
         android:title="@string/logout"
         app:showAsAction="ifRoom"/>
-    
 
 </menu>
