@@ -8,26 +8,31 @@
         android:id="@+id/insert_next"
         android:orderInCategory="100"
         android:title="Avanti"
-        app:showAsAction="ifRoom"
-        android:visible="true"/>
+        android:visible="true"
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/insert_cancel"
+        android:icon="@android:drawable/ic_menu_close_clear_cancel"
         android:orderInCategory="100"
         android:title="Annulla"
-        app:showAsAction="ifRoom"
-        android:visible="true"/>
-    
-        <item
+        android:visible="true"
+        app:showAsAction="ifRoom"/>
+    <item
         android:id="@+id/insert_back"
         android:orderInCategory="100"
         android:title="Indietro"
-        app:showAsAction="ifRoom"
-        android:visible="false"/>
+        android:visible="false"
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/insert_done"
+        android:icon="@android:drawable/ic_menu_save"
         android:orderInCategory="100"
         android:title="Salva"
-        app:showAsAction="ifRoom"
-        android:visible="false"/>
-
+        android:visible="false"
+        app:showAsAction="ifRoom"/>
+	<!--  Icone per qualche motivo non raggiungibili anche se presenti
+        android:icon="@android:drawable/ic_menu_forward"
+        android:icon="@android:drawable/ic_menu_back"
+        android:icon="@android:drawable/ic_menu_mark"
+        -->
 </menu>
