@@ -142,7 +142,7 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 				.setText(NON_SPECIFICATO);
 			//Duration
 			if(request.getEnd()!=null){
-				long durationMs = request.getStart().getValue()-request.getEnd().getValue();
+				long durationMs = request.getEnd().getValue()-request.getStart().getValue();
 				long duration = durationMs / 1000;
 				long h = duration / 3600;
 				long m = (duration - h * 3600) / 60;
