@@ -55,8 +55,13 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		LoginSession.setPrefs(PreferenceManager.getDefaultSharedPreferences(this));
 		GitkitUser session = LoginSession.getUser();
 		IdToken sessionToken = LoginSession.getIdToken();
-
-
+		//Mi salvo preventivamente l'id del device
+		try {
+			GCMIntentService.register(MyApplication.getContext());
+		} catch (Exception e) {
+			System.out.println("Impossibile registrare l'app");
+			//TODO ricominciare fino a che non viene registrata!
+		}
 		//		if(!ConnectionHandler.getInstance().isConnected())
 		//			Toast.makeText(MainActivity.this, "Problemi di connettività. Controllare la connessione!", Toast.LENGTH_LONG).show();
 

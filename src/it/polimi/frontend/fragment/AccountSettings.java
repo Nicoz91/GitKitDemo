@@ -1,8 +1,10 @@
 package it.polimi.frontend.fragment;
 
 import it.polimi.appengine.entity.manager.model.User;
+import it.polimi.frontend.activity.GCMIntentService;
 import it.polimi.frontend.activity.HttpUtils;
 import it.polimi.frontend.activity.LoginSession;
+import it.polimi.frontend.activity.MyApplication;
 import it.polimi.frontend.activity.R;
 import it.polimi.frontend.activity.TabbedActivity;
 import it.polimi.frontend.util.QueryManager;
@@ -321,6 +323,12 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 
 	private void registerUser(){
 		updateUser();
+		try {
+			GCMIntentService.register(MyApplication.getContext());
+		} catch (Exception e) {
+			System.out.println("Impossibile registrare l'app");
+			//TODO ricominciare fino a che non viene registrata!
+		}
 		ArrayList<String> devices = new ArrayList<String>();
 		devices.add(LoginSession.getDeviceId());
 		user.setDevices(devices);
