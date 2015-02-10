@@ -207,4 +207,10 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 		}
 	}
 
+	@Override
+	public void onRequestLoading() {
+		// TODO eventuali modifiche del layout durante il caricamento delle richieste.
+		
+	}
+
 }

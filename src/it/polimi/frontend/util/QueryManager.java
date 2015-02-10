@@ -33,6 +33,7 @@ public class QueryManager {
 	private List<Feedback> feedbacks;
 	private List<Request> requests;
 	private List<OnRequestLoadedListener> listeners;
+	private List<OnActionListener> actionListeners;
 	private Manager manager;
 	private MessageEndpoint message;
 	private static QueryManager instance;
@@ -67,6 +68,7 @@ public class QueryManager {
 		this.requests = new ArrayList<Request>();
 		this.feedbacks = new ArrayList<Feedback>();
 		this.listeners = new ArrayList<OnRequestLoadedListener>();
+		this.actionListeners = new ArrayList<OnActionListener>();
 		Manager.Builder managerBuilder = new Manager.Builder(
 				AndroidHttp.newCompatibleTransport(), new JacksonFactory(), null);
 		managerBuilder = CloudEndpointUtils.updateBuilder(managerBuilder);
@@ -412,7 +414,17 @@ public class QueryManager {
 	}
 
 	public interface OnRequestLoadedListener{
+		public void onRequestLoading();
 		public void onRequestLoaded(List<Request> requests);
+	}
+	
+	public void addActionListener(OnActionListener listener){
+		actionListeners.add(listener);
+	}
+	public interface OnActionListener{
+		public static final int JOIN=0, CANCEL_JOIN=1;
+		public void onPerformingAction(int action);
+		public void onActionPerformed(int action);
 	}
 
 	public static void destroy (){
@@ -483,6 +495,14 @@ public class QueryManager {
 
 	//Classi che effettuano le query
 	private class LoadDataTask extends AsyncTask<Void, Void,  ArrayList<Request>> {
+
+		
+		@Override
+		protected void onPreExecute() {
+			for(OnRequestLoadedListener l: listeners)
+				l.onRequestLoading();
+			super.onPreExecute();
+		}
 
 		@Override
 		protected ArrayList<Request> doInBackground(Void... params) {
@@ -717,6 +737,13 @@ public class QueryManager {
 		}
 
 		@Override
+		protected void onPreExecute() {
+			for(OnActionListener l: actionListeners)
+				l.onPerformingAction(OnActionListener.JOIN);
+			super.onPreExecute();
+		}
+		
+		@Override
 		protected Boolean doInBackground(Void... params) {
 			User u = new User();
 			Request newReq = new Request();
@@ -763,7 +790,14 @@ public class QueryManager {
 			return true;
 		}
 
+		@Override
+		protected void onPostExecute(Boolean result) {
+			for(OnActionListener l: actionListeners)
+				l.onActionPerformed(OnActionListener.JOIN);
+			super.onPostExecute(result);
+		}
 
+		
 
 	}
 	private class RemoveJoinRequest extends AsyncTask<Void, Void, User> {
@@ -771,6 +805,13 @@ public class QueryManager {
 
 		public RemoveJoinRequest(Request r){
 			this.r = r;
+		}
+		
+		@Override
+		protected void onPreExecute() {
+			for(OnActionListener l: actionListeners)
+				l.onPerformingAction(OnActionListener.CANCEL_JOIN);
+			super.onPreExecute();
 		}
 
 		@Override
@@ -828,6 +869,13 @@ public class QueryManager {
 			}
 			r.setOwner(oldOwner);
 			return u;
+		}
+		
+		@Override
+		protected void onPostExecute(User result) {
+			for(OnActionListener l: actionListeners)
+				l.onActionPerformed(OnActionListener.CANCEL_JOIN);
+			super.onPostExecute(result);
 		}
 	}
 	private class RemoveOwnerRequest extends AsyncTask<Void, Void, User> {

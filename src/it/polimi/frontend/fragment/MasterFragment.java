@@ -67,7 +67,6 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 					requests = new ArrayList<Request>();
 				break;
 			default: //Caso ALL_REQUEST + tutti gli altri possibili
-				//TODO
 				requests = QueryManager.getInstance().getRequests();
 				ArrayList<Request>	present = new ArrayList<Request>();
 				for(Request req : requests)
@@ -193,6 +192,11 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 				requestListFragment.setRequestAdapter(present);
 			break;
 		}
+	}
+	@Override
+	public void onRequestLoading() {
+		// TODO eventuali modifiche del layout durante il caricamento delle richieste.
+		
 	}
 
 }
