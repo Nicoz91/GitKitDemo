@@ -63,6 +63,7 @@
     <string name="title_activity_wait">Nessuna Connessione</string>
     <string name="no_data">Non ci sono richieste da visualizzare.</string>
     <string name="no_user">Nessuno ha ancora partecipato.</string>
+    <string name="no_fb">Nessuno ha ancora lasciato Feedback.</string>
     <string name="search_hint">Cerca tra le richieste.</string>
     <string name="search_title">Cerca</string>
     <string name="startDateLabel">Data:\u0020</string>
@@ -73,6 +74,7 @@
     <string name="detailMale">Maschio, \u0020</string>
     <string name="detailFemale">Femmina, \u0020</string>
     <string name="detailYears">\u0020 anni</string>
+    <string name="fbNotAllowed">Non puoi lasciare un feedback a questa persona.\n-O non hai ancora partecipato a questa richiesta.\n-O non sei nel tab relativo alle richieste a cui partecipi.\n-O la richiesta non è ancora passata.\n-O hai già lasciato un feedback a questa persona per questa richiesta</string>
 
     <string-array name="tag_array">
         <item>Cibo</item>

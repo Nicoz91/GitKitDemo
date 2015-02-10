@@ -2,8 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:divider="?android:attr/dividerVertical"
+    android:showDividers="middle" >
 
+    <TextView
+        android:id="@+id/fbNotAllowed"
+        style="@style/baseTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:text="@string/fbNotAllowed"
+        android:visibility="gone" />
+    
     <LinearLayout
         android:id="@+id/sendFbForm"
         android:layout_width="match_parent"
@@ -35,6 +47,16 @@
             android:text="@string/sendFeedback" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/empty"
+        style="@style/baseTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:gravity="center"
+        android:text="@string/no_fb"
+        android:visibility="gone" />
+    
     <ListView
         android:id="@+id/feedbackList"
         android:layout_width="match_parent"
