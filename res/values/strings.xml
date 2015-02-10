@@ -65,8 +65,8 @@
     <string name="no_user">Nessuno ha ancora partecipato.</string>
     <string name="search_hint">Cerca tra le richieste.</string>
     <string name="search_title">Cerca</string>
-    <string name="startDateLabel">Data:</string>
-    <string name="durationLabel">Durata:</string>
+    <string name="startDateLabel">Data:\u0020</string>
+    <string name="durationLabel">Durata:\u0020</string>
     <string name="typeLabel">Tipo:</string>
     <string name="maxLabel">N° max:</string>
     <string name="not_specified">Non specificato</string>
