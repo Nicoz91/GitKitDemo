@@ -10,6 +10,7 @@ public class LoginSession {
 	private static IdToken idToken;
 	private static SharedPreferences prefs;
 	private static String deviceId;
+	private static String provider;
 	
 	public static String getDeviceId() {
 		return deviceId;
@@ -27,6 +28,14 @@ public class LoginSession {
 		LoginSession.user = user;
 	}
 
+	public static String getProvider() {
+		return provider;
+	}
+
+	public static void setProvider(String provider) {
+		LoginSession.provider = provider;
+	}
+
 	public static void setPrefs(SharedPreferences prefes) {
 		//TODO Aggiungere MODO PRIVATO
 		prefs = prefes;
@@ -41,10 +50,18 @@ public class LoginSession {
 		if (prefs.contains("device")){
 		     deviceId = prefs.getString("device", "");
 		}
+		
+		if (prefs.contains("provider")){
+		     provider = prefs.getString("provide", "");
+		}
 	}
 	
 	public static void setStringUser(String gituser){
 		prefs.edit().putString("gituser", gituser).commit();
+	}
+	
+	public static void setStringProvider(String provider){
+		prefs.edit().putString("provider", provider).commit();
 	}
 	
 	public static void setStringToken(String token){
@@ -68,5 +85,7 @@ public class LoginSession {
 		idToken = null;
 		prefs.edit().remove("gituser").commit();
 		prefs.edit().remove("token").commit();
+		prefs.edit().remove("provider").commit();
+		prefs.edit().remove("device").commit();
 	}
 }
