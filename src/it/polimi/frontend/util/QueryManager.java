@@ -468,6 +468,17 @@ public class QueryManager {
 
 
 	}
+	
+	private boolean checkEmail(User u , String email){
+		boolean check = false;
+		if(u.getPwAccount()!=null && u.getPwAccount().equals(LoginSession.getUser().getEmail()) )
+			check = true;
+		if(u.getGmailAccount()!=null && u.getGmailAccount().equals(LoginSession.getUser().getEmail()) )
+			check = true;
+		if(u.getFbAccount()!=null && u.getFbAccount().equals(LoginSession.getUser().getEmail()) )
+			check = true;
+		return check;
+	}
 
 
 	//Classi che effettuano le query
@@ -483,8 +494,7 @@ public class QueryManager {
 					System.out.println("# utenti: "+users.size());
 					for(User u : users){
 						//						System.out.println("UTENTE: "+u);
-
-						if(u.getPwAccount().equals(LoginSession.getUser().getEmail())) 
+						if(checkEmail(u,LoginSession.getUser().getEmail()))
 							user = u;
 						ArrayList<Request> ownerReq = (ArrayList<Request>) u.getRequests();
 						ArrayList<Feedback> sentFeed = (ArrayList<Feedback>) u.getSentFb();
@@ -521,7 +531,7 @@ public class QueryManager {
 								r.setOwner(u);
 								if(r.getPartecipants()==null)
 									r.setPartecipants(new ArrayList<Long>());}
-							if(u.getPwAccount().equals(LoginSession.getUser().getEmail()) ) 
+							if(checkEmail(u,LoginSession.getUser().getEmail()) ) 
 								;//continue;
 							else
 								requests.addAll(ownerReq);

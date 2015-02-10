@@ -74,10 +74,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			// in account information are passed to the callback.
 
 			@Override
-			public void onSignIn(IdToken idToken, GitkitUser user) {
-
-
+			public void onSignIn(IdToken idToken, GitkitUser user) {		
 				//Controllo se l'utente ha già inserito i dati obbligatori
+				
 				if(checkRegistration(user))
 					showProfilePage(idToken, user);
 				else
@@ -88,7 +87,10 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 				LoginSession.setStringUser(user.toString());
 				LoginSession.setIdToken(idToken);
 				LoginSession.setStringToken(idToken.getTokenString());
-
+				if(user.getIdProvider()!=null)
+					System.out.println("Nome del provider: "+user.getIdProvider().name());
+				LoginSession.setStringProvider(user.getIdProvider().name());
+				LoginSession.setProvider(user.getIdProvider().name());
 				
 				// Now use the idToken to create a session for your user.
 				// To do so, you should exchange the idToken for either a Session Token or Cookie

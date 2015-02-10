@@ -41,6 +41,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.api.client.util.DateTime;
+import com.google.identitytoolkit.IdProvider;
 
 public class AccountSettings extends Fragment implements OnClickListener, DatePickerDialog.OnDateSetListener{
 
@@ -73,7 +74,13 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		user = QueryManager.getInstance().getCurrentUser();
 		if(user == null){
 			user = new User();
-			user.setPwAccount(LoginSession.getUser().getEmail());
+			if(LoginSession.getProvider()==null)
+				user.setPwAccount(LoginSession.getUser().getEmail());
+			else if (LoginSession.getProvider().equalsIgnoreCase(IdProvider.GOOGLE.name()))
+				user.setGmailAccount(LoginSession.getUser().getEmail());
+			else if(LoginSession.getProvider().equalsIgnoreCase(IdProvider.FACEBOOK.name()))
+				user.setFbAccount(LoginSession.getUser().getEmail());
+			else user.setPwAccount(LoginSession.getUser().getEmail());
 			user.setGender(true);
 			regMode = true;
 		}
@@ -308,6 +315,8 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		ArrayList<String> devices = new ArrayList<String>();
 		devices.add(LoginSession.getDeviceId());
 		user.setDevices(devices);
+		if(LoginSession.getProvider()!=null)
+			System.out.println(LoginSession.getUser().getIdProvider());
 		user  = QueryManager.getInstance().insertUser(user);
 		Toast.makeText(getActivity().getApplicationContext(), "Registrazione effettuata.",
 				Toast.LENGTH_SHORT).show();
