@@ -50,7 +50,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		ch = new ConnectionHandler();
 		registerReceiver(ch,new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-		
+
 		//Carico i cookie
 		LoginSession.setPrefs(PreferenceManager.getDefaultSharedPreferences(this));
 		GitkitUser session = LoginSession.getUser();
@@ -76,22 +76,25 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			@Override
 			public void onSignIn(IdToken idToken, GitkitUser user) {		
 				//Controllo se l'utente ha già inserito i dati obbligatori
-				
+
 				if(checkRegistration(user))
 					showProfilePage(idToken, user);
 				else
 					showRegistrationPage(user);
-				
+
 				//Salvo i dati ricevuti nelle shared preferences
 				LoginSession.setUser(user);
 				LoginSession.setStringUser(user.toString());
 				LoginSession.setIdToken(idToken);
 				LoginSession.setStringToken(idToken.getTokenString());
-				if(user.getIdProvider()!=null)
-					System.out.println("Nome del provider: "+user.getIdProvider().name());
-				LoginSession.setStringProvider(user.getIdProvider().name());
-				LoginSession.setProvider(user.getIdProvider().name());
-				
+				if(user.getIdProvider()!=null){
+					LoginSession.setStringProvider(user.getIdProvider().name());
+					LoginSession.setProvider(user.getIdProvider().name());
+				}
+				else{
+					LoginSession.setStringProvider("");
+					LoginSession.setProvider("");
+				}
 				// Now use the idToken to create a session for your user.
 				// To do so, you should exchange the idToken for either a Session Token or Cookie
 				// from your server.
@@ -112,7 +115,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			return;
 		}
 		System.out.println("Effettuo la query");
-	//	QueryManager.getInstance().getUserByEmail(session.getEmail());
+		//	QueryManager.getInstance().getUserByEmail(session.getEmail());
 		System.out.println("Fine query");
 		//Controllo se è attiva una sessione
 		if(session!=null && sessionToken!=null && QueryManager.getInstance().getUserByEmail(session.getEmail())!=null){
@@ -130,7 +133,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private boolean checkRegistration(GitkitUser user){
 		//Se l'utente è già salvato allora associo il device
 		User u = checkUser(user);
-		if(u!=null){
+		if(u!=null && u.getName()!=null && !u.getName().equals("")){
 			//Provo a registrare l'id così lo trovo già salvato in shared dopo
 			try {
 				GCMIntentService.register(MyApplication.getContext());

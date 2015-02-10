@@ -41,6 +41,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.api.client.util.DateTime;
+import com.google.identitytoolkit.GitkitUser.UserProfile;
 import com.google.identitytoolkit.IdProvider;
 
 public class AccountSettings extends Fragment implements OnClickListener, DatePickerDialog.OnDateSetListener{
@@ -74,6 +75,14 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		user = QueryManager.getInstance().getCurrentUser();
 		if(user == null){
 			user = new User();
+			try{
+			String s = LoginSession.getUser().getDisplayName();
+			String name = s.substring(0, s.lastIndexOf(' ')) ;
+			String surname =  s.substring(s.lastIndexOf(' '),s.length()) ;
+			user.setName(name);
+			user.setSurname(surname);
+			user.setPhotoURL(LoginSession.getUser().getPhotoUrl());
+			}catch(Exception e){}
 			if(LoginSession.getProvider()==null)
 				user.setPwAccount(LoginSession.getUser().getEmail());
 			else if (LoginSession.getProvider().equalsIgnoreCase(IdProvider.GOOGLE.name()))

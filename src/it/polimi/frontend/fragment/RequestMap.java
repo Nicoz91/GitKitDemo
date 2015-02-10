@@ -8,6 +8,7 @@ import it.polimi.frontend.util.GPSTracker;
 import it.polimi.frontend.util.QueryManager;
 import it.polimi.frontend.util.QueryManager.OnRequestLoadedListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,11 +100,20 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 	@Override
 	public void onRequestLoaded(List<Request> requests) {
 		map.clear();
+		
+		ArrayList<Request>	present = new ArrayList<Request>();
+		for(Request req : requests)
+			if(!req.getPastRequest())
+				present.add(req);
+		
+		requests = present;
+		
 		CircleOptions circleOptions = new CircleOptions().center(position) // set center
 				.radius(200) // set radius in meters
-				.fillColor(Color.TRANSPARENT) // default
-				.zIndex(2)
-				.strokeColor(0x10000000).strokeWidth(3);
+				.fillColor(0x5500ff00)
+				.strokeWidth(2)
+				.strokeColor(Color.BLACK);
+	
 	
 
 		map.addCircle(circleOptions);
@@ -121,6 +131,12 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 		QueryManager.getInstance().addListener(this);
 		List<Request> requests = QueryManager.getInstance().getRequests();
 		if(requests!=null && requests.size()>0 ){
+			ArrayList<Request>	present = new ArrayList<Request>();
+			for(Request req : requests)
+				if(!req.getPastRequest())
+					present.add(req);
+			
+			requests = present;
 			setRequestMark(requests);	
 		}
 		else{
