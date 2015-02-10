@@ -59,40 +59,47 @@ public class FeedbackDetail extends Fragment implements OnClickListener, OnRatin
 				container, false);
 		//TODO gestire visibilità sendFbForm in base a check su IDs
 		this.sendFbForm= (LinearLayout)rootView.findViewById(R.id.sendFbForm);
-		if (mode==ALL_REQUEST)
+		if (mode==ALL_REQUEST){
 			sendFbForm.setVisibility(View.GONE);
+			rootView.findViewById(R.id.fbNotAllowed).setVisibility(View.VISIBLE);
+		}
 		((Button) rootView.findViewById(R.id.send)).setOnClickListener(this);
 		((RatingBar)rootView.findViewById(R.id.valutazione)).setOnRatingBarChangeListener(this);
 		this.feedbackLV = (ListView)rootView.findViewById(R.id.feedbackList);
+		feedbackLV.setEmptyView(rootView.findViewById(R.id.empty));
 		if (owner!=null){
 			List<Feedback> feedbacks = owner.getReceivedFb();
 			//feedback di prova per visualizzazione
 			if (feedbacks==null)
 				feedbacks= new ArrayList<Feedback>();
-			if(!request.getPastRequest())
+			if(!request.getPastRequest()){
 				sendFbForm.setVisibility(View.GONE);
-			else
+				rootView.findViewById(R.id.fbNotAllowed).setVisibility(View.VISIBLE);
+			} else {
 				for(Feedback f : feedbacks){
-					if(f.getFrom().equals(QueryManager.getInstance().getCurrentUser()) && f.getToId().equals(owner.getId()) && f.getRequest().equals(request.getId()))
+					if(f.getFrom().equals(QueryManager.getInstance().getCurrentUser()) && f.getToId().equals(owner.getId()) && f.getRequest().equals(request.getId())){
 						sendFbForm.setVisibility(View.GONE);
+						rootView.findViewById(R.id.fbNotAllowed).setVisibility(View.VISIBLE);
+					}/* else {
+						rootView.findViewById(R.id.fbNotAllowed).setVisibility(View.GONE);
+					}*/
 				}
-			//			System.out.println("Size dei feed ricevuti: "+feedbacks.size());
+			}
 			Context c = getActivity();
 			if(c==null){ 
-				//				System.out.println("Il context è null ma noi bariamo");
 				c = MyApplication.getContext();
 			}
 			FeedbackAdapter fba = new FeedbackAdapter(c,0,feedbacks);
 			feedbackLV.setAdapter(fba);
 		}else
 			System.out.println("Nessun Nome dell'owner");
-		//		System.out.println("Sono dentro l'onCreateView del FeedbackDetail Fragment");
 		return rootView;
 	}
 
 	@Override
 	public void onClick(View v) {
 		sendFbForm.setVisibility(View.GONE);
+		getView().findViewById(R.id.fbNotAllowed).setVisibility(View.VISIBLE);
 		Feedback fb = new Feedback();
 		fb.setEvaluation(evaluation);
 		fb.setDescription(((EditText)getView().findViewById(R.id.description)).getEditableText().toString());
