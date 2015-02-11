@@ -76,10 +76,15 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			public void onSignIn(IdToken idToken, GitkitUser user) {		
 				//Controllo se l'utente ha già inserito i dati obbligatori
 
-				if(checkRegistration(user))
-					showProfilePage(idToken, user);
-				else
-					showRegistrationPage(user);
+				try {
+					if(checkRegistration(user))
+						showProfilePage(idToken, user);
+					else
+						showRegistrationPage(user);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 				//Salvo i dati ricevuti nelle shared preferences
 				LoginSession.setUser(user);
@@ -129,9 +134,13 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	// the method returns true to indicate the result has been consumed.
 	//
 
-	private boolean checkRegistration(GitkitUser user){
+	private boolean checkRegistration(GitkitUser user) throws Exception{
 		//Se l'utente è già salvato allora associo il device
 		User u = checkUser(user);
+		if(u == null){
+			System.out.println("Si è verificato un problema con il server!");
+			throw new Exception();
+		}
 		if(u!=null && u.getName()!=null && !u.getName().equals("")){
 //			//Provo a registrare l'id così lo trovo già salvato in shared dopo
 //			try {

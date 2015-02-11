@@ -8,10 +8,10 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="it.polimi.frontend.activity.NotificationActivity" >
 
-    <ListView
-        android:id="@android:id/list"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:drawSelectorOnTop="false"
-	/>
+    	<fragment
+        android:id="@+id/accNotification"
+        android:name="it.polimi.frontend.fragment.NotificationDetail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </RelativeLayout>

@@ -304,7 +304,7 @@ public class QueryManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
+		return new ArrayList<String>();
 	}
 
 	public void queryRequest(String tag){
@@ -1026,7 +1026,7 @@ public class QueryManager {
 				e1.printStackTrace();
 			}
 			ArrayList<String> notification = new ArrayList<String>();
-			if(not!=null)
+			if(not!=null && not.getItems()!=null && not.getItems().size()>0)
 				for(MessageData md : not.getItems())
 					notification.add(md.getMessage());
 			return notification;
