@@ -323,20 +323,12 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 
 	private void registerUser(){
 		updateUser();
-		try {
-			GCMIntentService.register(MyApplication.getContext());
-		} catch (Exception e) {
-			System.out.println("Impossibile registrare l'app");
-			//TODO ricominciare fino a che non viene registrata!
-		}
-		ArrayList<String> devices = new ArrayList<String>();
-		devices.add(LoginSession.getDeviceId());
-		user.setDevices(devices);
 		if(LoginSession.getProvider()!=null)
 			System.out.println(LoginSession.getUser().getIdProvider());
 		user  = QueryManager.getInstance().insertUser(user);
 		Toast.makeText(getActivity().getApplicationContext(), "Registrazione effettuata.",
 				Toast.LENGTH_SHORT).show();
+		QueryManager.getInstance().registerDevice();
 
 	}
 

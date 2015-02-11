@@ -4,6 +4,7 @@ import it.polimi.appengine.entity.manager.model.Feedback;
 import it.polimi.appengine.entity.manager.model.Request;
 import it.polimi.appengine.entity.manager.model.User;
 import it.polimi.frontend.activity.CloudEndpointUtils;
+import it.polimi.frontend.activity.GCMIntentService;
 import it.polimi.frontend.activity.LoginSession;
 import it.polimi.frontend.activity.MyApplication;
 
@@ -123,10 +124,10 @@ public class QueryManager {
 		return u;
 	}
 
-	public User updateUserDevices(User user){
-		User u = null;
+	public boolean updateUserDevices(){
+
 		try {
-			u= new UpdateUserDevice(user).execute().get();
+			return new UpdateUserDevice().execute().get();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -134,7 +135,7 @@ public class QueryManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return u;
+		return false;
 
 	}
 
@@ -292,7 +293,7 @@ public class QueryManager {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public ArrayList<String> getNotification(){
 		try {
 			return new NotificationTask().execute().get();
@@ -314,6 +315,10 @@ public class QueryManager {
 		new AdvancedQuery(tag,startA,startB,endA,endB,maxPA,maxPB);
 	}
 
+	public void registerDevice(){
+		new RegisterDevice().execute();
+	}
+
 	public void sortRequest(){
 		Collections.sort(requests, new Comparator<Request>(){
 			@Override
@@ -328,6 +333,15 @@ public class QueryManager {
 		});
 	}
 
+	private class RegisterDevice extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Void... arg0) {
+			GCMIntentService.register(MyApplication.getContext());
+			while(!updateUserDevices());
+			return null;
+		}
+	}
 	private class FilterTask extends AsyncTask<Void, Void, ArrayList<Request>> {
 		private String tag;
 		public FilterTask(String tag){
@@ -417,7 +431,7 @@ public class QueryManager {
 		public void onRequestLoading();
 		public void onRequestLoaded(List<Request> requests);
 	}
-	
+
 	public void addActionListener(OnActionListener listener){
 		actionListeners.add(listener);
 	}
@@ -480,7 +494,7 @@ public class QueryManager {
 
 
 	}
-	
+
 	private boolean checkEmail(User u , String email){
 		boolean check = false;
 		if(u.getPwAccount()!=null && u.getPwAccount().equals(LoginSession.getUser().getEmail()) )
@@ -493,10 +507,11 @@ public class QueryManager {
 	}
 
 
+
 	//Classi che effettuano le query
 	private class LoadDataTask extends AsyncTask<Void, Void,  ArrayList<Request>> {
 
-		
+
 		@Override
 		protected void onPreExecute() {
 			for(OnRequestLoadedListener l: listeners)
@@ -611,36 +626,38 @@ public class QueryManager {
 
 
 	}
-	private class UpdateUserDevice extends AsyncTask<Void, Void, User> {
-
-		private User u;
-
-		public UpdateUserDevice(User u){
-			super();
-			this.u = u;
-		}
+	private class UpdateUserDevice extends AsyncTask<Void, Void, Boolean> {
 
 		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			//	showDialog();
-		}
-
-		@Override
-		protected User doInBackground(Void... params) {
+		protected Boolean doInBackground(Void... params) {
 			//			System.out.println("Modifico la lista dei device");
-			User result = null;
+			User u = null;
+			try {
+				u = manager.getUserByEmail(LoginSession.getUser().getEmail()).execute();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			if(u==null){
+//				System.out.println("L'utente è null quindi torno false");
+				return false;
+			}
+			if(LoginSession.getDeviceId()==null){
+//				System.out.println("Deviceid in LoginSession è null quindi torno false");
+				return false;
+			}
 			if(u.getDevices()==null)
 				u.setDevices(new ArrayList<String>());
 			u.getDevices().add(LoginSession.getDeviceId());
 			try {
-				result = manager.updateUser(u).execute();
+				manager.updateUser(u).execute();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				System.out.println("Eccezione quindi torno null");
 				e.printStackTrace();
-				result = null;
+				return false;
 			}
-			return result;
+			System.out.println("Update dello user device effettuato con successo.");
+			return true;
 		}
 
 	}
@@ -742,7 +759,7 @@ public class QueryManager {
 				l.onPerformingAction(OnActionListener.JOIN);
 			super.onPreExecute();
 		}
-		
+
 		@Override
 		protected Boolean doInBackground(Void... params) {
 			User u = new User();
@@ -797,7 +814,7 @@ public class QueryManager {
 			super.onPostExecute(result);
 		}
 
-		
+
 
 	}
 	private class RemoveJoinRequest extends AsyncTask<Void, Void, User> {
@@ -806,7 +823,7 @@ public class QueryManager {
 		public RemoveJoinRequest(Request r){
 			this.r = r;
 		}
-		
+
 		@Override
 		protected void onPreExecute() {
 			for(OnActionListener l: actionListeners)
@@ -870,7 +887,7 @@ public class QueryManager {
 			r.setOwner(oldOwner);
 			return u;
 		}
-		
+
 		@Override
 		protected void onPostExecute(User result) {
 			for(OnActionListener l: actionListeners)
@@ -996,7 +1013,7 @@ public class QueryManager {
 			return u;
 		}
 	}
-	
+
 	private class NotificationTask extends AsyncTask<Void, Void, ArrayList<String>> {
 
 		@Override
@@ -1010,8 +1027,8 @@ public class QueryManager {
 			}
 			ArrayList<String> notification = new ArrayList<String>();
 			if(not!=null)
-			for(MessageData md : not.getItems())
-				notification.add(md.getMessage());
+				for(MessageData md : not.getItems())
+					notification.add(md.getMessage());
 			return notification;
 		}
 	}

@@ -55,13 +55,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		LoginSession.setPrefs(PreferenceManager.getDefaultSharedPreferences(this));
 		GitkitUser session = LoginSession.getUser();
 		IdToken sessionToken = LoginSession.getIdToken();
-		//Mi salvo preventivamente l'id del device
-		try {
-			GCMIntentService.register(MyApplication.getContext());
-		} catch (Exception e) {
-			System.out.println("Impossibile registrare l'app");
-			//TODO ricominciare fino a che non viene registrata!
-		}
+		
 		//		if(!ConnectionHandler.getInstance().isConnected())
 		//			Toast.makeText(MainActivity.this, "Problemi di connettività. Controllare la connessione!", Toast.LENGTH_LONG).show();
 
@@ -139,22 +133,22 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		//Se l'utente è già salvato allora associo il device
 		User u = checkUser(user);
 		if(u!=null && u.getName()!=null && !u.getName().equals("")){
-			//Provo a registrare l'id così lo trovo già salvato in shared dopo
-			try {
-				GCMIntentService.register(MyApplication.getContext());
-			} catch (Exception e) {
-				System.out.println("Impossibile registrare l'app");
-				//TODO ricominciare fino a che non viene registrata!
-			}
-			ArrayList<String> dev = (ArrayList<String>) u.getDevices();
-			if(dev==null || !dev.contains(LoginSession.getDeviceId()) ){
-				//				System.out.println("Faccio l'update su: "+u.getId());
-				u = QueryManager.getInstance().updateUserDevices(u);
-				if(u!=null)
-					return true;
-				else 
-					return false;
-			}
+//			//Provo a registrare l'id così lo trovo già salvato in shared dopo
+//			try {
+//				GCMIntentService.register(MyApplication.getContext());
+//			} catch (Exception e) {
+//				System.out.println("Impossibile registrare l'app");
+//				//TODO ricominciare fino a che non viene registrata!
+//			}
+//			ArrayList<String> dev = (ArrayList<String>) u.getDevices();
+//			if(dev==null || !dev.contains(LoginSession.getDeviceId()) ){
+//				//				System.out.println("Faccio l'update su: "+u.getId());
+//				u = QueryManager.getInstance().updateUserDevices(u);
+//				if(u!=null)
+//					return true;
+//				else 
+//					return false;
+			QueryManager.getInstance().registerDevice();
 			return true;
 
 		}
@@ -207,6 +201,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	}
 
 	private void showProfilePage(IdToken idToken, GitkitUser user) {
+		System.out.println("CARICO LE REQUEST");
 		QueryManager.getInstance().loadRequest();
 		startActivity(new Intent(this, TabbedActivity.class));
 	}
