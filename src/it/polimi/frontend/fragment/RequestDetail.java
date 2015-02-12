@@ -8,6 +8,7 @@ import it.polimi.frontend.activity.MyApplication;
 import it.polimi.frontend.activity.R;
 import it.polimi.frontend.util.ParentFragmentUtil;
 import it.polimi.frontend.util.QueryManager;
+import it.polimi.frontend.util.QueryManager.OnActionListener;
 import it.polimi.frontend.util.UserAdapter;
 
 import java.io.IOException;
@@ -36,7 +37,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class RequestDetail extends Fragment implements OnClickListener, OnItemClickListener{
+public class RequestDetail extends Fragment implements OnClickListener, OnItemClickListener,OnActionListener{
 
 	public static final String ID="RequestDetailFragmentID";
 	public final static int ALL_REQUEST=0;
@@ -68,6 +69,7 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		QueryManager.getInstance().addActionListener(this);
 		View rootView = inflater.inflate(R.layout.fragment_request_detail,
 				container, false);
 		MOSTRA=getString(R.string.showPartecipants);
@@ -229,6 +231,7 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 
 	@Override
 	public void onClick(View v) {
+
 		switch (v.getId()) {
 		case R.id.userSection:
 			listener.onUserClicked(request.getOwner(),request);
@@ -239,16 +242,10 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 					listener.onUserClicked(request.getOwner(),request);
 				}else{
 					if(request.getPartecipants()==null || !request.getPartecipants().contains((QueryManager.getInstance().getCurrentUser().getId())) ){
-						if(QueryManager.getInstance().joinRequest(request))
-							join.setText(CANCELLA_PART);
-						else
-							Toast.makeText(MyApplication.getContext(),"Richiesta al completo! Impossibile partecipare.",Toast.LENGTH_SHORT).show();
-
+						QueryManager.getInstance().joinRequest(request);
 					}
 					else{
 						QueryManager.getInstance().removeJoinRequest(request);
-						//new JoinTask().execute(false);
-						join.setText(PARTECIPA);
 					}
 				}
 			}else{
@@ -321,9 +318,9 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 	 * Metodi per mostrare o meno il progressDialog
 	 * */
 	private ProgressDialog mProgressDialog;
-	protected void showDialog() {
+	protected void showDialog(String message) {
 		if (mProgressDialog == null) {
-			setProgressDialog();
+			setProgressDialog(message);
 		}
 		mProgressDialog.show();
 	}
@@ -334,9 +331,45 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 		}
 	}
 
-	private void setProgressDialog() {
+	private void setProgressDialog(String message) {
 		mProgressDialog = new ProgressDialog(getActivity());
 		mProgressDialog.setTitle("Attendi...");
-		mProgressDialog.setMessage("Sto scaricando...");
+		mProgressDialog.setMessage(message);
 	}
+
+	@Override
+	public void onPerformingAction(int action) {
+		String message="";
+		switch(action){
+		case OnActionListener.JOIN:
+			message = "Stiamo completando la tua operazione.";
+			break;
+		case OnActionListener.CANCEL_JOIN:
+			message = "Stiamo completando la tua operazione.";
+			break;
+		}
+		showDialog(message);
+
+	}
+
+	@Override
+	public void onActionPerformed(boolean ok, int action) {
+		hideDialog();
+		switch(action){
+		case OnActionListener.JOIN:
+			if(ok)
+				join.setText(CANCELLA_PART);
+			else
+				Toast.makeText(MyApplication.getContext(),"Richiesta al completo! Impossibile partecipare.",Toast.LENGTH_SHORT).show();
+			break;
+		case OnActionListener.CANCEL_JOIN:
+			if(ok)
+				join.setText(PARTECIPA);
+			else
+				Toast.makeText(MyApplication.getContext(),"È stato impossibile completare la richiesta.",Toast.LENGTH_SHORT).show();
+			break;
+		}
+
+	}
+
 }

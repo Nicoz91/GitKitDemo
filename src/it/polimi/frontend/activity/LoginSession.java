@@ -12,6 +12,19 @@ public class LoginSession {
 	private static String deviceId;
 	private static String provider;
 	
+	public static int getNotNumber() {
+		int notNumber = 1;
+
+		if (prefs.contains("notNumber")){
+		     notNumber = prefs.getInt("notNumber", 1);
+		}
+		return notNumber;
+	}
+
+	public static void setNotNumber(int notNumber){
+		prefs.edit().putInt("notNumber", notNumber).commit();
+	}
+
 	public static String getDeviceId() {
 		return deviceId;
 	}
@@ -87,5 +100,6 @@ public class LoginSession {
 		prefs.edit().remove("token").commit();
 		prefs.edit().remove("provider").commit();
 		prefs.edit().remove("device").commit();
+		prefs.edit().remove("notNumber").commit();
 	}
 }

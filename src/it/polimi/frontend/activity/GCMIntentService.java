@@ -120,18 +120,24 @@ public class GCMIntentService extends GCMBaseIntentService {
   }
 
 	private void addNotification(String m) {
+		int notNumber = LoginSession.getNotNumber();
 	    NotificationCompat.Builder builder =  
 	            new NotificationCompat.Builder(this)  
 	            .setSmallIcon(R.drawable.ic_launcher)  
-	            .setContentTitle("Notifica")  
-	            .setContentText(m);  
+	            .setAutoCancel(true)
+	            .setContentTitle("Notifica");
+	    if(notNumber == 0)
+	            builder.setContentText(m);  
+	    else builder.setContentText("Hai "+notNumber+ " notifiche.");  
+	    notNumber ++;
 	    Intent notificationIntent = new Intent(this, MainActivity.class);  
 	    PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,   
 		            PendingIntent.FLAG_UPDATE_CURRENT);  
 		builder.setContentIntent(contentIntent);  
 	    // Add as notification  
 	    NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);  
-	    manager.notify(1, builder.build());  
+	    manager.notify(12345, builder.build());  
+	    LoginSession.setNotNumber(notNumber);
 		}  
   
   /**

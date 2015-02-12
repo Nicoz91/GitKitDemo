@@ -16,11 +16,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import android.app.Activity;
+
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.widget.Toast;
-
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
@@ -57,6 +55,7 @@ public class QueryManager {
 	}
 
 	private void setProgressDialog() {
+
 		mProgressDialog = new ProgressDialog(MyApplication.getContext());
 		mProgressDialog.setTitle("Attendi...");
 		mProgressDialog.setMessage("Sto scaricando...");
@@ -220,38 +219,12 @@ public class QueryManager {
 		return ret;
 	}
 
-	public boolean joinRequest(Request r){
-		//		if(r==null){System.out.println("R è null... strano");}
-		//		else{System.out.println("R id:"+r.getId());}
-		boolean ok;
-		try {
-			ok = new JoinRequest(r).execute().get();
-			notifyListener();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			return false;
-		} catch (ExecutionException e) {
-			e.printStackTrace();
-			return false;
-		}
-		return ok;
+	public void joinRequest(Request r){
+		new JoinRequest(r).execute();
 	}
 
 	public void removeJoinRequest(Request r){
-
-		//		if(r==null){System.out.println("R è null... strano");}
-		//		else{System.out.println("R id:"+r.getId());}
-
-		try {
-			new RemoveJoinRequest(r).execute().get();
-			notifyListener();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		new RemoveJoinRequest(r).execute();
 	}
 
 	public void removeOwnerRequest(Request r){
@@ -438,7 +411,7 @@ public class QueryManager {
 	public interface OnActionListener{
 		public static final int JOIN=0, CANCEL_JOIN=1;
 		public void onPerformingAction(int action);
-		public void onActionPerformed(int action);
+		public void onActionPerformed(boolean ok,int action);
 	}
 
 	public static void destroy (){
@@ -639,15 +612,18 @@ public class QueryManager {
 				e1.printStackTrace();
 			}
 			if(u==null){
-//				System.out.println("L'utente è null quindi torno false");
+				//				System.out.println("L'utente è null quindi torno false");
 				return false;
 			}
 			if(LoginSession.getDeviceId()==null){
-//				System.out.println("Deviceid in LoginSession è null quindi torno false");
+				//				System.out.println("Deviceid in LoginSession è null quindi torno false");
 				return false;
 			}
 			if(u.getDevices()==null)
 				u.setDevices(new ArrayList<String>());
+			for(String dev : u.getDevices())
+				if(dev.equals(LoginSession.getDeviceId()))
+					return true;
 			u.getDevices().add(LoginSession.getDeviceId());
 			try {
 				manager.updateUser(u).execute();
@@ -810,14 +786,15 @@ public class QueryManager {
 		@Override
 		protected void onPostExecute(Boolean result) {
 			for(OnActionListener l: actionListeners)
-				l.onActionPerformed(OnActionListener.JOIN);
+				l.onActionPerformed(result,OnActionListener.JOIN);
+			notifyListener();
 			super.onPostExecute(result);
 		}
 
 
 
 	}
-	private class RemoveJoinRequest extends AsyncTask<Void, Void, User> {
+	private class RemoveJoinRequest extends AsyncTask<Void, Void, Boolean> {
 		public Request r;
 
 		public RemoveJoinRequest(Request r){
@@ -826,19 +803,21 @@ public class QueryManager {
 
 		@Override
 		protected void onPreExecute() {
+
 			for(OnActionListener l: actionListeners)
 				l.onPerformingAction(OnActionListener.CANCEL_JOIN);
 			super.onPreExecute();
 		}
 
 		@Override
-		protected User doInBackground(Void... params) {
+		protected Boolean doInBackground(Void... params) {
+
 			User u = new User();
 			try {
 				u = manager.getUserByEmail(LoginSession.getUser().getEmail()).execute();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
+				return false;
 			}
 			//			if(u==null)
 			//				System.out.println("Utente null");
@@ -885,13 +864,14 @@ public class QueryManager {
 				e.printStackTrace();
 			}
 			r.setOwner(oldOwner);
-			return u;
+			return true;
 		}
 
 		@Override
-		protected void onPostExecute(User result) {
+		protected void onPostExecute(Boolean result) {
 			for(OnActionListener l: actionListeners)
-				l.onActionPerformed(OnActionListener.CANCEL_JOIN);
+				l.onActionPerformed(result,OnActionListener.CANCEL_JOIN);
+			notifyListener();
 			super.onPostExecute(result);
 		}
 	}
