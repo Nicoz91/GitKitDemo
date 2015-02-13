@@ -13,6 +13,7 @@ public class NotificationActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_notification);
 		NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.cancel(12345);
+		LoginSession.notificationErased();
 		LoginSession.setNotNumber(0);
 	}
 
