@@ -1,5 +1,6 @@
 package it.polimi.frontend.activity;
 
+import it.polimi.frontend.activity.LoginSession.OnNotificationListener;
 import it.polimi.frontend.fragment.MasterFragment;
 import it.polimi.frontend.fragment.RequestMap;
 import it.polimi.frontend.util.QueryManager;
@@ -29,7 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class TabbedActivity extends ActionBarActivity implements
-ActionBar.TabListener {
+ActionBar.TabListener , OnNotificationListener{
 
 	private static final int REQUEST_TAB=0;
 	private static final int MAP_TAB=1;
@@ -37,7 +38,7 @@ ActionBar.TabListener {
 	private static final int JOINED_TAB=3;
 	private MasterFragment masterFragment,masterFragmentOwner,masterFragmentJoined;
 	private RequestMap requestMap;
-
+	private Menu menu;
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -59,7 +60,7 @@ ActionBar.TabListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tabbed);
-		
+		LoginSession.setListener(this);
 		// Set up the action bar.
 		final ActionBar actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -99,53 +100,59 @@ ActionBar.TabListener {
 	}
 
 	@Override
-    protected void onNewIntent(Intent intent) {
-        handleIntent(intent);
-        super.onNewIntent(intent);
-    }
-	
+	protected void onNewIntent(Intent intent) {
+		handleIntent(intent);
+		super.onNewIntent(intent);
+	}
+
 	private void handleIntent(Intent intent){
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            //TODO use the query to search your data somehow
-            //Probabile soluzione per noi: chiamare il metodo di search del QueryManager
-            //che alla fine del filtraggio notifica ai listener un nuovo ArrayList<Request>
-            //con i risultati filtrati
-        }
+			String query = intent.getStringExtra(SearchManager.QUERY);
+			//TODO use the query to search your data somehow
+			//Probabile soluzione per noi: chiamare il metodo di search del QueryManager
+			//che alla fine del filtraggio notifica ai listener un nuovo ArrayList<Request>
+			//con i risultati filtrati
+		}
 	}
-	
+
 	//@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.tabbed, menu);
 		//if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			SearchManager searchManager =
-					(SearchManager) getSystemService(Context.SEARCH_SERVICE);
-			SearchView searchView =
-					(SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.searchRequest));
-			searchView.setSearchableInfo(
-					searchManager.getSearchableInfo(getComponentName()));
-			//searchView.setIconifiedByDefault(false);
-		    SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+		SearchManager searchManager =
+				(SearchManager) getSystemService(Context.SEARCH_SERVICE);
+		SearchView searchView =
+				(SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.searchRequest));
+		searchView.setSearchableInfo(
+				searchManager.getSearchableInfo(getComponentName()));
+		//searchView.setIconifiedByDefault(false);
+		SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
 
-				@Override
-				public boolean onQueryTextChange(String tag) {
-					QueryManager.getInstance().queryRequest(tag);
-					QueryManager.getInstance().queryRequest(tag);
-					return false;
-				}
+			@Override
+			public boolean onQueryTextChange(String tag) {
+				QueryManager.getInstance().queryRequest(tag);
+				QueryManager.getInstance().queryRequest(tag);
+				return false;
+			}
 
-				@Override
-				public boolean onQueryTextSubmit(String tag) {
-					QueryManager.getInstance().queryRequest(tag);
-					QueryManager.getInstance().queryRequest(tag);
-					return false;
-				}
+			@Override
+			public boolean onQueryTextSubmit(String tag) {
+				QueryManager.getInstance().queryRequest(tag);
+				QueryManager.getInstance().queryRequest(tag);
+				return false;
+			}
 
-		    };
-		    searchView.setOnQueryTextListener(queryTextListener);
-		//}
+		};
+		searchView.setOnQueryTextListener(queryTextListener);
+		this.menu = menu;
+		if(LoginSession.getNotNumber()!=0){
+			MenuItem item = menu.findItem(R.id.showNotification);
+			if(item!=null)
+				item.setIcon(R.drawable.ic_action_cc_bcc_red);           
+		}
+			
 		return true;
 	}
 
@@ -356,6 +363,33 @@ ActionBar.TabListener {
 			View rootView = inflater.inflate(R.layout.fragment_tabbed,
 					container, false);
 			return rootView;
+		}
+	}
+
+	@Override
+	public void onNotificationReceived() {
+		this.runOnUiThread(new Runnable(){
+
+			@Override
+			public void run() {
+				if(menu!=null){
+					MenuItem item = menu.findItem(R.id.showNotification);
+					if(item!=null)
+						item.setIcon(R.drawable.ic_action_cc_bcc_red);           
+				}
+				
+			}
+			
+		});
+
+	}
+
+	@Override
+	public void onNotificationErased() {
+		if(menu!=null){
+			MenuItem item = menu.findItem(R.id.showNotification);
+			if(item!=null)
+				item.setIcon(R.drawable.ic_action_cc_bcc);           
 		}
 	}
 }

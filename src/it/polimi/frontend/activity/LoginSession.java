@@ -11,13 +11,36 @@ public class LoginSession {
 	private static SharedPreferences prefs;
 	private static String deviceId;
 	private static String provider;
+	private static OnNotificationListener listener;
 	
+	public interface OnNotificationListener{
+		public void onNotificationReceived();
+		public void onNotificationErased();
+	}
+
+	public static void notificationReceived(){
+		if(listener!=null) listener.onNotificationReceived();
+	}
+	
+	public static void notificationErased(){
+		if(listener!=null) listener.onNotificationErased();
+	}
+	
+	public static OnNotificationListener getListener() {
+		return listener;
+	}
+
+	public static void setListener(OnNotificationListener listener) {
+		LoginSession.listener = listener;
+	}
+
 	public static int getNotNumber() {
-		int notNumber = 1;
+		int notNumber = 0;
 
 		if (prefs.contains("notNumber")){
 		     notNumber = prefs.getInt("notNumber", 1);
 		}
+		
 		return notNumber;
 	}
 
