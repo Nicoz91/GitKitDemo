@@ -44,6 +44,7 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 	private Request request;
 	private ImageView profileImg;
 	private OnUserClickedListener listener;
+	private OnRequestDeletedListener deletionListener;
 	private Button join,sendFb;
 	private ListView userPartecipant;
 	private String MOSTRA,NASCONDI;
@@ -187,6 +188,9 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 		}
 		//registrazione del parente in ascolto
 		listener = ParentFragmentUtil.getParent(this, OnUserClickedListener.class);
+		//TODO pare che non percorra tutta la gerarchia fino a Master, quindi in caso 
+		//di 2Pane bisogna ripropagare la chiamata anche da DetailContainer
+		deletionListener = ParentFragmentUtil.getParent(this, OnRequestDeletedListener.class);
 		return rootView;
 	}
 
@@ -225,6 +229,10 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 		public void onUserClicked(User user, Request request);
 	}
 
+	public interface OnRequestDeletedListener {
+		public void onRequestDeleted(Request request);
+	}
+	
 	@Override
 	public void onClick(View v) {
 
@@ -246,6 +254,9 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 				}
 			}else{
 				QueryManager.getInstance().removeOwnerRequest(request);
+				//TODO per ora è qui, ma ovviamente andrà spostata in onActionPerformed
+				// quando anche quello sarà asincrono
+				deletionListener.onRequestDeleted(request);
 			}
 			break;
 		case R.id.showPartecipant:

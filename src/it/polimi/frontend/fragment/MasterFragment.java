@@ -17,7 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class MasterFragment extends Fragment implements OnRequestLoadedListener, RequestList.OnRequestSelectedListener, RequestDetail.OnUserClickedListener{
+public class MasterFragment extends Fragment implements OnRequestLoadedListener, RequestList.OnRequestSelectedListener, RequestDetail.OnUserClickedListener, RequestDetail.OnRequestDeletedListener{
 
 	private boolean twoPane;
 	private View view;
@@ -167,6 +167,17 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 					});
 		} else {
 			/*Se ne dovrebbe occupare il DetailContainerFragment, quindi non fa nulla*/
+		}
+	}
+	@Override
+	public void onRequestDeleted(Request request) {
+		if (!twoPane) {
+			// In single-pane mode, rimuovi fragment del dettaglio
+			getChildFragmentManager().popBackStack();
+		} else {
+			//Altrimenti rimuovo in blocco tutto DetailContainer
+			Fragment f= getChildFragmentManager().findFragmentByTag(DetailContainerFragment.ID);
+			getChildFragmentManager().beginTransaction().remove(f).commit();
 		}
 	}
 	@Override
