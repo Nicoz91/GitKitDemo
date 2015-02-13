@@ -3,7 +3,6 @@ package it.polimi.frontend.fragment;
 import it.polimi.appengine.entity.manager.model.Feedback;
 import it.polimi.appengine.entity.manager.model.Request;
 import it.polimi.appengine.entity.manager.model.User;
-import it.polimi.frontend.activity.HttpUtils;
 import it.polimi.frontend.activity.MyApplication;
 import it.polimi.frontend.activity.R;
 import it.polimi.frontend.util.ParentFragmentUtil;
@@ -11,7 +10,6 @@ import it.polimi.frontend.util.QueryManager;
 import it.polimi.frontend.util.QueryManager.OnActionListener;
 import it.polimi.frontend.util.UserAdapter;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -21,9 +19,6 @@ import com.squareup.picasso.Picasso;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -150,12 +145,11 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 				long duration = durationMs / 1000;
 				long h = duration / 3600;
 				long m = (duration - h * 3600) / 60;
-				long s = duration - (h * 3600 + m * 60);
 				String durationValue;
 				if (h == 0)
-					durationValue = m+"m:"+s+"s";
+					durationValue = m+"m";
 				else 
-					durationValue = h+"h:"+m+"m:"+s+"s";
+					durationValue = h+"h:"+m+"m";
 				((TextView)rootView.findViewById(R.id.duration))
 				.setText(durationValue);
 			} else 

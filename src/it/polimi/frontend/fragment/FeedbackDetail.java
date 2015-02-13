@@ -34,9 +34,6 @@ public class FeedbackDetail extends Fragment implements OnClickListener, OnRatin
 	public final static int JOINED_REQUEST=2;
 	private int mode=0;
 	private int evaluation=3;
-	private EditText commentET;
-	private User fromUser, toUser;
-	private OnFeedbackSentListener mListener;
 	private LinearLayout sendFbForm;
 	private Request request;
 
@@ -57,7 +54,6 @@ public class FeedbackDetail extends Fragment implements OnClickListener, OnRatin
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_feedback_detail,
 				container, false);
-		//TODO gestire visibilità sendFbForm in base a check su IDs
 		this.sendFbForm= (LinearLayout)rootView.findViewById(R.id.sendFbForm);
 		if (mode==ALL_REQUEST){
 			sendFbForm.setVisibility(View.GONE);

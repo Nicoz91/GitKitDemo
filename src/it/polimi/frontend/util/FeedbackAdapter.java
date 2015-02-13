@@ -1,18 +1,13 @@
 package it.polimi.frontend.util;
 
 import it.polimi.appengine.entity.manager.model.Feedback;
-import it.polimi.frontend.activity.HttpUtils;
 import it.polimi.frontend.activity.R;
 
-import java.io.IOException;
 import java.util.List;
 
 import com.squareup.picasso.Picasso;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

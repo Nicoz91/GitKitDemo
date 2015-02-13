@@ -73,12 +73,11 @@ public class RequestAdapter extends ArrayAdapter<Request>{
 				long duration = durationMs / 1000;
 				long h = duration / 3600;
 				long m = (duration - h * 3600) / 60;
-				long s = duration - (h * 3600 + m * 60);
 				String durationValue;
 				if (h == 0)
-					durationValue = m+"m:"+s+"s";
+					durationValue = m+"m";
 				else 
-					durationValue = h+"h:"+m+"m:"+s+"s";
+					durationValue = h+"h:"+m+"m";
 				lower+=durationValue;
 			} else
 				lower+=NON_SPECIFICATO;
