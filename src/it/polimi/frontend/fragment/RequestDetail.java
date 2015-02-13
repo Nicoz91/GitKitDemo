@@ -17,6 +17,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import com.squareup.picasso.Picasso;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -109,7 +111,7 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 		if (request!=null){
 			//Photo
 			if (request.getOwner()!= null && request.getOwner().getPhotoURL()!=null)
-				new ProfileImageTask().execute(request.getOwner().getPhotoURL());
+				Picasso.with(getActivity()).load(request.getOwner().getPhotoURL()).into(profileImg);
 			//Name and surname
 			((TextView)rootView.findViewById(R.id.ownerLabel))
 			.setText(request.getOwner().getName()+" "+request.getOwner().getSurname());
@@ -292,26 +294,6 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 		listener.onUserClicked((User) userPartecipant.getAdapter().getItem(position),request);
-	}
-
-
-	private class ProfileImageTask extends AsyncTask<String, Void, Bitmap>{
-		@Override
-		protected Bitmap doInBackground(String... arg) {
-			try {
-				byte[] result = HttpUtils.get(arg[0]);
-				return BitmapFactory.decodeByteArray(result, 0, result.length);
-			} catch (IOException e) {
-				return null;
-			}
-		}
-
-		@Override
-		protected void onPostExecute(Bitmap bitmap) {
-			if (bitmap != null && profileImg!=null) {
-				profileImg.setImageBitmap(bitmap);
-			}
-		}
 	}
 
 	/** 

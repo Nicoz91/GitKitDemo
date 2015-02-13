@@ -1,17 +1,12 @@
 package it.polimi.frontend.fragment;
 
 import it.polimi.appengine.entity.manager.model.User;
-import it.polimi.frontend.activity.GCMIntentService;
-import it.polimi.frontend.activity.HttpUtils;
 import it.polimi.frontend.activity.LoginSession;
-import it.polimi.frontend.activity.MyApplication;
 import it.polimi.frontend.activity.R;
 import it.polimi.frontend.activity.TabbedActivity;
 import it.polimi.frontend.util.QueryManager;
 import it.polimi.frontend.util.TextValidator;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -19,10 +14,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -43,8 +35,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.api.client.util.DateTime;
-import com.google.identitytoolkit.GitkitUser.UserProfile;
 import com.google.identitytoolkit.IdProvider;
+import com.squareup.picasso.Picasso;
 
 public class AccountSettings extends Fragment implements OnClickListener, DatePickerDialog.OnDateSetListener{
 
@@ -65,11 +57,9 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 	private boolean accountType[]={false,false,false};
 	private boolean regMode=false, valid=true;
 	private String photoURL="";
-	private boolean twoPane;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		twoPane = getResources().getBoolean(R.bool.isTablet);
 		View rootView;
 		rootView = inflater.inflate(R.layout.fragment_account_settings,
 				container, false);
@@ -78,13 +68,15 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		if(user == null){
 			user = new User();
 			try{
-			String s = LoginSession.getUser().getDisplayName();
-			String name = s.substring(0, s.lastIndexOf(' ')) ;
-			String surname =  s.substring(s.lastIndexOf(' '),s.length()) ;
-			user.setName(name);
-			user.setSurname(surname);
-			user.setPhotoURL(LoginSession.getUser().getPhotoUrl());
-			}catch(Exception e){}
+				String s = LoginSession.getUser().getDisplayName();
+				String name = s.substring(0, s.lastIndexOf(' ')) ;
+				String surname =  s.substring(s.lastIndexOf(' '),s.length()) ;
+				user.setName(name);
+				user.setSurname(surname);
+				user.setPhotoURL(LoginSession.getUser().getPhotoUrl());
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 			if(LoginSession.getProvider()==null)
 				user.setPwAccount(LoginSession.getUser().getEmail());
 			else if (LoginSession.getProvider().equalsIgnoreCase(IdProvider.GOOGLE.name()))
@@ -218,7 +210,6 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		//Setup Image
 		profileIV = (ImageView) rootView.findViewById(R.id.account_picture);
 		profileIV.setOnClickListener(this);
-		//TODO possibile motivo per cui non mostra il dialog con l'edittext
 		profileIV.setOnTouchListener(new OnTouchListener() {
 			//Se in editMode, si comporterà al click come un button
 			@Override
@@ -248,7 +239,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		});
 		if (user.getPhotoURL()!=null){
 			photoURL = user.getPhotoURL();
-			new ProfileImageTask().execute(photoURL);
+			Picasso.with(getActivity()).load(photoURL).into(profileIV);
 		}
 		//Setup NonEditable Mode
 		if(regMode)
@@ -431,7 +422,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 				if (photoUrl!=null && !photoUrl.equals("")
 						&& android.util.Patterns.WEB_URL.matcher(photoUrl).matches()){
 					photoURL = photoUrl;
-					new ProfileImageTask().execute(photoUrl);
+					Picasso.with(getActivity()).load(photoURL).into(profileIV);
 				} else
 					Toast.makeText(getActivity().getApplicationContext(), "Immagine non aggiornata perchè non hai inserito un URL corretto.",
 							Toast.LENGTH_SHORT).show();
@@ -479,26 +470,6 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		}
 		maleRB.setClickable(editable);
 		femaleRB.setClickable(editable);
-		//TODO possibile motivo per cui non mostra il dialog con l'edittext.
 		profileIV.setClickable(editable);
-	}
-
-	private class ProfileImageTask extends AsyncTask<String, Void, Bitmap>{
-		@Override
-		protected Bitmap doInBackground(String... arg) {
-			try {
-				byte[] result = HttpUtils.get(arg[0]);
-				return BitmapFactory.decodeByteArray(result, 0, result.length);
-			} catch (IOException e) {
-				return null;
-			}
-		}
-
-		@Override
-		protected void onPostExecute(Bitmap bitmap) {
-			if (bitmap != null && profileIV!=null) {
-				profileIV.setImageBitmap(bitmap);
-			}
-		}
 	}
 }
