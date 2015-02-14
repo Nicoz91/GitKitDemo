@@ -64,6 +64,7 @@ public class QueryManager {
 
 
 	private QueryManager(){
+		Storage.getInstance();
 		this.users = new ArrayList<User>();
 		this.requests = new ArrayList<Request>();
 		this.feedbacks = new ArrayList<Feedback>();
