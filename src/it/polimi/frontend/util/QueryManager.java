@@ -792,8 +792,6 @@ public class QueryManager {
 			super.onPostExecute(result);
 		}
 
-
-
 	}
 	private class RemoveJoinRequest extends AsyncTask<Void, Void, Boolean> {
 		public Request r;

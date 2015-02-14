@@ -6,14 +6,13 @@ import it.polimi.frontend.activity.R;
 import it.polimi.frontend.activity.TabbedActivity;
 import it.polimi.frontend.util.QueryManager;
 import it.polimi.frontend.util.Storage;
+import it.polimi.frontend.util.Storage.OnImageLoadedListener;
 import it.polimi.frontend.util.TextValidator;
-
-import java.io.FileNotFoundException;
 import java.util.Calendar;
 import java.util.Locale;
-
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -38,18 +37,14 @@ import android.widget.RadioButton;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.dropbox.client2.exception.DropboxException;
 import com.google.api.client.util.DateTime;
 import com.google.identitytoolkit.IdProvider;
 import com.squareup.picasso.Picasso;
 
-public class AccountSettings extends Fragment implements OnClickListener, DatePickerDialog.OnDateSetListener{
+public class AccountSettings extends Fragment implements OnClickListener, DatePickerDialog.OnDateSetListener, OnImageLoadedListener{
 
 	public final static String ID="AccountSettingsFragmentID";
-	private int resultCode;
 	private Calendar data;
-
 	private EditText nameET,surnameET,accountET[],bDayET;
 	private TextView nameTV,surnameTV,accountTV[],bDayTV;
 	private RadioButton maleRB;
@@ -67,6 +62,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		Storage.getInstance().setListener(this);
 		View rootView;
 		rootView = inflater.inflate(R.layout.fragment_account_settings,
 				container, false);
@@ -226,9 +222,11 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 					switch (event.getAction()) {
 					case MotionEvent.ACTION_DOWN:
 						view = (ImageView) v;
+						try{
 						//overlay is black with transparency of 0x77 (119)
 						view.getDrawable().setColorFilter(0x77000000,PorterDuff.Mode.SRC_ATOP);
 						view.invalidate();
+						}catch(Exception e){e.printStackTrace();}
 						//TODO inserendo qua il dialog funziona ma non sono sicuro sia modo corretto
 						showGallery();
 						//showProfileURLDialog(v);
@@ -236,9 +234,11 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 					case MotionEvent.ACTION_UP:
 					case MotionEvent.ACTION_CANCEL: 
 						view = (ImageView) v;
+						try{
 						//clear the overlay
 						view.getDrawable().clearColorFilter();
 						view.invalidate();
+						}catch(Exception e){e.printStackTrace();}
 						break;
 					}
 					return true;
@@ -414,54 +414,43 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 			break;
 		}
 	}
-	
+
 	private void showGallery(){
 		Intent intent = new Intent();
 		intent.setType("image/*");
 		intent.setAction(Intent.ACTION_GET_CONTENT);
 		startActivityForResult(Intent.createChooser(intent, "Select picture"), 1 );
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) { 
 
-	        if (resultCode == getActivity().RESULT_OK) {
+		if (resultCode == getActivity().RESULT_OK) {
 
-	                if (requestCode == 1) {
+			if (requestCode == 1) {
 
-	                        // currImageURI is the global variable I'm using to hold the content:// URI of the image
-	                        currImageURI = data.getData();
-	                        String realUri = this.getRealPathFromURI(currImageURI);
-	                        try {
-								String url = Storage.getInstance().uploadFile(realUri,"I"+LoginSession.getUser().getEmail()+"Image.png");
-								photoURL = url;
-								Picasso.with(getActivity()).load(photoURL).into(profileIV);
-	                        } catch (FileNotFoundException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} catch (DropboxException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-	                        
-	                }
-	        }
+				// currImageURI is the global variable I'm using to hold the content:// URI of the image
+				currImageURI = data.getData();
+				String realUri = this.getRealPathFromURI(currImageURI);
+				Storage.getInstance().uploadFile(realUri,"I"+LoginSession.getUser().getEmail()+"Image.png");
+			}
+		}
 	}
 
 	// And to convert the image URI to the direct file system path of the image file
 	private String getRealPathFromURI(Uri contentUri) {
 
-	        // can post image
-	        String [] proj={MediaStore.Images.Media.DATA};
-	        Cursor cursor = getActivity().managedQuery( contentUri,
-	                        proj, // Which columns to return
-	                        null,       // WHERE clause; which rows to return (all rows)
-	                        null,       // WHERE clause selection arguments (none)
-	                        null); // Order-by clause (ascending by name)
-	        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-	        cursor.moveToFirst();
+		// can post image
+		String [] proj={MediaStore.Images.Media.DATA};
+		Cursor cursor = getActivity().managedQuery( contentUri,
+				proj, // Which columns to return
+				null,       // WHERE clause; which rows to return (all rows)
+				null,       // WHERE clause selection arguments (none)
+				null); // Order-by clause (ascending by name)
+		int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+		cursor.moveToFirst();
 
-	        return cursor.getString(column_index);
+		return cursor.getString(column_index);
 	}
 
 	public void showProfileURLDialog(View v){
@@ -529,5 +518,55 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		maleRB.setClickable(editable);
 		femaleRB.setClickable(editable);
 		profileIV.setClickable(editable);
+	}
+
+	@Override
+	public void onImageLoading() {
+		String message = "Stiamo completando la tua operazione.";
+		showDialog(message);
+
+	}
+
+	@Override
+	public void onImageLoaded(String path) {
+		hideDialog();
+		if(path==null)
+			Toast.makeText(getActivity().getApplicationContext(), "Errore nel caricamento dell'immagine.",Toast.LENGTH_SHORT).show();
+		else{
+			photoURL = path;
+			Picasso.with(getActivity()).load(photoURL).into(profileIV);
+		}
+	}
+
+	/** 
+	 * Metodi per mostrare o meno il progressDialog
+	 * */
+	private ProgressDialog mProgressDialog;
+	protected void showDialog(String message) {
+		if (mProgressDialog == null) {
+			setProgressDialog(message);
+		}
+		mProgressDialog.show();
+	}
+
+	protected void hideDialog() {
+		if (mProgressDialog != null && mProgressDialog.isShowing()) {
+			mProgressDialog.dismiss();
+		}
+	}
+
+	private void setProgressDialog(String message) {
+		mProgressDialog = new ProgressDialog(getActivity());
+		mProgressDialog.setTitle("Attendi...");
+		mProgressDialog.setMessage(message);
+		mProgressDialog.setMax(100);
+		mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+	}      
+
+	@Override
+	public void onImageProgress(long bytes, long total) {
+		int percent = (int)(100.0*(double)bytes/total + 0.5);
+	    mProgressDialog.setProgress(percent);
+		
 	}
 }
