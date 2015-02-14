@@ -11,7 +11,6 @@ import java.util.List;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -115,16 +114,6 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 		} else {
 			// In single-pane mode, simply start the detail fragment
 			// for the selected item ID.
-			switch (mode) {
-			case OWNER_REQUEST:
-				//UserList userListFragment = new UserList
-				break;
-			case JOINED_REQUEST:
-				break;
-
-			default://ALL_REQUEST				
-				break;
-			}
 			RequestDetail fragment = new RequestDetail(request,mode);
 			Fragment reqList=getChildFragmentManager().findFragmentByTag(RequestList.ID);
 
@@ -133,14 +122,6 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 			.addToBackStack(RequestDetail.ID)
 			.add(R.id.container,fragment,RequestDetail.ID)
 			.commit();
-
-			getChildFragmentManager().addOnBackStackChangedListener(
-					new FragmentManager.OnBackStackChangedListener() {
-						public void onBackStackChanged() {
-							//TODO
-							// Update your UI here.
-						}
-					});
 		}
 	}
 
@@ -157,14 +138,6 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 			.addToBackStack(FeedbackDetail.ID)
 			.add(R.id.container,fragment,FeedbackDetail.ID)
 			.commit();
-
-			getChildFragmentManager().addOnBackStackChangedListener(
-					new FragmentManager.OnBackStackChangedListener() {
-						public void onBackStackChanged() {
-							//TODO
-							// Update your UI here.
-						}
-					});
 		} else {
 			/*Se ne dovrebbe occupare il DetailContainerFragment, quindi non fa nulla*/
 		}

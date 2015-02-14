@@ -9,7 +9,7 @@
 	<classpathentry kind="src" path="endpoint-libs/libdeviceinfoendpoint-v1/deviceinfoendpoint/deviceinfoendpoint-v1-generated-source"/>
 	<classpathentry kind="src" path="endpoint-libs/libmanager-v1/manager/manager-v1-generated-source"/>
 	<classpathentry kind="src" path="endpoint-libs/libmessageEndpoint-v1/messageEndpoint/messageendpoint-v1-generated-source"/>
-	<classpathentry exported="true" kind="lib" path="/home/anonymous/Scrivania/EclipseADT/dropbox-android-sdk-1.6.3/lib/dropbox-android-sdk-1.6.3.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/anonymous/Scrivania/EclipseADT/dropbox-android-sdk-1.6.3/lib/json_simple-1.1.jar"/>
+	<classpathentry kind="lib" path="/home/anonymous/Scrivania/EclipseADT/dropbox-android-sdk-1.6.3/lib/dropbox-android-sdk-1.6.3.jar"/>
+	<classpathentry kind="lib" path="/home/anonymous/Scrivania/EclipseADT/dropbox-android-sdk-1.6.3/lib/json_simple-1.1.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
