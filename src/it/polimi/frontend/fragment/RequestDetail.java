@@ -19,11 +19,14 @@ import com.squareup.picasso.Picasso;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -101,8 +104,43 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 			ll.setVisibility(View.GONE);
 			//join.setVisibility(View.GONE);
 		}
-		else
+		else{
 			ll.setOnClickListener(this);
+			ll.setOnTouchListener(new OnTouchListener() {
+				//Se in editMode, si comporterà al click come un button
+				@Override
+				public boolean onTouch(View v, MotionEvent event) {
+					View view;
+					switch (event.getAction()) {
+					case MotionEvent.ACTION_DOWN:
+						view = v;
+						//overlay is black with transparency of 0x77 (119)
+						//view.getBackground().setColorFilter(0x77000000,PorterDuff.Mode.SRC_ATOP);
+						view.setBackgroundColor(0x77000000);
+						view.invalidate();
+						//TODO inserendo qua il dialog funziona ma non sono sicuro sia modo corretto
+						//showProfileURLDialog(v);
+						break;
+					case MotionEvent.ACTION_UP:
+						v.performClick();
+						view = v;
+						//clear the overlay
+						//view.getBackground().clearColorFilter();
+						view.setBackgroundColor(0x00000000);
+						view.invalidate();
+						break;
+					case MotionEvent.ACTION_CANCEL: 
+						view = v;
+						//clear the overlay
+						//view.getBackground().clearColorFilter();
+						view.setBackgroundColor(0x00000000);
+						view.invalidate();
+						break;
+					}
+					return true;
+				}
+			});
+		}
 
 		if (request!=null){
 			//Photo
@@ -232,7 +270,7 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 	public interface OnRequestDeletedListener {
 		public void onRequestDeleted(Request request);
 	}
-	
+
 	@Override
 	public void onClick(View v) {
 

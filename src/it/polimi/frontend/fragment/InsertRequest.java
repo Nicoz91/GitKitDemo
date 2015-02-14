@@ -123,6 +123,8 @@ public class InsertRequest extends Fragment{
 
 	public void onStartDateSelected(Calendar selectedDate){
 		startDate = selectedDate;
+		//onEndDateSelected(startDate);TODO perchè aggiorna la var., l'edittext, ma se clicco
+		//sull'edit text nel dialog la data è ancora la precedente?
 		int minute = selectedDate.get(Calendar.MINUTE) /
 				TimeLabeler.MINUTEINTERVAL*TimeLabeler.MINUTEINTERVAL;
 		start.setText(String.format("%n%te. %tB %tY%n%tH:%02d",

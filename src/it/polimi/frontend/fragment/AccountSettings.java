@@ -223,9 +223,15 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 						view.getDrawable().setColorFilter(0x77000000,PorterDuff.Mode.SRC_ATOP);
 						view.invalidate();
 						//TODO inserendo qua il dialog funziona ma non sono sicuro sia modo corretto
-						showProfileURLDialog(v);
+						//showProfileURLDialog(v);
 						break;
 					case MotionEvent.ACTION_UP:
+						v.performClick();
+						view = (ImageView) v;
+						//clear the overlay
+						view.getDrawable().clearColorFilter();
+						view.invalidate();
+						break;
 					case MotionEvent.ACTION_CANCEL: 
 						view = (ImageView) v;
 						//clear the overlay
