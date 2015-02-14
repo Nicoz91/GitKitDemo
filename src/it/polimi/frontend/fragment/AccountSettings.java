@@ -229,7 +229,8 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 						//overlay is black with transparency of 0x77 (119)
 						view.getDrawable().setColorFilter(0x77000000,PorterDuff.Mode.SRC_ATOP);
 						view.invalidate();
-						//TODO inserendo qua il dialog funziona ma non sono sicuro sia modo corretto
+						//TODO Commentati perchè richiamando il performclick non c'è bisogno di farlo qui
+						//nell'ontouch
 						//showGallery();
 						//showProfileURLDialog(v);
 						break;
