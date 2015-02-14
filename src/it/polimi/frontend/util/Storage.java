@@ -24,29 +24,36 @@ public class Storage {
 	private final static String APP_TOKEN = "LScJK1rz1BQAAAAAAAAAG7mSTlO5ZPG5qwj7enYV21SsG0UuFejvHNmogO8W8L6e";
 	private DropboxAPI<AndroidAuthSession> mDBApi;
 	private OnImageLoadedListener listener;
-	private ProgressListener progress;
 	
 	private Storage(){
-		AppKeyPair appKeys = new AppKeyPair(APP_KEY, APP_SECRET);
-		AndroidAuthSession session = new AndroidAuthSession(appKeys);
-		mDBApi = new DropboxAPI<AndroidAuthSession>(session);
-		mDBApi.getSession().setOAuth2AccessToken(APP_TOKEN);
-		try {
-			if(isDropboxLinked())
-				System.out.println("Link effettuato");
-			else
-				System.out.println("Link non effettuato");
-			//mDBApi.getSession().finishAuthentication();
-
-			System.out.println("Linked to: "+mDBApi.accountInfo().displayName);
-		} catch (DropboxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}catch(IllegalStateException e){
-			e.printStackTrace();
-		}
+		new Init().execute();
 	}
 
+	private class Init extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			AppKeyPair appKeys = new AppKeyPair(APP_KEY, APP_SECRET);
+			AndroidAuthSession session = new AndroidAuthSession(appKeys);
+			mDBApi = new DropboxAPI<AndroidAuthSession>(session);
+			mDBApi.getSession().setOAuth2AccessToken(APP_TOKEN);
+			try {
+				if(isDropboxLinked())
+					System.out.println("Link effettuato");
+				else
+					System.out.println("Link non effettuato");
+				//mDBApi.getSession().finishAuthentication();
+
+				System.out.println("Linked to: "+mDBApi.accountInfo().displayName);
+			} catch (DropboxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}catch(IllegalStateException e){
+				e.printStackTrace();
+			}
+			return null;
+		}
+	}
 
 
 	public OnImageLoadedListener getListener() {
