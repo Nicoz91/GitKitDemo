@@ -17,6 +17,7 @@
 package it.polimi.frontend.activity;
 
 import android.support.v4.app.FragmentActivity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
@@ -27,25 +28,27 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
-
 import com.google.identitytoolkit.GitkitClient;
 import com.google.identitytoolkit.GitkitUser;
 import com.google.identitytoolkit.IdToken;
-
 import it.polimi.appengine.entity.manager.model.User;
 import it.polimi.frontend.activity.R;
 import it.polimi.frontend.util.ConnectionHandler;
 import it.polimi.frontend.util.QueryManager;
+import it.polimi.frontend.util.QueryManager.OnActionListener;
 
-import java.util.ArrayList;
 
-public class MainActivity extends FragmentActivity implements OnClickListener {
+public class MainActivity extends FragmentActivity implements OnClickListener,OnActionListener {
 
 	private GitkitClient client;
 	private ConnectionHandler ch;
+	private boolean signing = false;
+	private GitkitUser session;
+	private IdToken sessionToken;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		QueryManager.getInstance().addActionListener(this);
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		ch = new ConnectionHandler();
@@ -53,60 +56,19 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 		//Carico i cookie
 		LoginSession.setPrefs(PreferenceManager.getDefaultSharedPreferences(this));
-		GitkitUser session = LoginSession.getUser();
-		IdToken sessionToken = LoginSession.getIdToken();
+		session = LoginSession.getUser();
+		sessionToken = LoginSession.getIdToken();
 		
-		//		if(!ConnectionHandler.getInstance().isConnected())
-		//			Toast.makeText(MainActivity.this, "Problemi di connettività. Controllare la connessione!", Toast.LENGTH_LONG).show();
-
-
-		// Step 1: Create a GitkitClient.
-		// The configurations are set in the AndroidManifest.xml. You can also set or overwrite them
-		// by calling the corresponding setters on the GitkitClient builder.
-		//
-		//    Intent intent = new Intent(this, RegisterActivity.class);
-		//    startActivity(intent);
-
+		//Istanzio il gitkit client
 		client = GitkitClient.newBuilder(this, new GitkitClient.SignInCallbacks() {
-			// Implement the onSignIn method of GitkitClient.SignInCallbacks interface.
-			// This method is called when the sign-in process succeeds. A Gitkit IdToken and the signed
-			// in account information are passed to the callback.
-
-			@Override
 			public void onSignIn(IdToken idToken, GitkitUser user) {		
-				//Controllo se l'utente ha già inserito i dati obbligatori
-
-				try {
-					if(checkRegistration(user))
-						showProfilePage(idToken, user);
-					else
-						showRegistrationPage(user);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				//Salvo i dati ricevuti nelle shared preferences
-				LoginSession.setUser(user);
-				LoginSession.setStringUser(user.toString());
-				LoginSession.setIdToken(idToken);
-				LoginSession.setStringToken(idToken.getTokenString());
-				if(user.getIdProvider()!=null){
-					LoginSession.setStringProvider(user.getIdProvider().name());
-					LoginSession.setProvider(user.getIdProvider().name());
-				}
-				else{
-					LoginSession.setStringProvider("");
-					LoginSession.setProvider("");
-				}
-				// Now use the idToken to create a session for your user.
-				// To do so, you should exchange the idToken for either a Session Token or Cookie
-				// from your server.
-				// Finally, save the Session Token or Cookie to maintain your user's session.
+				//Verifico se l'utente è stato registrato nel database
+				signing = true;
+				session = user;
+				sessionToken = idToken;
+				System.out.println("Cerco l'utente");
+				QueryManager.getInstance().getUserByEmail(user.getEmail());
 			}
-
-			// Implement the onSignInFailed method of GitkitClient.SignInCallbacks interface.
-			// This method is called when the sign-in process fails.
 			@Override
 			public void onSignInFailed() {
 				Toast.makeText(MainActivity.this, "Sign in failed", Toast.LENGTH_LONG).show();
@@ -118,13 +80,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			startActivity(new Intent(this, WaitActivity.class));
 			return;
 		}
-		System.out.println("Effettuo la query");
-		//	QueryManager.getInstance().getUserByEmail(session.getEmail());
-		System.out.println("Fine query");
+
 		//Controllo se è attiva una sessione
-		if(session!=null && sessionToken!=null && QueryManager.getInstance().getUserByEmail(session.getEmail())!=null){
-			showProfilePage(sessionToken,session);
-		}else
+		if(session!=null)
+			QueryManager.getInstance().getUserByEmail(session.getEmail());
+		else
 			showSignInPage();
 	}
 
@@ -133,43 +93,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	// GitkitClient.handleActivityResult to check the result. If the result is for GitkitClient,
 	// the method returns true to indicate the result has been consumed.
 	//
-
-	private boolean checkRegistration(GitkitUser user) throws Exception{
-		//Se l'utente è già salvato allora associo il device
-		User u = checkUser(user);
-		if(u == null){
-			System.out.println("Si è verificato un problema con il server!");
-			throw new Exception();
-		}
-		if(u!=null && u.getName()!=null && !u.getName().equals("")){
-//			//Provo a registrare l'id così lo trovo già salvato in shared dopo
-//			try {
-//				GCMIntentService.register(MyApplication.getContext());
-//			} catch (Exception e) {
-//				System.out.println("Impossibile registrare l'app");
-//				//TODO ricominciare fino a che non viene registrata!
-//			}
-//			ArrayList<String> dev = (ArrayList<String>) u.getDevices();
-//			if(dev==null || !dev.contains(LoginSession.getDeviceId()) ){
-//				//				System.out.println("Faccio l'update su: "+u.getId());
-//				u = QueryManager.getInstance().updateUserDevices(u);
-//				if(u!=null)
-//					return true;
-//				else 
-//					return false;
-			QueryManager.getInstance().registerDevice();
-			return true;
-
-		}
-		else
-			return false;
-	}
-
-	private User checkUser(GitkitUser user){
-		User u = null;
-		u = QueryManager.getInstance().getUserByEmail(user.getEmail());
-		return u;
-	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -200,16 +123,17 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 
 	private void showSignInPage() {
+		QueryManager.getInstance().addActionListener(this);
 		setContentView(R.layout.welcome);
 		Button button = (Button) findViewById(R.id.sign_in);
 		button.setOnClickListener(this);
 	}
 
-	private void showRegistrationPage(GitkitUser user){
+	private void showRegistrationPage(){
 		startActivity(new Intent(this, SettingsActivity.class));
 	}
 
-	private void showProfilePage(IdToken idToken, GitkitUser user) {
+	private void showProfilePage() {
 		System.out.println("CARICO LE REQUEST");
 		QueryManager.getInstance().loadRequest();
 		startActivity(new Intent(this, TabbedActivity.class));
@@ -230,20 +154,31 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		} else if (v.getId() == R.id.sign_out) {
 			LoginSession.reset();
 			showSignInPage();
+			session = null;
+			sessionToken = null;
 		}
 	}
 
 	@Override
 	public void onResume(){
 		super.onResume();
+//		session = null;
+//		sessionToken = null;
+//		signing = false;
+
 		Intent i = getIntent();
 		if (i!=null && i.getStringExtra("Reason")!=null && i.getStringExtra("Reason").equals("Logout")){
+			signing = false;
 			LoginSession.reset();
 			QueryManager.destroy();
 			showSignInPage();
 		} else if (i!=null && i.getStringExtra("Reason")!=null && i.getStringExtra("Reason").equals("Exit")){
 			QueryManager.destroy();
 			this.finish();
+		}
+		else if(session!=null){
+			signing = false;
+			QueryManager.getInstance().getUserByEmail(session.getEmail());
 		}
 	}
 
@@ -255,6 +190,87 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		super.onDestroy();
 	}
 
+	@Override
+	public void onPerformingAction(int action) {
+		showDialog("Connesione al server.");
+
+	}
+
+	@Override
+	public void onActionPerformed(Object result, int action) {
+		if(action == OnActionListener.GET_USER){
+			User u = (User)result;
+			if(!signing){
+				if(u == null){
+					Toast.makeText(MainActivity.this, "Si è verificato un problema nella connessione con il server.", Toast.LENGTH_LONG).show();
+					return;
+				}
+				
+				if(u!=null && u.getName()!=null && !u.getName().equals("")){
+					QueryManager.getInstance().registerDevice();
+
+				}
+
+				if(session!=null && sessionToken!=null && u!=null){
+					showProfilePage();
+				}else
+					showSignInPage();
+			}else{
+				try {	
+					if(u == null){
+						Toast.makeText(MainActivity.this, "Si è verificato un problema nella connessione con il server.", Toast.LENGTH_LONG).show();
+						return;
+						}
+
+					if(u!=null && u.getName()!=null && !u.getName().equals(""))
+						showProfilePage();
+					else
+						showRegistrationPage();
+
+					//Salvo i dati ricevuti nelle shared preferences
+					LoginSession.setUser(session);
+					LoginSession.setStringUser(session.toString());
+					LoginSession.setIdToken(sessionToken);
+					LoginSession.setStringToken(sessionToken.getTokenString());
+					if(session.getIdProvider()!=null){
+						LoginSession.setStringProvider(session.getIdProvider().name());
+						LoginSession.setProvider(session.getIdProvider().name());
+					}
+					else{
+						LoginSession.setStringProvider("");
+						LoginSession.setProvider("");
+					}
+				} catch (Exception e) {
+					Toast.makeText(MainActivity.this, "Si è verificato un problema nella connessione con il server.", Toast.LENGTH_LONG).show();
+					e.printStackTrace();
+				}
+			}
+		}
+		hideDialog();
+	}
+
+	/** 
+	 * Metodi per mostrare o meno il progressDialog
+	 * */
+	private ProgressDialog mProgressDialog;
+	protected void showDialog(String message) {
+		if (mProgressDialog == null) {
+			setProgressDialog(message);
+		}
+		mProgressDialog.show();
+	}
+
+	protected void hideDialog() {
+		if (mProgressDialog != null && mProgressDialog.isShowing()) {
+			mProgressDialog.dismiss();
+		}
+	}
+
+	private void setProgressDialog(String message) {
+		mProgressDialog = new ProgressDialog(this);
+		mProgressDialog.setTitle("Attendi...");
+		mProgressDialog.setMessage(message);
+	}      
 
 
 }

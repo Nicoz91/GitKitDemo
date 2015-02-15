@@ -378,21 +378,24 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 	}
 
 	@Override
-	public void onActionPerformed(boolean ok, int action) {
-		hideDialog();
-		switch(action){
-		case OnActionListener.JOIN:
-			if(ok)
-				join.setText(CANCELLA_PART);
-			else
-				Toast.makeText(MyApplication.getContext(),"Richiesta al completo! Impossibile partecipare.",Toast.LENGTH_SHORT).show();
-			break;
-		case OnActionListener.CANCEL_JOIN:
-			if(ok)
-				join.setText(PARTECIPA);
-			else
-				Toast.makeText(MyApplication.getContext(),"È stato impossibile completare la richiesta.",Toast.LENGTH_SHORT).show();
-			break;
+	public void onActionPerformed(Object result, int action) {
+		if(action==OnActionListener.CANCEL_JOIN || action==OnActionListener.JOIN ){
+			boolean ok = (Boolean)result;
+			hideDialog();
+			switch(action){
+			case OnActionListener.JOIN:
+				if(ok)
+					join.setText(CANCELLA_PART);
+				else
+					Toast.makeText(MyApplication.getContext(),"Richiesta al completo! Impossibile partecipare.",Toast.LENGTH_SHORT).show();
+				break;
+			case OnActionListener.CANCEL_JOIN:
+				if(ok)
+					join.setText(PARTECIPA);
+				else
+					Toast.makeText(MyApplication.getContext(),"È stato impossibile completare la richiesta.",Toast.LENGTH_SHORT).show();
+				break;
+			}
 		}
 
 	}

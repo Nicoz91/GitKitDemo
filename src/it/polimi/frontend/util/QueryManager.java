@@ -36,32 +36,7 @@ public class QueryManager {
 	private Manager manager;
 	private MessageEndpoint message;
 	private static QueryManager instance;
-	private ProgressDialog mProgressDialog;
 	private User user;
-	/** 
-	 * Metodi per mostrare o meno il progressDialog
-	 * */
-	protected void showDialog() {
-		if (mProgressDialog == null) {
-			setProgressDialog();
-		}
-		mProgressDialog.show();
-	}
-
-	protected void hideDialog() {
-		if (mProgressDialog != null && mProgressDialog.isShowing()) {
-			mProgressDialog.dismiss();
-		}
-	}
-
-	private void setProgressDialog() {
-
-		mProgressDialog = new ProgressDialog(MyApplication.getContext());
-		mProgressDialog.setTitle("Attendi...");
-		mProgressDialog.setMessage("Sto scaricando...");
-	}
-
-
 
 	private QueryManager(){
 		Storage.getInstance();
@@ -110,22 +85,11 @@ public class QueryManager {
 		return feedbacks;
 	}
 
-	public User getUserByEmail(String email){
-		User u = null;
-		try {
-			u = new QueryUser(email).execute().get();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return u;
+	public void getUserByEmail(String email){
+		new QueryUser(email).execute();
 	}
 
 	public boolean updateUserDevices(){
-
 		try {
 			return new UpdateUserDevice().execute().get();
 		} catch (InterruptedException e) {
@@ -136,7 +100,6 @@ public class QueryManager {
 			e.printStackTrace();
 		}
 		return false;
-
 	}
 
 	public void notifyListener(){
@@ -407,12 +370,13 @@ public class QueryManager {
 	}
 
 	public void addActionListener(OnActionListener listener){
-		actionListeners.add(listener);
+		if(!actionListeners.contains(listener))
+			actionListeners.add(listener);
 	}
 	public interface OnActionListener{
-		public static final int JOIN=0, CANCEL_JOIN=1;
+		public static final int JOIN=0, CANCEL_JOIN=1,GET_USER=2;
 		public void onPerformingAction(int action);
-		public void onActionPerformed(boolean ok,int action);
+		public void onActionPerformed(Object result,int action);
 	}
 
 	public static void destroy (){
@@ -580,6 +544,8 @@ public class QueryManager {
 
 		@Override
 		protected void onPreExecute() {
+			for(OnActionListener l: actionListeners)
+				l.onPerformingAction(OnActionListener.GET_USER);
 			super.onPreExecute();
 			//showDialog();
 		}
@@ -597,6 +563,16 @@ public class QueryManager {
 			}
 			return result;
 		}
+
+		@Override
+		protected void onPostExecute(User result) {
+			for(OnActionListener l: actionListeners)
+				l.onActionPerformed(result,OnActionListener.GET_USER);
+			notifyListener();
+			super.onPostExecute(result);
+		}
+
+
 
 
 	}

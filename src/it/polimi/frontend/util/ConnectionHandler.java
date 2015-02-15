@@ -1,5 +1,6 @@
 package it.polimi.frontend.util;
 
+import it.polimi.frontend.activity.MainActivity;
 import it.polimi.frontend.activity.MyApplication;
 import it.polimi.frontend.activity.TabbedActivity;
 import it.polimi.frontend.activity.WaitActivity;
@@ -40,8 +41,8 @@ public class ConnectionHandler extends BroadcastReceiver {
 		if(isConnected(context) && !state)
 		{
 			state = true;
-			context.startActivity(new Intent(context, TabbedActivity.class));
-			QueryManager.getInstance().loadRequest();
+			context.startActivity(new Intent(context, MainActivity.class));
+			//QueryManager.getInstance().loadRequest();
 
 		}
 		if(!isConnected(context) && state){
