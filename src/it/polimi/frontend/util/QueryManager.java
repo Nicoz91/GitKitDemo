@@ -117,21 +117,8 @@ public class QueryManager {
 	}
 
 
-	public User insertUser(User user){
-		User u = null;
-
-		try {
-			u= new InsertUser(user).execute().get();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		this.user = user;
-		return u;
-
+	public void insertUser(User user){
+		new InsertUser(user).execute();
 	}
 
 	public void updateUser(){
@@ -374,7 +361,7 @@ public class QueryManager {
 			actionListeners.add(listener);
 	}
 	public interface OnActionListener{
-		public static final int JOIN=0, CANCEL_JOIN=1,GET_USER=2;
+		public static final int JOIN=0, CANCEL_JOIN=1,GET_USER=2,INSERT_USER=3,UPDATE_USER=4;
 		public void onPerformingAction(int action);
 		public void onActionPerformed(Object result,int action);
 	}
@@ -625,8 +612,9 @@ public class QueryManager {
 
 		@Override
 		protected void onPreExecute() {
+			for(OnActionListener l: actionListeners)
+				l.onPerformingAction(OnActionListener.INSERT_USER);
 			super.onPreExecute();
-			//showDialog();
 		}
 
 		@Override
@@ -636,11 +624,17 @@ public class QueryManager {
 			try {
 				result = manager.insertUser(u).execute();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
-				result = null;
 			}
 			return result;
+		}
+		
+		@Override
+		protected void onPostExecute(User result) {
+			for(OnActionListener l: actionListeners)
+				l.onActionPerformed(result,OnActionListener.INSERT_USER);
+			notifyListener();
+			super.onPostExecute(result);
 		}
 
 	}

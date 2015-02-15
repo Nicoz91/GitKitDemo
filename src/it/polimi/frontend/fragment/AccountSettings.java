@@ -5,11 +5,14 @@ import it.polimi.frontend.activity.LoginSession;
 import it.polimi.frontend.activity.R;
 import it.polimi.frontend.activity.TabbedActivity;
 import it.polimi.frontend.util.QueryManager;
+import it.polimi.frontend.util.QueryManager.OnActionListener;
 import it.polimi.frontend.util.Storage;
 import it.polimi.frontend.util.Storage.OnImageLoadedListener;
 import it.polimi.frontend.util.TextValidator;
+
 import java.util.Calendar;
 import java.util.Locale;
+
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
@@ -37,11 +40,12 @@ import android.widget.RadioButton;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.api.client.util.DateTime;
 import com.google.identitytoolkit.IdProvider;
 import com.squareup.picasso.Picasso;
 
-public class AccountSettings extends Fragment implements OnClickListener, DatePickerDialog.OnDateSetListener, OnImageLoadedListener{
+public class AccountSettings extends Fragment implements OnClickListener, DatePickerDialog.OnDateSetListener,OnActionListener, OnImageLoadedListener{
 
 	public final static String ID="AccountSettingsFragmentID";
 	private Calendar data;
@@ -62,6 +66,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		QueryManager.getInstance().addActionListener(this);
 		Storage.getInstance().setListener(this);
 		View rootView;
 		rootView = inflater.inflate(R.layout.fragment_account_settings,
@@ -223,9 +228,9 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 					case MotionEvent.ACTION_DOWN:
 						view = (ImageView) v;
 						try{
-						//overlay is black with transparency of 0x77 (119)
-						view.getDrawable().setColorFilter(0x77000000,PorterDuff.Mode.SRC_ATOP);
-						view.invalidate();
+							//overlay is black with transparency of 0x77 (119)
+							view.getDrawable().setColorFilter(0x77000000,PorterDuff.Mode.SRC_ATOP);
+							view.invalidate();
 						}catch(Exception e){e.printStackTrace();}
 						//TODO inserendo qua il dialog funziona ma non sono sicuro sia modo corretto
 						showGallery();
@@ -235,9 +240,9 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 					case MotionEvent.ACTION_CANCEL: 
 						view = (ImageView) v;
 						try{
-						//clear the overlay
-						view.getDrawable().clearColorFilter();
-						view.invalidate();
+							//clear the overlay
+							view.getDrawable().clearColorFilter();
+							view.invalidate();
 						}catch(Exception e){e.printStackTrace();}
 						break;
 					}
@@ -288,11 +293,6 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		case R.id.saveAccount:
 			if(regMode){
 				registerUser();
-
-				QueryManager.getInstance().loadRequest();
-				startActivity(new Intent(getActivity(), TabbedActivity.class));
-				getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
-				this.getActivity().finish();
 				return false;
 			}
 			if (hasChanged()){
@@ -324,11 +324,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		updateUser();
 		if(LoginSession.getProvider()!=null)
 			System.out.println(LoginSession.getUser().getIdProvider());
-		user  = QueryManager.getInstance().insertUser(user);
-		Toast.makeText(getActivity().getApplicationContext(), "Registrazione effettuata.",
-				Toast.LENGTH_SHORT).show();
-		QueryManager.getInstance().registerDevice();
-
+		QueryManager.getInstance().insertUser(user);
 	}
 
 	private void updateUser(){
@@ -523,7 +519,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 	@Override
 	public void onImageLoading() {
 		String message = "Stiamo completando la tua operazione.";
-		showDialog(message);
+		showDialog(message,true);
 
 	}
 
@@ -542,9 +538,9 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 	 * Metodi per mostrare o meno il progressDialog
 	 * */
 	private ProgressDialog mProgressDialog;
-	protected void showDialog(String message) {
+	protected void showDialog(String message,boolean progress) {
 		if (mProgressDialog == null) {
-			setProgressDialog(message);
+			setProgressDialog(message,progress);
 		}
 		mProgressDialog.show();
 	}
@@ -555,18 +551,54 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		}
 	}
 
-	private void setProgressDialog(String message) {
+	private void setProgressDialog(String message, boolean progress) {
 		mProgressDialog = new ProgressDialog(getActivity());
 		mProgressDialog.setTitle("Attendi...");
 		mProgressDialog.setMessage(message);
-		mProgressDialog.setMax(100);
-		mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		if(progress){
+			mProgressDialog.setMax(100);
+			mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		}
 	}      
 
 	@Override
 	public void onImageProgress(long bytes, long total) {
 		int percent = (int)(100.0*(double)bytes/total + 0.5);
-	    mProgressDialog.setProgress(percent);
-		
+		mProgressDialog.setProgress(percent);
+
+	}
+
+
+
+	@Override
+	public void onPerformingAction(int action) {
+		if(action == OnActionListener.INSERT_USER || action == OnActionListener.UPDATE_USER){
+			showDialog("Stiamo portando a termine l'operazione",false);
+		}
+
+	}
+
+	@Override
+	public void onActionPerformed(Object result, int action) {
+		if(action == OnActionListener.INSERT_USER || action == OnActionListener.UPDATE_USER){
+			hideDialog();
+			if(action == OnActionListener.INSERT_USER){
+				User u = (User)result;
+				if(u==null){
+					Toast.makeText(getActivity().getApplicationContext(), "Errore durante la registrazione. Riprova tra qualche minuto.",Toast.LENGTH_SHORT).show();
+					return;
+				}
+				Toast.makeText(getActivity().getApplicationContext(), "Registrazione effettuata.",
+						Toast.LENGTH_SHORT).show();
+				QueryManager.getInstance().registerDevice();
+				QueryManager.getInstance().loadRequest();
+				startActivity(new Intent(getActivity(), TabbedActivity.class));
+				getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+				this.getActivity().finish();
+			}
+			
+			
+		}
+
 	}
 }
