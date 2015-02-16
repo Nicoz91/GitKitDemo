@@ -19,12 +19,13 @@ import it.polimi.frontend.util.QueryManager;
 import it.polimi.frontend.util.DateSlider.DateSlider;
 import it.polimi.frontend.util.DateSlider.DateTimeSlider;
 public class RequestActivity extends ActionBarActivity {
-	
+
 	private InsertRequest insert;
 	private GetPositionMap map;
 	private Menu menu;
 	private Request req;
-	
+	private Calendar start; 
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -35,39 +36,46 @@ public class RequestActivity extends ActionBarActivity {
 		map = new GetPositionMap();
 		req = new Request();
 		fragmentTransaction.add(R.id.insRequestContainer, insert);
-//		fragmentTransaction.add(R.id.insRequestContainer, fragment2);
+		//		fragmentTransaction.add(R.id.insRequestContainer, fragment2);
 		fragmentTransaction.commit();
 	}
-	
+
 	public void getDate(EditText t){
-		
+
 	}
 
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        final Calendar c = Calendar.getInstance();
-        switch(id){
-        case 0:	return new DateTimeSlider(this,startTime,c);
-        default : return new DateTimeSlider(this,endTime,c);
-        }
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		final Calendar c = Calendar.getInstance();
+		switch(id){
+		case 0:	return new DateTimeSlider(this,startTime,c);
+		default :
+			if(start==null)
+				return new DateTimeSlider(this,endTime,c);
+			else
+				return new DateTimeSlider(this,endTime,start);
 
-    }
-    
+		}
 
-    private DateSlider.OnDateSetListener startTime =
-        new DateSlider.OnDateSetListener() {
-            public void onDateSet(DateSlider view, Calendar selectedDate) {
-                insert.onStartDateSelected(selectedDate);
-            }
-    };
-    
-    private DateSlider.OnDateSetListener endTime =
-            new DateSlider.OnDateSetListener() {
-                public void onDateSet(DateSlider view, Calendar selectedDate) {
-                    insert.onEndDateSelected(selectedDate);
-                }
-        };
-	
+	}
+
+
+	private DateSlider.OnDateSetListener startTime =
+			new DateSlider.OnDateSetListener() {
+		public void onDateSet(DateSlider view, Calendar selectedDate) {
+			insert.onStartDateSelected(selectedDate);
+			insert.onEndDateSelected(selectedDate);
+			start = selectedDate;
+		}
+	};
+
+	private DateSlider.OnDateSetListener endTime =
+			new DateSlider.OnDateSetListener() {
+		public void onDateSet(DateSlider view, Calendar selectedDate) {
+			insert.onEndDateSelected(selectedDate);
+		}
+	};
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -75,7 +83,7 @@ public class RequestActivity extends ActionBarActivity {
 		getMenuInflater().inflate(R.menu.insert, menu);
 		return true;
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
@@ -90,12 +98,12 @@ public class RequestActivity extends ActionBarActivity {
 			return true;
 		case R.id.insert_next:
 			if(insert.assignAttribute(req)){
-			menu.findItem(R.id.insert_next).setVisible(false);
-			menu.findItem(R.id.insert_cancel).setVisible(false);
-			menu.findItem(R.id.insert_back).setVisible(true);
-			menu.findItem(R.id.insert_done).setVisible(true);
-			fragmentTransaction.replace(R.id.insRequestContainer, map);
-			fragmentTransaction.commit();
+				menu.findItem(R.id.insert_next).setVisible(false);
+				menu.findItem(R.id.insert_cancel).setVisible(false);
+				menu.findItem(R.id.insert_back).setVisible(true);
+				menu.findItem(R.id.insert_done).setVisible(true);
+				fragmentTransaction.replace(R.id.insRequestContainer, map);
+				fragmentTransaction.commit();
 			}
 			return true;
 		case R.id.insert_back:
@@ -109,8 +117,8 @@ public class RequestActivity extends ActionBarActivity {
 		case R.id.insert_done:
 
 			if(map.setPosition(req)){
-			QueryManager.getInstance().insertRequest(req);
-			this.finish();
+				QueryManager.getInstance().insertRequest(req);
+				this.finish();
 			}
 			else 
 				Toast.makeText(MyApplication.getContext(),"Inserisci una posizione sulla mappa",Toast.LENGTH_SHORT).show();
@@ -120,9 +128,9 @@ public class RequestActivity extends ActionBarActivity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
 	public void assignAttribute(){
-		
+
 	}
 
 }

@@ -6,6 +6,7 @@ import it.polimi.appengine.entity.manager.model.User;
 import it.polimi.frontend.activity.CloudEndpointUtils;
 import it.polimi.frontend.activity.GCMIntentService;
 import it.polimi.frontend.activity.LoginSession;
+import it.polimi.frontend.activity.MainActivity;
 import it.polimi.frontend.activity.MyApplication;
 
 import java.io.IOException;
@@ -16,9 +17,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
@@ -62,6 +63,12 @@ public class QueryManager {
 		return instance;
 	}
 
+	public void removeListener(OnRequestLoadedListener listener){
+		try{
+			this.listeners.remove(listener);
+		}catch(Exception e){}
+	}
+	
 	public void loadRequest(){
 		//		System.out.println("Mi connetto per scaricare le richieste...");
 		new LoadDataTask().execute();
@@ -103,7 +110,7 @@ public class QueryManager {
 	}
 
 	public void notifyListener(){
-		//		System.out.println("NOTIFICO I LISTENER PER AGGIORNARE LE VIEW");
+				System.out.println("NOTIFICO I LISTENER PER AGGIORNARE LE VIEW");
 		for (OnRequestLoadedListener l : listeners){
 			l.onRequestLoaded(requests);
 		}
@@ -145,6 +152,8 @@ public class QueryManager {
 				if(r.getPartecipants().contains(user.getId()))
 					partecipation.add(r);
 		}
+		System.out.println("Size delle requests: "+partecipation.size());
+
 		return partecipation;
 	}
 
@@ -437,7 +446,8 @@ public class QueryManager {
 
 
 		@Override
-		protected void onPreExecute() {
+		protected void onPreExecute() {	
+			System.out.println("PRE EXECUTE");
 			for(OnRequestLoadedListener l: listeners)
 				l.onRequestLoading();
 			super.onPreExecute();
@@ -446,19 +456,21 @@ public class QueryManager {
 		@Override
 		protected ArrayList<Request> doInBackground(Void... params) {
 			System.out.println("Sto scaricando gli utenti");
-			requests = new ArrayList<Request>();
+			ArrayList<Request> requests = new ArrayList<Request>();
 			try {
 				users = (ArrayList<User>) manager.listUser().execute().getItems();
 				try{
 					System.out.println("# utenti: "+users.size());
 					for(User u : users){
 						//						System.out.println("UTENTE: "+u);
-						if(checkEmail(u,LoginSession.getUser().getEmail()))
+						if(checkEmail(u,LoginSession.getUser().getEmail())){
 							user = u;
+							System.out.println("STO SETTANDO LO USER!!!!");
+						}
 						ArrayList<Request> ownerReq = (ArrayList<Request>) u.getRequests();
 						ArrayList<Feedback> sentFeed = (ArrayList<Feedback>) u.getSentFb();
 						if(sentFeed!=null && sentFeed.size()>=0){
-							System.out.println("SIZE DEI FEED INVIATI: "+sentFeed.size());
+//							System.out.println("SIZE DEI FEED INVIATI: "+sentFeed.size());
 							for(Feedback f: sentFeed){
 								f.setFrom(u);
 								adjustUserFeedback(f);
@@ -514,9 +526,15 @@ public class QueryManager {
 			//			System.out.println("NOTIFICO A TUTTI!("+listeners.size()+")");
 			if(result!=null)
 				requests = result;
+			else
+				requests = new ArrayList<Request>();
+			OnRequestLoadedListener remove = null;
 			for (OnRequestLoadedListener l : listeners){
 				l.onRequestLoaded(requests);
+				if(l.getClass().equals(MainActivity.class))
+					remove = l;
 			}
+			listeners.remove(remove);
 		}
 	}
 	private class QueryUser extends AsyncTask<Void, Void, User> {
@@ -554,7 +572,6 @@ public class QueryManager {
 		protected void onPostExecute(User result) {
 			for(OnActionListener l: actionListeners)
 				l.onActionPerformed(result,OnActionListener.GET_USER);
-			notifyListener();
 			super.onPostExecute(result);
 		}
 
@@ -632,7 +649,6 @@ public class QueryManager {
 		protected void onPostExecute(User result) {
 			for(OnActionListener l: actionListeners)
 				l.onActionPerformed(result,OnActionListener.INSERT_USER);
-			notifyListener();
 			super.onPostExecute(result);
 		}
 
@@ -675,7 +691,8 @@ public class QueryManager {
 
 		private boolean compareRequest(Request r1,Request r2){
 			try{
-				if(r1.getTitle().equals(r2.getTitle()))
+				if(r1.getTitle().equals(r2.getTitle()) && r1.getDescription().equals(r2.getDescription()) && r1.getStart().equals(r2.getStart())
+						&& r1.getEnd().equals(r2.getEnd()) )
 					return true;
 				else 
 					return false;
@@ -977,7 +994,7 @@ public class QueryManager {
 				l.onActionPerformed(result,OnActionListener.UPDATE_USER);
 				System.out.println("Sto notificando a: "+l.getClass());
 			}
-			notifyListener();
+//			notifyListener();
 			super.onPostExecute(result);
 		}
 	}

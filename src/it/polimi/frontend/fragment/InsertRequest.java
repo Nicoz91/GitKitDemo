@@ -7,6 +7,7 @@ import it.polimi.frontend.util.TextValidator;
 import it.polimi.frontend.util.DateSlider.labeler.TimeLabeler;
 
 import java.util.Calendar;
+import java.util.TimeZone;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

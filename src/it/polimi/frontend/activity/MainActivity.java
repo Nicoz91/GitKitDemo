@@ -16,6 +16,8 @@
 
 package it.polimi.frontend.activity;
 
+import java.util.List;
+
 import android.support.v4.app.FragmentActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -28,24 +30,27 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
+
 import com.google.identitytoolkit.GitkitClient;
 import com.google.identitytoolkit.GitkitUser;
 import com.google.identitytoolkit.IdToken;
+
+import it.polimi.appengine.entity.manager.model.Request;
 import it.polimi.appengine.entity.manager.model.User;
 import it.polimi.frontend.activity.R;
 import it.polimi.frontend.util.ConnectionHandler;
 import it.polimi.frontend.util.QueryManager;
 import it.polimi.frontend.util.QueryManager.OnActionListener;
+import it.polimi.frontend.util.QueryManager.OnRequestLoadedListener;
 
 
-public class MainActivity extends FragmentActivity implements OnClickListener,OnActionListener {
+public class MainActivity extends FragmentActivity implements OnClickListener,OnActionListener,OnRequestLoadedListener {
 
 	private GitkitClient client;
 	private ConnectionHandler ch;
-	private boolean signing = false;
+	private boolean signing;
 	private GitkitUser session;
 	private IdToken sessionToken;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		QueryManager.getInstance().addActionListener(this);
@@ -58,7 +63,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 		LoginSession.setPrefs(PreferenceManager.getDefaultSharedPreferences(MyApplication.getContext()));
 		session = LoginSession.getUser();
 		sessionToken = LoginSession.getIdToken();
-		
+
 		//Istanzio il gitkit client
 		client = GitkitClient.newBuilder(this, new GitkitClient.SignInCallbacks() {
 			public void onSignIn(IdToken idToken, GitkitUser user) {		
@@ -74,7 +79,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 				Toast.makeText(MainActivity.this, "Sign in failed", Toast.LENGTH_LONG).show();
 			}
 		}).build();
-
+		signing = false;
 		//Controllo se è presente la connessione
 		if(!ConnectionHandler.isConnected()){
 			startActivity(new Intent(this, WaitActivity.class));
@@ -134,9 +139,10 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 	}
 
 	private void showProfilePage() {
+		QueryManager.getInstance().addListener(this);
 		System.out.println("CARICO LE REQUEST");
 		QueryManager.getInstance().loadRequest();
-		startActivity(new Intent(this, TabbedActivity.class));
+		//		startActivity(new Intent(this, TabbedActivity.class));
 	}
 
 
@@ -158,13 +164,21 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 			sessionToken = null;
 		}
 	}
+	
+	
+
+	@Override
+	protected void onPause() {
+		hideDialog();
+		super.onPause();
+	}
 
 	@Override
 	public void onResume(){
 		super.onResume();
-//		session = null;
-//		sessionToken = null;
-//		signing = false;
+		//		session = null;
+		//		sessionToken = null;
+		//		signing = false;
 
 		Intent i = getIntent();
 		if (i!=null && i.getStringExtra("Reason")!=null && i.getStringExtra("Reason").equals("Logout")){
@@ -192,8 +206,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 
 	@Override
 	public void onPerformingAction(int action) {
-		showDialog("Connesione al server.");
-
+		if(action == OnActionListener.GET_USER)
+			showDialog("Connessione al server...");
 	}
 
 	@Override
@@ -205,23 +219,25 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 					Toast.makeText(MainActivity.this, "Si è verificato un problema nella connessione con il server.", Toast.LENGTH_LONG).show();
 					return;
 				}
-				
+
 				if(u!=null && u.getName()!=null && !u.getName().equals("")){
 					QueryManager.getInstance().registerDevice();
-
 				}
 
+				hideDialog();
 				if(session!=null && sessionToken!=null && u!=null){
 					showProfilePage();
 				}else
 					showSignInPage();
+				return;
 			}else{
 				try {	
 					if(u == null){
 						Toast.makeText(MainActivity.this, "Si è verificato un problema nella connessione con il server.", Toast.LENGTH_LONG).show();
 						return;
-						}
+					}
 
+					hideDialog();
 					if(u!=null && u.getName()!=null && !u.getName().equals(""))
 						showProfilePage();
 					else
@@ -240,13 +256,13 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 						LoginSession.setStringProvider("");
 						LoginSession.setProvider("");
 					}
+					return;
 				} catch (Exception e) {
 					Toast.makeText(MainActivity.this, "Si è verificato un problema nella connessione con il server.", Toast.LENGTH_LONG).show();
 					e.printStackTrace();
 				}
 			}
 		}
-		hideDialog();
 	}
 
 	/** 
@@ -254,11 +270,10 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 	 * */
 	private ProgressDialog mProgressDialog;
 	protected void showDialog(String message) {
-		if (mProgressDialog == null) {
-			setProgressDialog(message);
-		}
+		
+		setProgressDialog(message);
 		if(this!=null && !this.isFinishing())
-		mProgressDialog.show();
+			mProgressDialog.show();
 	}
 
 	protected void hideDialog() {
@@ -268,9 +283,25 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 	}
 
 	private void setProgressDialog(String message) {
+		if(mProgressDialog!=null){
+			mProgressDialog.dismiss();
+			mProgressDialog = null;
+		}
 		mProgressDialog = new ProgressDialog(this);
 		mProgressDialog.setTitle("Attendi...");
 		mProgressDialog.setMessage(message);
+	}
+
+	@Override
+	public void onRequestLoading() {
+		showDialog("Sto caricando le richieste");
+	}
+
+	@Override
+	public void onRequestLoaded(List<Request> requests) {
+		startActivity(new Intent(this, TabbedActivity.class));
+		hideDialog();
+
 	}      
 
 

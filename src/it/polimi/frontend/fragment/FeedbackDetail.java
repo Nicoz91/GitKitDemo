@@ -64,6 +64,10 @@ public class FeedbackDetail extends Fragment implements OnClickListener, OnRatin
 		this.feedbackLV = (ListView)rootView.findViewById(R.id.feedbackList);
 		feedbackLV.setEmptyView(rootView.findViewById(R.id.empty));
 		if (owner!=null){
+			if(owner.getId().equals(QueryManager.getInstance().getCurrentUser().getId())){
+				sendFbForm.setVisibility(View.GONE);
+				rootView.findViewById(R.id.fbNotAllowed).setVisibility(View.VISIBLE);
+			}
 			List<Feedback> feedbacks = owner.getReceivedFb();
 			//feedback di prova per visualizzazione
 			if (feedbacks==null)
