@@ -63,7 +63,8 @@ public class RequestAdapter extends ArrayAdapter<Request>{
 				start.setTimeInMillis(reqs.get(position).getStart().getValue());
 				String dataInizio = start.get(Calendar.DAY_OF_MONTH)+" "+
 						start.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.ITALIAN)
-						+" "+start.get(Calendar.YEAR);
+						+" "+start.get(Calendar.YEAR)+" "+start.get(Calendar.HOUR_OF_DAY)+":"
+								+start.get(Calendar.MINUTE);
 				lower+=dataInizio+", "+context.getString(R.string.durationLabel);
 			} else
 				lower+=NON_SPECIFICATO+", "+context.getString(R.string.durationLabel);
