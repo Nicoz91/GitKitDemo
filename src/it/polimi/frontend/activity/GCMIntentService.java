@@ -16,8 +16,10 @@ import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.json.jackson2.JacksonFactory;
+
 import it.polimi.appengine.util.deviceinfoendpoint.Deviceinfoendpoint;
 import it.polimi.appengine.util.deviceinfoendpoint.model.DeviceInfo;
+import it.polimi.frontend.util.QueryManager;
 
 
 /**
@@ -117,6 +119,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 		//        "Message received via Google Cloud Messaging:\n\n"
 		//            + intent.getStringExtra("message"), true, false);
 		LoginSession.notificationReceived();
+		QueryManager.getInstance().clearNotification();
 		this.addNotification(intent.getStringExtra("message"));
 	}
 

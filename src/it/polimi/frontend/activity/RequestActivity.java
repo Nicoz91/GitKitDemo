@@ -3,6 +3,7 @@ package it.polimi.frontend.activity;
 import java.util.Calendar;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -16,9 +17,10 @@ import it.polimi.frontend.activity.R;
 import it.polimi.frontend.fragment.GetPositionMap;
 import it.polimi.frontend.fragment.InsertRequest;
 import it.polimi.frontend.util.QueryManager;
+import it.polimi.frontend.util.QueryManager.OnActionListener;
 import it.polimi.frontend.util.DateSlider.DateSlider;
 import it.polimi.frontend.util.DateSlider.DateTimeSlider;
-public class RequestActivity extends ActionBarActivity {
+public class RequestActivity extends ActionBarActivity implements OnActionListener {
 
 	private InsertRequest insert;
 	private GetPositionMap map;
@@ -28,6 +30,7 @@ public class RequestActivity extends ActionBarActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		QueryManager.getInstance().addActionListener(this);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_request);
 		FragmentManager fragmentManager = getSupportFragmentManager();
@@ -118,7 +121,6 @@ public class RequestActivity extends ActionBarActivity {
 
 			if(map.setPosition(req)){
 				QueryManager.getInstance().insertRequest(req);
-				this.finish();
 			}
 			else 
 				Toast.makeText(MyApplication.getContext(),"Inserisci una posizione sulla mappa",Toast.LENGTH_SHORT).show();
@@ -131,6 +133,56 @@ public class RequestActivity extends ActionBarActivity {
 
 	public void assignAttribute(){
 
+	}
+
+	/** 
+	 * Metodi per mostrare o meno il progressDialog
+	 * */
+	private ProgressDialog mProgressDialog;
+	protected void showDialog(String message) {
+		
+		setProgressDialog(message);
+		if(this!=null && !this.isFinishing())
+			mProgressDialog.show();
+	}
+
+	protected void hideDialog() {
+		if (mProgressDialog != null && mProgressDialog.isShowing()) {
+			mProgressDialog.dismiss();
+		}
+	}
+
+	private void setProgressDialog(String message) {
+		if(mProgressDialog!=null){
+			mProgressDialog.dismiss();
+			mProgressDialog = null;
+		}
+		mProgressDialog = new ProgressDialog(this);
+		mProgressDialog.setTitle("Attendi...");
+		mProgressDialog.setMessage(message);
+	}
+	
+	@Override
+	public void onPerformingAction(int action) {
+		if(action == OnActionListener.INSERT_REQUEST){
+			showDialog("Stiamo completando la tua richiesta...");
+		}
+		
+	}
+
+	@Override
+	public void onActionPerformed(Object result, int action) {
+		hideDialog();
+		if(action == OnActionListener.INSERT_REQUEST){
+			Request r = (Request)result;
+			if(r==null)
+				Toast.makeText(MyApplication.getContext(),"Si è verificato un errore durante l'operazione...",Toast.LENGTH_SHORT).show();
+			else
+				Toast.makeText(MyApplication.getContext(),"Richiesta inserita correttamente.",Toast.LENGTH_SHORT).show();
+			this.finish();
+		}
+		
+		
 	}
 
 }

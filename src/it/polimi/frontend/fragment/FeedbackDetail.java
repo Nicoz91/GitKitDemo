@@ -7,10 +7,12 @@ import it.polimi.frontend.activity.MyApplication;
 import it.polimi.frontend.activity.R;
 import it.polimi.frontend.util.FeedbackAdapter;
 import it.polimi.frontend.util.QueryManager;
+import it.polimi.frontend.util.QueryManager.OnActionListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,8 +25,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RatingBar;
+import android.widget.Toast;
 import android.widget.RatingBar.OnRatingBarChangeListener;
-public class FeedbackDetail extends Fragment implements OnClickListener, OnRatingBarChangeListener{
+public class FeedbackDetail extends Fragment implements OnClickListener, OnRatingBarChangeListener,OnActionListener{
 
 	public static final String ID = "FeedbackDetailFragmentID";
 	private User owner;
@@ -54,6 +57,7 @@ public class FeedbackDetail extends Fragment implements OnClickListener, OnRatin
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_feedback_detail,
 				container, false);
+		QueryManager.getInstance().addActionListener(this);
 		this.sendFbForm= (LinearLayout)rootView.findViewById(R.id.sendFbForm);
 		if (mode==ALL_REQUEST){
 			sendFbForm.setVisibility(View.GONE);
@@ -96,6 +100,21 @@ public class FeedbackDetail extends Fragment implements OnClickListener, OnRatin
 		return rootView;
 	}
 
+	public void update(){
+		if (owner!=null){
+			List<Feedback> feedbacks = owner.getReceivedFb();
+			if (feedbacks==null)
+				feedbacks= new ArrayList<Feedback>();
+			Context c = getActivity();
+			if(c==null){ 
+				c = MyApplication.getContext();
+			}
+			FeedbackAdapter fba = new FeedbackAdapter(c,0,feedbacks);
+			feedbackLV.setAdapter(fba);
+		}else
+			System.out.println("Nessun Nome dell'owner");
+	}
+
 	@Override
 	public void onClick(View v) {
 		sendFbForm.setVisibility(View.GONE);
@@ -126,5 +145,50 @@ public class FeedbackDetail extends Fragment implements OnClickListener, OnRatin
 	public void onRatingChanged(RatingBar ratingBar, float rating,
 			boolean fromUser) {
 		evaluation = (int) Math.round(rating);
+	}
+
+	/** 
+	 * Metodi per mostrare o meno il progressDialog
+	 * */
+	private ProgressDialog mProgressDialog;
+	protected void showDialog(String message) {
+
+		setProgressDialog(message);
+		if(this!=null && !this.getActivity().isFinishing())
+			mProgressDialog.show();
+	}
+
+	protected void hideDialog() {
+		if (mProgressDialog != null && mProgressDialog.isShowing()) {
+			mProgressDialog.dismiss();
+		}
+	}
+
+	private void setProgressDialog(String message) {
+		if(mProgressDialog!=null){
+			mProgressDialog.dismiss();
+			mProgressDialog = null;
+		}
+		mProgressDialog = new ProgressDialog(getActivity());
+		mProgressDialog.setTitle("Attendi...");
+		mProgressDialog.setMessage(message);
+	}
+
+	@Override
+	public void onPerformingAction(int action) {
+		if(action == OnActionListener.INSERT_FEEDBACK)
+			showDialog("Attendi mentre completiamo la richiesta...");
+	}
+
+	@Override
+	public void onActionPerformed(Object result, int action) {
+		if(action == OnActionListener.INSERT_FEEDBACK){
+			hideDialog();
+			boolean ok = (Boolean) result;
+			if(!ok)
+				Toast.makeText(MyApplication.getContext(),"È stato impossibile completare la richiesta.",Toast.LENGTH_SHORT).show();		
+			else
+				update();
+		}
 	}
 }

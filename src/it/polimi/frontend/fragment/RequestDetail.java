@@ -368,19 +368,24 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 		String message="";
 		switch(action){
 		case OnActionListener.JOIN:
+			showDialog(message);
 			message = "Stiamo completando la tua operazione.";
 			break;
 		case OnActionListener.CANCEL_JOIN:
+			showDialog(message);
+			message = "Stiamo completando la tua operazione.";
+			break;
+		case OnActionListener.REMOVE_REQUEST:
+			showDialog(message);
 			message = "Stiamo completando la tua operazione.";
 			break;
 		}
-		showDialog(message);
 
 	}
 
 	@Override
 	public void onActionPerformed(Object result, int action) {
-		if(action==OnActionListener.CANCEL_JOIN || action==OnActionListener.JOIN ){
+		if(action==OnActionListener.CANCEL_JOIN || action==OnActionListener.JOIN || action==OnActionListener.REMOVE_REQUEST ){
 			boolean ok = (Boolean)result;
 			hideDialog();
 			switch(action){
@@ -394,6 +399,10 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 				if(ok)
 					join.setText(PARTECIPA);
 				else
+					Toast.makeText(MyApplication.getContext(),"È stato impossibile completare la richiesta.",Toast.LENGTH_SHORT).show();
+				break;
+			case OnActionListener.REMOVE_REQUEST:
+				if(!ok)
 					Toast.makeText(MyApplication.getContext(),"È stato impossibile completare la richiesta.",Toast.LENGTH_SHORT).show();
 				break;
 			}

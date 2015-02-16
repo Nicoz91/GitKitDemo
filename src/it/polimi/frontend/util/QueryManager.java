@@ -34,6 +34,7 @@ public class QueryManager {
 	private List<Request> requests;
 	private List<OnRequestLoadedListener> listeners;
 	private List<OnActionListener> actionListeners;
+	private ArrayList<String> notification;
 	private Manager manager;
 	private MessageEndpoint message;
 	private static QueryManager instance;
@@ -68,7 +69,7 @@ public class QueryManager {
 			this.listeners.remove(listener);
 		}catch(Exception e){}
 	}
-	
+
 	public void loadRequest(){
 		//		System.out.println("Mi connetto per scaricare le richieste...");
 		new LoadDataTask().execute();
@@ -110,7 +111,7 @@ public class QueryManager {
 	}
 
 	public void notifyListener(){
-				System.out.println("NOTIFICO I LISTENER PER AGGIORNARE LE VIEW");
+		System.out.println("NOTIFICO I LISTENER PER AGGIORNARE LE VIEW");
 		for (OnRequestLoadedListener l : listeners){
 			l.onRequestLoaded(requests);
 		}
@@ -133,16 +134,7 @@ public class QueryManager {
 	}
 
 	public void insertRequest(Request request){
-		try {
-			new InsertRequest(request).execute().get();
-			notifyListener();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		new InsertRequest(request).execute();
 	}
 
 	public ArrayList<Request> getUserPartecipation(){
@@ -180,56 +172,34 @@ public class QueryManager {
 	}
 
 	public void removeOwnerRequest(Request r){
-		//
-		//		if(r==null){System.out.println("R è null... strano");}
-		//		else{System.out.println("R id:"+r.getId());}
-		try {
-			new RemoveOwnerRequest(r).execute().get();
-			for(int i=0;i<user.getRequests().size();i++){
-				if(user.getRequests().get(i).getId().equals(r.getId())){
-					user.getRequests().remove(i);
-					break;
-				}
-
+		new RemoveOwnerRequest(r).execute();
+		for(int i=0;i<user.getRequests().size();i++){
+			if(user.getRequests().get(i).getId().equals(r.getId())){
+				user.getRequests().remove(i);
+				break;
 			}
-			notifyListener();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
+		notifyListener();
+
 	}
 
 
 
 	public void insertFeedback(Feedback f){
-		//		System.out.println("Provo ad inserire un feed");
-
-		try {
-			new InsertFeedback(f).execute().get();
-			notifyListener();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		new InsertFeedback(f).execute();
 	}
 
 	public ArrayList<String> getNotification(){
-		try {
-			return new NotificationTask().execute().get();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if(notification==null){
+			notification = new ArrayList<String>();
+			new NotificationTask().execute();
 		}
-		return new ArrayList<String>();
+		return notification;
+
+	}
+	
+	public void clearNotification(){
+		notification = null;
 	}
 
 	public void queryRequest(String tag){
@@ -369,7 +339,8 @@ public class QueryManager {
 
 	}
 	public interface OnActionListener{
-		public static final int JOIN=0, CANCEL_JOIN=1,GET_USER=2,INSERT_USER=3,UPDATE_USER=4;
+		public static final int JOIN=0, CANCEL_JOIN=1,GET_USER=2,INSERT_USER=3,
+				UPDATE_USER=4, INSERT_REQUEST=5, REMOVE_REQUEST=6, INSERT_FEEDBACK=7, NOTIFICATION=8;
 		public void onPerformingAction(int action);
 		public void onActionPerformed(Object result,int action);
 	}
@@ -470,7 +441,7 @@ public class QueryManager {
 						ArrayList<Request> ownerReq = (ArrayList<Request>) u.getRequests();
 						ArrayList<Feedback> sentFeed = (ArrayList<Feedback>) u.getSentFb();
 						if(sentFeed!=null && sentFeed.size()>=0){
-//							System.out.println("SIZE DEI FEED INVIATI: "+sentFeed.size());
+							//							System.out.println("SIZE DEI FEED INVIATI: "+sentFeed.size());
 							for(Feedback f: sentFeed){
 								f.setFrom(u);
 								adjustUserFeedback(f);
@@ -590,6 +561,7 @@ public class QueryManager {
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
+				return false;
 			}
 			if(u==null){
 				//				System.out.println("L'utente è null quindi torno false");
@@ -641,6 +613,7 @@ public class QueryManager {
 				result = manager.insertUser(u).execute();
 			} catch (IOException e) {
 				e.printStackTrace();
+				return null;
 			}
 			return result;
 		}
@@ -661,6 +634,21 @@ public class QueryManager {
 		}
 
 		@Override
+		protected void onPreExecute() {
+			for(OnActionListener l: actionListeners)
+				l.onPerformingAction(OnActionListener.INSERT_REQUEST);
+			super.onPreExecute();
+		}
+
+		@Override
+		protected void onPostExecute(Request result) {
+			for(OnActionListener l: actionListeners)
+				l.onActionPerformed(result,OnActionListener.INSERT_REQUEST);
+			super.onPostExecute(result);
+			notifyListener();
+		}
+
+		@Override
 		protected Request doInBackground(Void... params) {
 			User u = new User();
 			try {
@@ -668,6 +656,7 @@ public class QueryManager {
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
+				return null;
 			}
 			if(u.getRequests()==null)
 				u.setRequests(new ArrayList<Request>());
@@ -677,22 +666,29 @@ public class QueryManager {
 				u = manager.updateUser(u).execute();
 			} catch (IOException e) {
 				e.printStackTrace();
+				return null;
 			}
+			boolean set = false;
 			for(Request req : u.getRequests()){
 				if(compareRequest(req,r)){
 					r.setId(req.getId());
+					set = true;
 					System.out.println("Ho settato l'id giusto");
 				}
 			}
+			if(!set)
+				return null;
+
 			r.setOwner(user);
 			addRequest(user,r);
 			return r;
 		}
 
+
+
 		private boolean compareRequest(Request r1,Request r2){
 			try{
-				if(r1.getTitle().equals(r2.getTitle()) && r1.getDescription().equals(r2.getDescription()) && r1.getStart().equals(r2.getStart())
-						&& r1.getEnd().equals(r2.getEnd()) )
+				if(r1.getTitle().equals(r2.getTitle()) && r1.getDescription().equals(r2.getDescription()))
 					return true;
 				else 
 					return false;
@@ -735,6 +731,7 @@ public class QueryManager {
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
+				return false;
 			}
 			if(newReq.getPartecipants()!=null && newReq.getPartecipants().size()>=newReq.getMaxPartecipants()){
 				System.out.println("Non puoi partecipare");
@@ -847,6 +844,7 @@ public class QueryManager {
 
 			} catch (IOException e) {
 				e.printStackTrace();
+				return false;
 			}
 			r.setOwner(oldOwner);
 			return true;
@@ -860,21 +858,28 @@ public class QueryManager {
 			super.onPostExecute(result);
 		}
 	}
-	private class RemoveOwnerRequest extends AsyncTask<Void, Void, User> {
+	private class RemoveOwnerRequest extends AsyncTask<Void, Void, Boolean> {
 		public Request r;
 
 		public RemoveOwnerRequest(Request r){
 			this.r = r;
 		}
+		
+		@Override
+		protected void onPreExecute() {
+			for(OnActionListener l: actionListeners)
+				l.onPerformingAction(OnActionListener.REMOVE_REQUEST);
+			super.onPreExecute();
+		}
 
 		@Override
-		protected User doInBackground(Void... params) {
+		protected Boolean doInBackground(Void... params) {
 			User u = new User();
 			try {
 				u = manager.getUserByEmail(LoginSession.getUser().getEmail()).execute();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
+				return false;
 			}
 			//			if(u==null)
 			//				System.out.println("Utente null");
@@ -883,7 +888,8 @@ public class QueryManager {
 
 			if(u.getRequests()==null){
 				//				System.out.println("Request è null quindi non modifico nulla");
-				return null;}
+				return false;
+				}
 
 			for(int i=0;i<u.getRequests().size();i++){
 				if(u.getRequests().get(i).getId().equals(r.getId())){
@@ -900,23 +906,39 @@ public class QueryManager {
 				ArrayList<User> partecipant = getUserFromRequest(r);
 				if(partecipant!=null)
 					for(User us : partecipant)
-						new PushMessage("Lutente "+ user.getName()+" "+user.getSurname()+" ha cancellato la richiesta a cui partecipavi.",us).execute();
+						new PushMessage("L'utente "+ user.getName()+" "+user.getSurname()+" ha cancellato la richiesta a cui partecipavi.",us).execute();
 			} catch (IOException e) {
 				e.printStackTrace();
+				return false;
 			}
-			return u;
+			return true;
+		}
+		
+		@Override
+		protected void onPostExecute(Boolean result) {
+			for(OnActionListener l: actionListeners)
+				l.onActionPerformed(result,OnActionListener.REMOVE_REQUEST);
+			notifyListener();
+			super.onPostExecute(result);
 		}
 	}
-	private class InsertFeedback extends AsyncTask<Void, Void, Feedback> {
+	private class InsertFeedback extends AsyncTask<Void, Void, Boolean> {
 
 		public Feedback f;
 
 		public InsertFeedback(Feedback f){
 			this.f = f;
 		}
+		
+		@Override
+		protected void onPreExecute() {
+			for(OnActionListener l: actionListeners)
+				l.onPerformingAction(OnActionListener.INSERT_FEEDBACK);
+			super.onPreExecute();
+		}
 
 		@Override
-		protected Feedback doInBackground(Void... params) {
+		protected Boolean doInBackground(Void... params) {
 			//			System.out.println("Doing in background");
 			User u = new User();
 			try {
@@ -924,6 +946,7 @@ public class QueryManager {
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
+				return false;
 			}
 			//			if(u==null)
 			//				System.out.println("Utente null");
@@ -942,10 +965,19 @@ public class QueryManager {
 
 			} catch (IOException e) {
 				e.printStackTrace();
+				return false;
 			}
 			adjustUserFeedback(f);
 			f.setFrom(user);
-			return f;
+			return true;
+		}
+		
+		@Override
+		protected void onPostExecute(Boolean result) {
+			for(OnActionListener l: actionListeners)
+				l.onActionPerformed(result,OnActionListener.INSERT_FEEDBACK);
+			notifyListener();
+			super.onPostExecute(result);
 		}
 	}
 
@@ -967,6 +999,7 @@ public class QueryManager {
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
+				u = null;
 			}
 			//			if(u==null)
 			//				System.out.println("Utente null");
@@ -992,9 +1025,8 @@ public class QueryManager {
 		protected void onPostExecute(User result) {
 			for(OnActionListener l: actionListeners){
 				l.onActionPerformed(result,OnActionListener.UPDATE_USER);
-				System.out.println("Sto notificando a: "+l.getClass());
 			}
-//			notifyListener();
+			//			notifyListener();
 			super.onPostExecute(result);
 		}
 	}
@@ -1007,14 +1039,23 @@ public class QueryManager {
 			try {
 				not = message.getNotification(user.getId()).execute();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
+				return null;
 			}
 			ArrayList<String> notification = new ArrayList<String>();
 			if(not!=null && not.getItems()!=null && not.getItems().size()>0)
 				for(MessageData md : not.getItems())
 					notification.add(md.getMessage());
 			return notification;
+		}
+		
+		@Override
+		protected void onPostExecute(ArrayList<String> result) {
+			notification = result;
+			for(OnActionListener l: actionListeners){
+				l.onActionPerformed(result,OnActionListener.NOTIFICATION);
+			}
+			super.onPostExecute(result);
 		}
 	}
 }
