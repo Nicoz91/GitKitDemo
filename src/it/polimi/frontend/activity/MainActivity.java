@@ -55,7 +55,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 		registerReceiver(ch,new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
 		//Carico i cookie
-		LoginSession.setPrefs(PreferenceManager.getDefaultSharedPreferences(this));
+		LoginSession.setPrefs(PreferenceManager.getDefaultSharedPreferences(MyApplication.getContext()));
 		session = LoginSession.getUser();
 		sessionToken = LoginSession.getIdToken();
 		
@@ -257,6 +257,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 		if (mProgressDialog == null) {
 			setProgressDialog(message);
 		}
+		if(this!=null && !this.isFinishing())
 		mProgressDialog.show();
 	}
 

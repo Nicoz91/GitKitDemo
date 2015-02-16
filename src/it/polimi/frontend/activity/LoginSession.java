@@ -36,7 +36,6 @@ public class LoginSession {
 
 	public static int getNotNumber() {
 		int notNumber = 0;
-
 		if (prefs.contains("notNumber")){
 		     notNumber = prefs.getInt("notNumber", 1);
 		}

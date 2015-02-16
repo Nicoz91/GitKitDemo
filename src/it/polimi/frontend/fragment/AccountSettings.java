@@ -2,6 +2,7 @@ package it.polimi.frontend.fragment;
 
 import it.polimi.appengine.entity.manager.model.User;
 import it.polimi.frontend.activity.LoginSession;
+import it.polimi.frontend.activity.MyApplication;
 import it.polimi.frontend.activity.R;
 import it.polimi.frontend.activity.TabbedActivity;
 import it.polimi.frontend.util.QueryManager;
@@ -252,7 +253,9 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		});
 		if (user.getPhotoURL()!=null){
 			photoURL = user.getPhotoURL();
-			Picasso.with(getActivity()).load(photoURL).into(profileIV);
+			try{
+				Picasso.with(getActivity()).load(photoURL).into(profileIV);
+			}catch(Exception e){}
 		}
 		//Setup NonEditable Mode
 		if(regMode)
@@ -297,17 +300,17 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 			}
 			if (hasChanged()){
 				if (valid){
-					menu.findItem(R.id.editAccount).setVisible(true);
-					menu.findItem(R.id.saveAccount).setVisible(false);
-					editMode=false;
-					editable(editMode);
 					updateUser();
-					initializeView(getView());
+					//					menu.findItem(R.id.editAccount).setVisible(true);
+					//					menu.findItem(R.id.saveAccount).setVisible(false);
+					//					editMode=false;
+					//					editable(editMode);
+					//					initializeView(getView());
 				} else 
-					Toast.makeText(getActivity().getApplicationContext(), "Qualcosa non va nei campi inseriti.",
+					Toast.makeText(MyApplication.getContext(), "Qualcosa non va nei campi inseriti.",
 							Toast.LENGTH_SHORT).show();
 			} else{
-				Toast.makeText(getActivity().getApplicationContext(), "Nulla è cambiato.",
+				Toast.makeText(MyApplication.getContext(), "Nulla è cambiato.",
 						Toast.LENGTH_SHORT).show();
 				menu.findItem(R.id.editAccount).setVisible(true);
 				menu.findItem(R.id.saveAccount).setVisible(false);
@@ -338,8 +341,6 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		user.setPhotoURL(photoURL);
 		if(!regMode){
 			QueryManager.getInstance().updateUser();
-			Toast.makeText(getActivity().getApplicationContext(), "Dati utente aggiornati correttamente.",
-					Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -467,7 +468,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 					photoURL = photoUrl;
 					Picasso.with(getActivity()).load(photoURL).into(profileIV);
 				} else
-					Toast.makeText(getActivity().getApplicationContext(), "Immagine non aggiornata perchè non hai inserito un URL corretto.",
+					Toast.makeText(MyApplication.getContext(), "Immagine non aggiornata perchè non hai inserito un URL corretto.",
 							Toast.LENGTH_SHORT).show();
 			}
 		});
@@ -475,7 +476,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				// Canceled.
-				Toast.makeText(getActivity().getApplicationContext(), "Aggiornamento immagine cancellato.",
+				Toast.makeText(MyApplication.getContext(), "Aggiornamento immagine cancellato.",
 						Toast.LENGTH_SHORT).show();
 			}
 		});
@@ -527,7 +528,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 	public void onImageLoaded(String path) {
 		hideDialog();
 		if(path==null)
-			Toast.makeText(getActivity().getApplicationContext(), "Errore nel caricamento dell'immagine.",Toast.LENGTH_SHORT).show();
+			Toast.makeText(MyApplication.getContext(), "Errore nel caricamento dell'immagine.",Toast.LENGTH_SHORT).show();
 		else{
 			photoURL = path;
 			Picasso.with(getActivity()).load(photoURL).into(profileIV);
@@ -539,10 +540,10 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 	 * */
 	private ProgressDialog mProgressDialog;
 	protected void showDialog(String message,boolean progress) {
-		if (mProgressDialog == null) {
+		if(getActivity()!=null && !getActivity().isFinishing()){
 			setProgressDialog(message,progress);
+			mProgressDialog.show();
 		}
-		mProgressDialog.show();
 	}
 
 	protected void hideDialog() {
@@ -585,10 +586,10 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 			if(action == OnActionListener.INSERT_USER){
 				User u = (User)result;
 				if(u==null){
-					Toast.makeText(getActivity().getApplicationContext(), "Errore durante la registrazione. Riprova tra qualche minuto.",Toast.LENGTH_SHORT).show();
+					Toast.makeText(MyApplication.getContext(), "Errore durante la registrazione. Riprova tra qualche minuto.",Toast.LENGTH_SHORT).show();
 					return;
 				}
-				Toast.makeText(getActivity().getApplicationContext(), "Registrazione effettuata.",
+				Toast.makeText(MyApplication.getContext(), "Registrazione effettuata.",
 						Toast.LENGTH_SHORT).show();
 				QueryManager.getInstance().registerDevice();
 				QueryManager.getInstance().loadRequest();
@@ -596,8 +597,25 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 				getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
 				this.getActivity().finish();
 			}
-			
-			
+
+			if(action == OnActionListener.UPDATE_USER){
+				User u = (User)result;
+				if(u==null){
+					Toast.makeText(MyApplication.getContext(), "Si è verificato un errore durante l'interazione con il server. Riprova tra qualche minuto.",Toast.LENGTH_SHORT).show();
+					return;
+				}
+				menu.findItem(R.id.editAccount).setVisible(true);
+				menu.findItem(R.id.saveAccount).setVisible(false);
+				editMode=false;
+				editable(editMode);
+				Toast.makeText(MyApplication.getContext(), "Dati utente aggiornati correttamente.",
+						Toast.LENGTH_SHORT).show();
+				if(getActivity()!=null && !getActivity().isFinishing()){
+				initializeView(getView());}
+				//MODIFICA QUI
+			}
+
+
 		}
 
 	}

@@ -122,15 +122,7 @@ public class QueryManager {
 	}
 
 	public void updateUser(){
-		try {
-			new UpdateUser().execute().get();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		new UpdateUser().execute();
 	}
 
 	public void insertRequest(Request request){
@@ -357,8 +349,15 @@ public class QueryManager {
 	}
 
 	public void addActionListener(OnActionListener listener){
-		if(!actionListeners.contains(listener))
-			actionListeners.add(listener);
+		OnActionListener remove = null;
+		for(OnActionListener l : actionListeners){
+			if(l.getClass().equals(listener.getClass()))
+				remove = l;
+		}
+		if(remove!=null)
+			actionListeners.remove(remove);
+		actionListeners.add(listener);
+
 	}
 	public interface OnActionListener{
 		public static final int JOIN=0, CANCEL_JOIN=1,GET_USER=2,INSERT_USER=3,UPDATE_USER=4;
@@ -628,7 +627,7 @@ public class QueryManager {
 			}
 			return result;
 		}
-		
+
 		@Override
 		protected void onPostExecute(User result) {
 			for(OnActionListener l: actionListeners)
@@ -932,7 +931,16 @@ public class QueryManager {
 			return f;
 		}
 	}
+
+
 	private class UpdateUser extends AsyncTask<Void, Void, User> {
+
+		@Override
+		protected void onPreExecute() {
+			for(OnActionListener l: actionListeners)
+				l.onPerformingAction(OnActionListener.UPDATE_USER);
+			super.onPreExecute();
+		}
 
 		@Override
 		protected User doInBackground(Void... params) {
@@ -957,9 +965,20 @@ public class QueryManager {
 
 			} catch (IOException e) {
 				e.printStackTrace();
+				u = null;
 			}
 			//			System.out.println("Dovrei aver aggiornato correttamente l'utente");
 			return u;
+		}
+
+		@Override
+		protected void onPostExecute(User result) {
+			for(OnActionListener l: actionListeners){
+				l.onActionPerformed(result,OnActionListener.UPDATE_USER);
+				System.out.println("Sto notificando a: "+l.getClass());
+			}
+			notifyListener();
+			super.onPostExecute(result);
 		}
 	}
 

@@ -33,24 +33,22 @@ public class Storage {
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			AppKeyPair appKeys = new AppKeyPair(APP_KEY, APP_SECRET);
-			AndroidAuthSession session = new AndroidAuthSession(appKeys);
-			mDBApi = new DropboxAPI<AndroidAuthSession>(session);
-			mDBApi.getSession().setOAuth2AccessToken(APP_TOKEN);
-			try {
-				if(isDropboxLinked())
-					System.out.println("Link effettuato");
-				else
-					System.out.println("Link non effettuato");
+				while(!isDropboxLinked()){
+				//System.out.println("Link non effettuato");
 				//mDBApi.getSession().finishAuthentication();
+				
+				AppKeyPair appKeys = new AppKeyPair(APP_KEY, APP_SECRET);
+				AndroidAuthSession session = new AndroidAuthSession(appKeys);
+				mDBApi = new DropboxAPI<AndroidAuthSession>(session);
+				mDBApi.getSession().setOAuth2AccessToken(APP_TOKEN);
+				}
+				try {
+					System.out.println("Linked to: "+mDBApi.accountInfo().displayName);
+				} catch (DropboxException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
-				System.out.println("Linked to: "+mDBApi.accountInfo().displayName);
-			} catch (DropboxException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}catch(IllegalStateException e){
-				e.printStackTrace();
-			}
 			return null;
 		}
 	}
