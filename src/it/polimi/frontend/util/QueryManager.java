@@ -13,7 +13,10 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
+import android.os.Build;
+
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
@@ -66,9 +69,14 @@ public class QueryManager {
 		}
 	}
 
+	@SuppressLint("NewApi")
 	public void loadRequest(){
 		//		System.out.println("Mi connetto per scaricare le richieste...");
-		new LoadDataTask().execute();
+		AsyncTask<Void, Void,  ArrayList<Request>> myTask = new LoadDataTask();
+		if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB)
+		    myTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		else
+		    myTask.execute();
 	}
 
 	public List<Request> getRequests(){
