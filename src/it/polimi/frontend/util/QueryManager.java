@@ -8,11 +8,13 @@ import it.polimi.frontend.activity.GCMIntentService;
 import it.polimi.frontend.activity.LoginSession;
 import it.polimi.frontend.activity.MainActivity;
 import it.polimi.frontend.activity.MyApplication;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -24,6 +26,7 @@ import com.google.identitytoolkit.demo.messageEndpoint.MessageEndpoint;
 import com.google.identitytoolkit.demo.messageEndpoint.model.CollectionResponseMessageData;
 import com.google.identitytoolkit.demo.messageEndpoint.model.MessageData;
 
+@SuppressLint("NewApi")
 public class QueryManager {
 
 	private List<User> users;
@@ -69,7 +72,6 @@ public class QueryManager {
 		}
 	}
 
-	@SuppressLint("NewApi")
 	public void loadRequest(){
 		//		System.out.println("Mi connetto per scaricare le richieste...");
 		AsyncTask<Void, Void,  ArrayList<Request>> myTask = new LoadDataTask();
@@ -98,12 +100,21 @@ public class QueryManager {
 	}
 
 	public void getUserByEmail(String email){
-		new QueryUser(email).execute();
+		AsyncTask<Void, Void, User> myTask = new QueryUser(email);
+		if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB)
+		    myTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		else
+		    myTask.execute();
+		
 	}
 
 	public boolean updateUserDevices(){
+		AsyncTask<Void, Void, Boolean> myTask = new UpdateUserDevice();
 		try {
-			return new UpdateUserDevice().execute().get();
+			if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB)
+			    return myTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
+			else
+			    return myTask.execute().get();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -126,15 +137,28 @@ public class QueryManager {
 
 
 	public void insertUser(User user){
-		new InsertUser(user).execute();
+		AsyncTask<Void, Void, User> myTask = new InsertUser(user);
+		if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB)
+		    myTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		else
+		    myTask.execute();
 	}
 
 	public void updateUser(){
-		new UpdateUser().execute();
+		AsyncTask<Void, Void, User> myTask = new UpdateUser();
+		if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB)
+		    myTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		else
+		    myTask.execute();
 	}
 
 	public void insertRequest(Request request){
-		new InsertRequest(request).execute();
+		AsyncTask<Void, Void, Request> myTask = new InsertRequest(request);
+		if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB)
+		    myTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		else
+		    myTask.execute();
+		
 	}
 
 	public ArrayList<Request> getUserPartecipation(){
@@ -164,15 +188,29 @@ public class QueryManager {
 	}
 
 	public void joinRequest(Request r){
-		new JoinRequest(r).execute();
+		AsyncTask<Void, Void, Boolean> myTask = new JoinRequest(r);
+		if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB)
+		    myTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		else
+		    myTask.execute();
+		
 	}
 
 	public void removeJoinRequest(Request r){
-		new RemoveJoinRequest(r).execute();
+		AsyncTask<Void, Void, Boolean> myTask = new RemoveJoinRequest(r);
+		if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB)
+		    myTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		else
+		    myTask.execute();
 	}
 
 	public void removeOwnerRequest(Request r){
-		new RemoveOwnerRequest(r).execute();
+		AsyncTask<Void, Void, Boolean> myTask = new RemoveOwnerRequest(r);
+		if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB)
+		    myTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		else
+		    myTask.execute();
+		
 		for(int i=0;i<user.getRequests().size();i++){
 			if(user.getRequests().get(i).getId().equals(r.getId())){
 				user.getRequests().remove(i);
@@ -186,13 +224,22 @@ public class QueryManager {
 
 
 	public void insertFeedback(Feedback f){
-		new InsertFeedback(f).execute();
+		AsyncTask<Void, Void, Boolean> myTask = new InsertFeedback(f);
+		if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB)
+		    myTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		else
+		    myTask.execute();
 	}
 
 	public ArrayList<String> getNotification(){
 		if(notification==null){
 			notification = new ArrayList<String>();
-			new NotificationTask().execute();
+			
+			AsyncTask<Void, Void, ArrayList<String>> myTask = new NotificationTask();
+			if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB)
+			    myTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			else
+			    myTask.execute();
 		}
 		return notification;
 
@@ -203,15 +250,24 @@ public class QueryManager {
 	}
 
 	public void queryRequest(String tag){
-		new FilterTask(tag).execute();
+		AsyncTask<Void, Void, ArrayList<Request>> myTask = new FilterTask(tag);
+		if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB)
+		    myTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		else
+		    myTask.execute();
 	}
 
 	public void advancedQuery(String tag, DateTime startA, DateTime startB, DateTime endA, DateTime endB,int maxPA, int maxPB){
+		//NOT USED
 		new AdvancedQuery(tag,startA,startB,endA,endB,maxPA,maxPB);
 	}
 
 	public void registerDevice(){
-		new RegisterDevice().execute();
+		AsyncTask<Void, Void, Void> myTask = new RegisterDevice();
+		if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB)
+		    myTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		else
+		    myTask.execute();
 	}
 
 	public void sortRequest(){
@@ -279,7 +335,7 @@ public class QueryManager {
 			this.maxPB = maxPB;
 
 		}
-
+		
 		@Override
 		protected ArrayList<Request> doInBackground(Void... arg0) {
 			ArrayList<Request> result = new ArrayList<Request>();
