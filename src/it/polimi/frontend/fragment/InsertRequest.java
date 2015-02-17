@@ -42,11 +42,11 @@ public class InsertRequest extends Fragment{
 	private Calendar startDate;
 	private Calendar endDate;
 	private boolean valid;
-
+	private String EMPTY_VALIDATOR;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-
+		EMPTY_VALIDATOR=getString(R.string.emptyValidator);
 		View rootView = inflater.inflate(R.layout.fragment_insert_request,
 				container, false);
 		title = (EditText) rootView.findViewById(R.id.insert_title_edit); 
@@ -57,7 +57,7 @@ public class InsertRequest extends Fragment{
 					valid=true;
 				} else {
 					valid=false;
-					textView.setError("Il titolo può essere vuoto.");
+					textView.setError(EMPTY_VALIDATOR);
 				}
 			}
 		});
@@ -70,7 +70,7 @@ public class InsertRequest extends Fragment{
 					valid=true;
 				} else {
 					valid=false;
-					textView.setError("Aggiungi una descrizione.");
+					textView.setError(EMPTY_VALIDATOR);
 				}
 			}
 		});/*Vecchio codice con EditText
@@ -172,7 +172,7 @@ public class InsertRequest extends Fragment{
 		if(title.getText().equals("") || description.getText().equals("") || tag.getSelectedItem().toString().equals(""))
 			return false;
 		if(startDate.getTimeInMillis()>endDate.getTimeInMillis()){
-			Toast.makeText(MyApplication.getContext(),"La data di fine non può essere precedente a quella di inizio",Toast.LENGTH_SHORT).show();
+			Toast.makeText(MyApplication.getContext(),getString(R.string.startEndValidator),Toast.LENGTH_SHORT).show();
 			return false;
 		}
 		req.setTitle(title.getText().toString());

@@ -64,11 +64,13 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 	private boolean regMode=false, valid=true, linkingAllowed=false;
 	private String photoURL="";
 	private Uri currImageURI;
+	private String EMPTY_VALIDATOR;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		QueryManager.getInstance().addActionListener(this);
 		Storage.getInstance().setListener(this);
+		EMPTY_VALIDATOR=getString(R.string.emptyValidator);
 		View rootView;
 		rootView = inflater.inflate(R.layout.fragment_account_settings,
 				container, false);
@@ -114,7 +116,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 					valid=true;
 				} else {
 					valid=false;
-					textView.setError("Il nome non può essere vuoto.");
+					textView.setError(EMPTY_VALIDATOR);
 				}
 			}
 		});
@@ -127,7 +129,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 					valid=true;
 				} else {
 					valid=false;
-					textView.setError("Il cognome non può essere vuoto.");
+					textView.setError(EMPTY_VALIDATOR);
 				}
 			}
 		});
@@ -162,7 +164,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 							valid=true;
 						} else {
 							valid=false;
-							textView.setError("Mail non valida.");
+							textView.setError(getString(R.string.mailValidator));
 						}
 					}
 				});
@@ -209,7 +211,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 			public void validate(TextView textView, String text) {
 				if(data!=null && data.after(Calendar.getInstance())){
 					valid=false;
-					textView.setError("Non puoi venire dal futuro.");
+					textView.setError(getString(R.string.bDayValidator));
 				} else {
 					valid=true;
 				}
@@ -322,10 +324,10 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 					//					editable(editMode);
 					//					initializeView(getView());
 				} else 
-					Toast.makeText(MyApplication.getContext(), "Qualcosa non va nei campi inseriti.",
+					Toast.makeText(MyApplication.getContext(), getString(R.string.generalValidator),
 							Toast.LENGTH_SHORT).show();
 			} else{
-				Toast.makeText(MyApplication.getContext(), "Nulla è cambiato.",
+				Toast.makeText(MyApplication.getContext(), getString(R.string.noChangeValidator),
 						Toast.LENGTH_SHORT).show();
 				menu.findItem(R.id.editAccount).setVisible(true);
 				menu.findItem(R.id.saveAccount).setVisible(false);
@@ -335,7 +337,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 			}
 			return true;
 		case R.id.cancel:
-			Toast.makeText(MyApplication.getContext(), "Nulla è cambiato.",
+			Toast.makeText(MyApplication.getContext(), getString(R.string.noChangeValidator),
 					Toast.LENGTH_SHORT).show();
 			menu.findItem(R.id.editAccount).setVisible(true);
 			menu.findItem(R.id.saveAccount).setVisible(false);
@@ -441,7 +443,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		Intent intent = new Intent();
 		intent.setType("image/*");
 		intent.setAction(Intent.ACTION_GET_CONTENT);
-		startActivityForResult(Intent.createChooser(intent, "Select picture"), 1 );
+		startActivityForResult(Intent.createChooser(intent, getString(R.string.choosePicture)), 1 );
 	}
 
 	@Override
@@ -475,6 +477,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		return cursor.getString(column_index);
 	}
 
+	//Non dovrebbe servire più, teoricamente
 	public void showProfileURLDialog(View v){
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 
@@ -544,7 +547,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 
 	@Override
 	public void onImageLoading() {
-		String message = "Stiamo completando la tua operazione.";
+		String message = getString(R.string.performingAction);
 		showDialog(message,true);
 
 	}
@@ -553,7 +556,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 	public void onImageLoaded(String path) {
 		hideDialog();
 		if(path==null)
-			Toast.makeText(MyApplication.getContext(), "Errore nel caricamento dell'immagine.",Toast.LENGTH_SHORT).show();
+			Toast.makeText(MyApplication.getContext(), getString(R.string.imageError),Toast.LENGTH_SHORT).show();
 		else{
 			photoURL = path;
 			Picasso.with(getActivity()).load(photoURL).into(profileIV);
@@ -579,7 +582,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 
 	private void setProgressDialog(String message, boolean progress) {
 		mProgressDialog = new ProgressDialog(getActivity());
-		mProgressDialog.setTitle("Attendi...");
+		mProgressDialog.setTitle(getString(R.string.wait));
 		mProgressDialog.setMessage(message);
 		if(progress){
 			mProgressDialog.setMax(100);
@@ -599,7 +602,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 	@Override
 	public void onPerformingAction(int action) {
 		if(action == OnActionListener.INSERT_USER || action == OnActionListener.UPDATE_USER){
-			showDialog("Stiamo portando a termine l'operazione",false);
+			showDialog(getString(R.string.performingAction),false);
 		}
 
 	}
@@ -611,10 +614,10 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 			if(action == OnActionListener.INSERT_USER){
 				User u = (User)result;
 				if(u==null){
-					Toast.makeText(MyApplication.getContext(), "Errore durante la registrazione. Riprova tra qualche minuto.",Toast.LENGTH_SHORT).show();
+					Toast.makeText(MyApplication.getContext(), getString(R.string.registrationError),Toast.LENGTH_SHORT).show();
 					return;
 				}
-				Toast.makeText(MyApplication.getContext(), "Registrazione effettuata.",
+				Toast.makeText(MyApplication.getContext(), getString(R.string.registrationCompleted),
 						Toast.LENGTH_SHORT).show();
 				QueryManager.getInstance().registerDevice();
 				QueryManager.getInstance().loadRequest();
@@ -632,7 +635,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 			if(action == OnActionListener.UPDATE_USER){
 				User u = (User)result;
 				if(u==null){
-					Toast.makeText(MyApplication.getContext(), "Si è verificato un errore durante l'interazione con il server. Riprova tra qualche minuto.",Toast.LENGTH_SHORT).show();
+					Toast.makeText(MyApplication.getContext(), getString(R.string.serverError),Toast.LENGTH_SHORT).show();
 					return;
 				}
 				menu.findItem(R.id.editAccount).setVisible(true);
@@ -640,7 +643,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 				menu.findItem(R.id.cancel).setVisible(false);
 				editMode=false;
 				editable(editMode);
-				Toast.makeText(MyApplication.getContext(), "Dati utente aggiornati correttamente.",
+				Toast.makeText(MyApplication.getContext(), getString(R.string.userUpdateCompleted),
 						Toast.LENGTH_SHORT).show();
 				if(getActivity()!=null && !getActivity().isFinishing()){
 				initializeView(getView());}

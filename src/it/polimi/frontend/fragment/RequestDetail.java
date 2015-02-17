@@ -19,7 +19,6 @@ import com.squareup.picasso.Picasso;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -359,7 +358,7 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 
 	private void setProgressDialog(String message) {
 		mProgressDialog = new ProgressDialog(getActivity());
-		mProgressDialog.setTitle("Attendi...");
+		mProgressDialog.setTitle(getString(R.string.wait));
 		mProgressDialog.setMessage(message);
 	}
 
@@ -368,15 +367,15 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 		String message="";
 		switch(action){
 		case OnActionListener.JOIN:
-			message = "Stiamo completando la tua operazione.";
+			message = getString(R.string.performingAction);
 			showDialog(message);
 			break;
 		case OnActionListener.CANCEL_JOIN:
-			message = "Stiamo completando la tua operazione.";
+			message = getString(R.string.performingAction);
 			showDialog(message);
 			break;
 		case OnActionListener.REMOVE_REQUEST:
-			message = "Stiamo completando la tua operazione.";
+			message = getString(R.string.performingAction);
 			showDialog(message);
 			break;
 		}
@@ -393,17 +392,17 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 				if(ok)
 					join.setText(CANCELLA_PART);
 				else
-					Toast.makeText(MyApplication.getContext(),"Richiesta al completo! Impossibile partecipare.",Toast.LENGTH_SHORT).show();
+					Toast.makeText(MyApplication.getContext(),getString(R.string.maxReachedError),Toast.LENGTH_SHORT).show();
 				break;
 			case OnActionListener.CANCEL_JOIN:
 				if(ok)
 					join.setText(PARTECIPA);
 				else
-					Toast.makeText(MyApplication.getContext(),"È stato impossibile completare la richiesta.",Toast.LENGTH_SHORT).show();
+					Toast.makeText(MyApplication.getContext(),getString(R.string.actionNotPerformed),Toast.LENGTH_SHORT).show();
 				break;
 			case OnActionListener.REMOVE_REQUEST:
 				if(!ok)
-					Toast.makeText(MyApplication.getContext(),"È stato impossibile completare la richiesta.",Toast.LENGTH_SHORT).show();
+					Toast.makeText(MyApplication.getContext(),getString(R.string.actionNotPerformed),Toast.LENGTH_SHORT).show();
 				break;
 			}
 		}

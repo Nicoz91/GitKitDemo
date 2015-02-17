@@ -85,4 +85,23 @@
 
     <string name="title_activity_notification">Notifications</string>
 
+    <string name="emptyValidator">The field can\'t be empty.</string>
+    <string name="mailValidator">Invalid mail.</string>
+    <string name="bDayValidator">You can\'t come from the future.</string>
+    <string name="generalValidator">Something wrong in the fields.</string>
+    <string name="noChangeValidator">Nothing changed.</string>
+    <string name="choosePicture">Select an image.</string>
+    <string name="performingAction">We\'re performing the operation.</string>
+    <string name="imageError">Error during the image loading.</string>
+    <string name="wait">Wait&#8230;</string>
+    <string name="registrationError">Error during registration. Try again in a few minutes.</string>
+    <string name="registrationCompleted">Registration completed.</string>
+    <string name="serverError">Error during server interaction. Try again in a few minutes.</string>
+    <string name="userUpdateCompleted">User data successfully updated.</string>
+    <string name="actionNotPerformed">It was impossible to complete the action.</string>
+    <string name="positionRequested">Requested position.</string>
+    <string name="startEndValidator">The end date can\'t be before the start date.</string>
+    <string name="maxReachedError">Max reached! You can\'t join.</string>
+    <string name="youAreHere">You are here!</string>
+    
 </resources>

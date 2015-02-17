@@ -170,14 +170,14 @@ public class FeedbackDetail extends Fragment implements OnClickListener, OnRatin
 			mProgressDialog = null;
 		}
 		mProgressDialog = new ProgressDialog(getActivity());
-		mProgressDialog.setTitle("Attendi...");
+		mProgressDialog.setTitle(getString(R.string.wait));
 		mProgressDialog.setMessage(message);
 	}
 
 	@Override
 	public void onPerformingAction(int action) {
 		if(action == OnActionListener.INSERT_FEEDBACK)
-			showDialog("Attendi mentre completiamo la richiesta...");
+			showDialog(getString(R.string.performingAction));
 	}
 
 	@Override
@@ -186,7 +186,7 @@ public class FeedbackDetail extends Fragment implements OnClickListener, OnRatin
 			hideDialog();
 			boolean ok = (Boolean) result;
 			if(!ok)
-				Toast.makeText(MyApplication.getContext(),"È stato impossibile completare la richiesta.",Toast.LENGTH_SHORT).show();		
+				Toast.makeText(MyApplication.getContext(),getString(R.string.actionNotPerformed),Toast.LENGTH_SHORT).show();		
 			else
 				update();
 		}

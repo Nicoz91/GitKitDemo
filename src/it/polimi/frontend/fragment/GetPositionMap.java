@@ -36,13 +36,13 @@ public class GetPositionMap extends Fragment{
 			public void onMapClick(LatLng point) {
 				if(marker==null){
 					marker = new MarkerOptions().draggable(true).position(
-							new LatLng(point.latitude, point.longitude)).title("Posizione Richiesta");
+							new LatLng(point.latitude, point.longitude)).title(getString(R.string.positionRequested));
 					map.addMarker(marker);
 					position = new LatLng(point.latitude,point.longitude);
 				}
 				else{
 					marker = new MarkerOptions().draggable(true).position(
-							new LatLng(point.latitude, point.longitude)).title("Posizione Richiesta");
+							new LatLng(point.latitude, point.longitude)).title(getString(R.string.positionRequested));
 				}
 
 			}

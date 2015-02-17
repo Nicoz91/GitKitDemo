@@ -59,7 +59,7 @@ public class NotificationDetail extends Fragment implements OnActionListener{
 		if(action == OnActionListener.NOTIFICATION){
 			ArrayList<String> not = (ArrayList<String>) result;
 			if(not == null)
-				Toast.makeText(MyApplication.getContext(),"Impossibile contattare il server...",Toast.LENGTH_SHORT).show();				
+				Toast.makeText(MyApplication.getContext(),getString(R.string.actionNotPerformed),Toast.LENGTH_SHORT).show();				
 			else{
 				notification = not;
 				Context c = getActivity();
