@@ -26,11 +26,11 @@
     <string name="surnameLabel">Surname:</string>
     <string name="surnameHint">Your surname</string>
     <string name="pwAccountLabel">App account:</string>
-    <string name="pwAccountHint">Your account's mail</string>
+    <string name="pwAccountHint">Your account\'s mail</string>
     <string name="gmailAccountLabel">Google account:</string>
-    <string name="gmailAccountHint">Your Google's account</string>
+    <string name="gmailAccountHint">Your Google\'s account</string>
     <string name="fbAccountLabel">Facebook Account:</string>
-    <string name="fbAccountHint">Your Facebook's account</string>
+    <string name="fbAccountHint">Your Facebook\'s account</string>
     <string name="bDayLabel">Birthday:</string>
     <string name="bDayHint">Your birthday</string>
     <string name="genderLabel">Sex:</string>
@@ -74,7 +74,7 @@
     <string name="detailMale">Male, \u0020</string>
     <string name="detailFemale">Female, \u0020</string>
     <string name="detailYears">\u0020 years old</string>
-    <string name="fbNotAllowed">You can't leave a feedback to this user.\n-either tou haven't joined yet.\n-or you aren't in the Joining Tab.\n-or the request isn't past yet.\n-or you already left e feedback to this user for this request</string>
+    <string name="fbNotAllowed">You can\'t leave a feedback to this user.\n-either tou haven\'t joined yet.\n-or you aren\'t in the Joining Tab.\n-or the request isn\'t past yet.\n-or you already left e feedback to this user for this request</string>
 
     <string-array name="tag_array">
         <item>Food</item>
