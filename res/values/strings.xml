@@ -83,6 +83,6 @@
         <item>Studio</item>
     </string-array>
 
-    <string name="title_activity_notification">NotificationActivity</string>
+    <string name="title_activity_notification">Notifiche</string>
 
 </resources>

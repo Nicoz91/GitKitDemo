@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="showNotification">Notification</string>
+    <string name="dateSliderTitle">Selected date</string>
+    <string name="app_name">Gitkit Demo</string>
+    <string name="profile_picture_desc">Profile picture</string>
+    <string name="welcome">Welcome</string>
+    <string name="sign_in_label">Sign in</string>
+    <string name="manage_account_label">Manage account</string>
+    <string name="sign_out_label">Sign out</string>
+    <string name="fb_app_id">626114737492775</string>
+    <string name="title_activity_tabbed">Requests</string>
+    <string name="request_tab_title">All</string>
+    <string name="map_tab_title">Map</string>
+    <string name="owner_tab_title">Your</string>
+    <string name="joined_tab_title">Joining</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="logout">Log out</string>
+    <string name="insertRequest">New</string>
+    <string name="iconDesc">Descr</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_request">New Request</string>
+    <string name="nameLabel">Name:</string>
+    <string name="nameHint">Your name</string>
+    <string name="surnameLabel">Surname:</string>
+    <string name="surnameHint">Your surname</string>
+    <string name="pwAccountLabel">App account:</string>
+    <string name="pwAccountHint">Your account's mail</string>
+    <string name="gmailAccountLabel">Google account:</string>
+    <string name="gmailAccountHint">Your Google's account</string>
+    <string name="fbAccountLabel">Facebook Account:</string>
+    <string name="fbAccountHint">Your Facebook's account</string>
+    <string name="bDayLabel">Birthday:</string>
+    <string name="bDayHint">Your birthday</string>
+    <string name="genderLabel">Sex:</string>
+    <string name="genderMale">M</string>
+    <string name="genderFemale">F</string>
+    <string name="edit">Edit</string>
+    <string name="save">Save</string>
+    <string name="join">Join</string>
+    <string name="insertFeedback">Leave Feedback</string>
+    <string name="cancelPartecipation">Cancel join</string>
+    <string name="cancelRequest">Delete Request</string>
+    <string name="showPartecipants">Show Partecipants</string>
+    <string name="hidePartecipants">Hide Partecipants</string>
+    <string name="commentTitle">Comment: </string>
+    <string name="commentHint">A descriptive evaluation.</string>
+    <string name="sendFeedback">Leave Feedback</string>
+    <string name="title_activity_test">TestActivity</string>
+    <string name="insert_title_label">Title:</string>
+    <string name="insert_title_edit">Title</string>
+    <string name="insert_description_label">Description:</string>
+    <string name="insert_description_edit">Description</string>
+    <string name="insert_tag_label">Tag:</string>
+    <string name="insert_tag_edit">Tag</string>
+    <string name="insert_start_label">Start:</string>
+    <string name="insert_start_edit">Start</string>
+    <string name="insert_end_label">End:</string>
+    <string name="insert_end_edit">End</string>
+    <string name="insert_max_label">Partecipants:</string>
+    <string name="insert_max_edit">1</string>
+    <string name="title_activity_wait">No Connection</string>
+    <string name="no_data">No requests to list.</string>
+    <string name="no_user">Nobody has joined yet.</string>
+    <string name="no_fb">Nobody has left a feedback yet.</string>
+    <string name="search_hint">Search requests.</string>
+    <string name="search_title">Search</string>
+    <string name="startDateLabel">Date:\u0020</string>
+    <string name="durationLabel">Duration:\u0020</string>
+    <string name="typeLabel">Type:</string>
+    <string name="maxLabel">Max n°:</string>
+    <string name="not_specified">Not specified</string>
+    <string name="detailMale">Male, \u0020</string>
+    <string name="detailFemale">Female, \u0020</string>
+    <string name="detailYears">\u0020 years old</string>
+    <string name="fbNotAllowed">You can't leave a feedback to this user.\n-either tou haven't joined yet.\n-or you aren't in the Joining Tab.\n-or the request isn't past yet.\n-or you already left e feedback to this user for this request</string>
+
+    <string-array name="tag_array">
+        <item>Food</item>
+        <item>Sport</item>
+        <item>Game</item>
+        <item>Study</item>
+    </string-array>
+
+    <string name="title_activity_notification">Notifications</string>
+
+</resources>
