@@ -106,8 +106,6 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 			if(!req.getPastRequest())
 				present.add(req);
 
-		requests = present;
-
 		CircleOptions circleOptions = new CircleOptions().center(position) // set center
 				.radius(200) // set radius in meters
 				.fillColor(0x5500ff00)
@@ -119,8 +117,8 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 		map.addCircle(circleOptions);
 
 		map.addMarker(new MarkerOptions().position(position).title("Ti Trovi qui!").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-		if(requests!=null && requests.size()>0)
-			setRequestMark(requests);
+		if(present!=null && present.size()>0)
+			setRequestMark(present);
 
 	}
 
@@ -135,9 +133,7 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 			for(Request req : requests)
 				if(!req.getPastRequest())
 					present.add(req);
-
-			requests = present;
-			setRequestMark(requests);	
+			setRequestMark(present);	
 		}
 		else{
 			//RequestLoader.getInstance().loadRequest();
@@ -190,7 +186,7 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 		} else {
 			// In single-pane mode, simply start the detail fragment
 			// for the selected item ID.
-			FeedbackDetail fragment = new FeedbackDetail(user,MasterFragment.ALL_REQUEST,null);
+			FeedbackDetail fragment = new FeedbackDetail(user,MasterFragment.ALL_REQUEST,requestId);
 			Fragment reqDetail=getChildFragmentManager().findFragmentByTag(RequestDetail.ID);
 
 			getChildFragmentManager().beginTransaction()

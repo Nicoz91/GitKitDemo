@@ -368,16 +368,16 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 		String message="";
 		switch(action){
 		case OnActionListener.JOIN:
-			showDialog(message);
 			message = "Stiamo completando la tua operazione.";
+			showDialog(message);
 			break;
 		case OnActionListener.CANCEL_JOIN:
-			showDialog(message);
 			message = "Stiamo completando la tua operazione.";
+			showDialog(message);
 			break;
 		case OnActionListener.REMOVE_REQUEST:
-			showDialog(message);
 			message = "Stiamo completando la tua operazione.";
+			showDialog(message);
 			break;
 		}
 

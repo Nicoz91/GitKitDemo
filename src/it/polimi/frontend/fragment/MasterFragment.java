@@ -57,23 +57,21 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 			RequestList requestListFragment = null;
 			switch (mode) {
 			case OWNER_REQUEST:
-				requests = QueryManager.getInstance().getCurrentUser().getRequests();
+				if(QueryManager.getInstance().getCurrentUser().getRequests()!=null)
+				requests.addAll(QueryManager.getInstance().getCurrentUser().getRequests());
 //				System.out.println("Dovrei aver recuperato le richieste dell'owner");
 				break;
 			case JOINED_REQUEST:
-				requests = QueryManager.getInstance().getUserPartecipation();
-				if(requests==null)
-					requests = new ArrayList<Request>();
+				if(QueryManager.getInstance().getCurrentUser().getRequests()!=null)
+				requests.addAll(QueryManager.getInstance().getUserPartecipation());
 				break;
 			default: //Caso ALL_REQUEST + tutti gli altri possibili
-				requests = QueryManager.getInstance().getRequests();
-				ArrayList<Request>	present = new ArrayList<Request>();
-				for(Request req : requests)
+				ArrayList<Request> app = (ArrayList<Request>) QueryManager.getInstance().getRequests();
+				if(app!=null){
+				for(Request req : app)
 					if(!req.getPastRequest())
-						present.add(req);
-				
-				requests = present;
-				
+						requests.add(req);
+				}
 				break;
 			}
 			requestListFragment = new RequestList(requests, mode);
