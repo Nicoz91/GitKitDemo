@@ -2,6 +2,7 @@ package it.polimi.frontend.fragment;
 
 import it.polimi.appengine.entity.manager.model.User;
 import it.polimi.frontend.activity.LoginSession;
+import it.polimi.frontend.activity.MainActivity;
 import it.polimi.frontend.activity.MyApplication;
 import it.polimi.frontend.activity.R;
 import it.polimi.frontend.activity.TabbedActivity;
@@ -193,6 +194,16 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 					data.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.ITALIAN)
 					+" "+data.get(Calendar.YEAR));
 		}
+		else{
+			data = Calendar.getInstance();
+			bDayET.setText(data.get(Calendar.DAY_OF_MONTH)+" "+
+					data.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.ITALIAN)
+					+" "+data.get(Calendar.YEAR));
+			bDayTV.setText(data.get(Calendar.DAY_OF_MONTH)+" "+
+					data.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.ITALIAN)
+					+" "+data.get(Calendar.YEAR));
+		}
+		
 		bDayET.setOnClickListener(this);
 		bDayET.addTextChangedListener(new TextValidator(bDayET){
 			@Override
@@ -593,7 +604,13 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 						Toast.LENGTH_SHORT).show();
 				QueryManager.getInstance().registerDevice();
 				QueryManager.getInstance().loadRequest();
-				startActivity(new Intent(getActivity(), TabbedActivity.class));
+				//Fai partire la main activity
+				Intent i = new Intent(getActivity(), MainActivity.class);
+				i.putExtra("Reason", "Network");
+				i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(i);				
+				//
+				//startActivity(new Intent(getActivity(), MainActivity.class));
 				getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
 				this.getActivity().finish();
 			}

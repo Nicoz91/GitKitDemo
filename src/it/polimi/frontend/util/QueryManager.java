@@ -8,18 +8,12 @@ import it.polimi.frontend.activity.GCMIntentService;
 import it.polimi.frontend.activity.LoginSession;
 import it.polimi.frontend.activity.MainActivity;
 import it.polimi.frontend.activity.MyApplication;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
-
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
@@ -67,7 +61,9 @@ public class QueryManager {
 	public void removeListener(OnRequestLoadedListener listener){
 		try{
 			this.listeners.remove(listener);
-		}catch(Exception e){}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 
 	public void loadRequest(){
@@ -100,14 +96,10 @@ public class QueryManager {
 	public boolean updateUserDevices(){
 		try {
 			return new UpdateUserDevice().execute().get();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
 			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return false;
 		}
-		return false;
 	}
 
 	public void notifyListener(){
@@ -389,8 +381,7 @@ public class QueryManager {
 					message.notify(notify, device,to.getId()).execute();
 					System.out.println("Sto per chiamare la query...");
 				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			return null;
@@ -484,7 +475,7 @@ public class QueryManager {
 					e.printStackTrace();
 					System.out.println("Like no tomorrow");}
 
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				System.out.println("Requests null");
 			}
@@ -531,8 +522,7 @@ public class QueryManager {
 			User result = null;
 			try {
 				result = manager.getUserByEmail(email).execute();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
+			} catch (Exception e) {
 				e.printStackTrace();
 				result = null;
 			}
@@ -558,8 +548,7 @@ public class QueryManager {
 			User u = null;
 			try {
 				u = manager.getUserByEmail(LoginSession.getUser().getEmail()).execute();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
+			} catch (Exception e1) {
 				e1.printStackTrace();
 				return false;
 			}
@@ -579,7 +568,7 @@ public class QueryManager {
 			u.getDevices().add(LoginSession.getDeviceId());
 			try {
 				manager.updateUser(u).execute();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				System.out.println("Eccezione quindi torno null");
 				e.printStackTrace();
 				return false;
@@ -611,7 +600,7 @@ public class QueryManager {
 			User result = null;
 			try {
 				result = manager.insertUser(u).execute();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				return null;
 			}
@@ -653,8 +642,7 @@ public class QueryManager {
 			User u = new User();
 			try {
 				u = manager.getUserByEmail(LoginSession.getUser().getEmail()).execute();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
+			} catch (Exception e1) {
 				e1.printStackTrace();
 				return null;
 			}
@@ -664,7 +652,7 @@ public class QueryManager {
 
 			try {
 				u = manager.updateUser(u).execute();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				return null;
 			}
@@ -728,8 +716,7 @@ public class QueryManager {
 				newReq = manager.getRequest(r.getId()).execute();
 				if(newReq!=null)
 					System.out.println("Ho caricato la richiesta corretta e aggiornata");
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
+			} catch (Exception e1) {
 				e1.printStackTrace();
 				return false;
 			}
@@ -759,7 +746,7 @@ public class QueryManager {
 				new PushMessage(user.getName()+ " "+ user.getSurname() + " partecipa alla richiesta "+r.getTitle(),oldOwner).execute();
 				//				message.notify("Notifica", u.getDevices().get(1)).execute();
 
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				return false;
 			}
@@ -797,7 +784,7 @@ public class QueryManager {
 			User u = new User();
 			try {
 				u = manager.getUserByEmail(LoginSession.getUser().getEmail()).execute();
-			} catch (IOException e1) {
+			} catch (Exception e1) {
 				e1.printStackTrace();
 				return false;
 			}
@@ -842,7 +829,7 @@ public class QueryManager {
 				manager.updateRequest(r).execute();
 				new PushMessage(user.getName()+ " "+ user.getSurname() + " non partecipa più alla richiesta "+r.getTitle(),oldOwner).execute();
 
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				return false;
 			}
@@ -877,7 +864,7 @@ public class QueryManager {
 			User u = new User();
 			try {
 				u = manager.getUserByEmail(LoginSession.getUser().getEmail()).execute();
-			} catch (IOException e1) {
+			} catch (Exception e1) {
 				e1.printStackTrace();
 				return false;
 			}
@@ -907,7 +894,7 @@ public class QueryManager {
 				if(partecipant!=null)
 					for(User us : partecipant)
 						new PushMessage("L'utente "+ user.getName()+" "+user.getSurname()+" ha cancellato la richiesta a cui partecipavi.",us).execute();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				return false;
 			}
@@ -943,8 +930,7 @@ public class QueryManager {
 			User u = new User();
 			try {
 				u = manager.getUserByEmail(LoginSession.getUser().getEmail()).execute();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
+			} catch (Exception e1) {
 				e1.printStackTrace();
 				return false;
 			}
@@ -963,7 +949,7 @@ public class QueryManager {
 				else
 					new PushMessage("Lutente "+ user.getName()+" "+user.getSurname()+" ti ha lasciato un feedback.",getUserFromId(f.getToId())).execute();
 
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				return false;
 			}
@@ -996,8 +982,7 @@ public class QueryManager {
 			User u = new User();
 			try {
 				u = manager.getUserByEmail(LoginSession.getUser().getEmail()).execute();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
+			} catch (Exception e1) {
 				e1.printStackTrace();
 				u = null;
 			}
@@ -1013,7 +998,7 @@ public class QueryManager {
 			try {
 				manager.updateUser(u).execute();
 
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				u = null;
 			}
@@ -1038,7 +1023,7 @@ public class QueryManager {
 			CollectionResponseMessageData not = null;
 			try {
 				not = message.getNotification(user.getId()).execute();
-			} catch (IOException e1) {
+			} catch (Exception e1) {
 				e1.printStackTrace();
 				return null;
 			}

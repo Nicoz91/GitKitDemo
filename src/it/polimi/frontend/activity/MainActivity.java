@@ -189,10 +189,13 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 		} else if (i!=null && i.getStringExtra("Reason")!=null && i.getStringExtra("Reason").equals("Exit")){
 			QueryManager.destroy();
 			this.finish();
-		}
-		else if(session!=null){
-			signing = false;
-			QueryManager.getInstance().getUserByEmail(session.getEmail());
+		}else if (i!=null && i.getStringExtra("Reason")!=null && i.getStringExtra("Reason").equals("Registered")){
+			showProfilePage();
+		}else if (i!=null && i.getStringExtra("Reason")!=null && i.getStringExtra("Reason").equals("Network")){
+			if(session!=null)
+				QueryManager.getInstance().getUserByEmail(session.getEmail());
+			else
+				showSignInPage();
 		}
 	}
 
@@ -225,7 +228,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 				}
 
 				hideDialog();
-				if(session!=null && sessionToken!=null && u!=null){
+				if(session!=null && sessionToken!=null && u!=null && u.getName()!=null && !u.getName().equals("")){
 					showProfilePage();
 				}else
 					showSignInPage();

@@ -100,21 +100,21 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 	@Override
 	public void onRequestLoaded(List<Request> requests) {
 		map.clear();
-		
+
 		ArrayList<Request>	present = new ArrayList<Request>();
 		for(Request req : requests)
 			if(!req.getPastRequest())
 				present.add(req);
-		
+
 		requests = present;
-		
+
 		CircleOptions circleOptions = new CircleOptions().center(position) // set center
 				.radius(200) // set radius in meters
 				.fillColor(0x5500ff00)
 				.strokeWidth(2)
 				.strokeColor(Color.BLACK);
-	
-	
+
+
 
 		map.addCircle(circleOptions);
 
@@ -135,14 +135,14 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 			for(Request req : requests)
 				if(!req.getPastRequest())
 					present.add(req);
-			
+
 			requests = present;
 			setRequestMark(requests);	
 		}
 		else{
 			//RequestLoader.getInstance().loadRequest();
 		}
-		
+
 
 		// Move the camera instantly to hamburg with a zoom of 15.
 		map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15));
@@ -164,14 +164,16 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 			.add(R.id.mapContainer,detailContFragment,DetailContainerFragment.ID)
 			.commit();
 		} else {
-			RequestDetail fragment = new RequestDetail(markers.get(m),MasterFragment.ALL_REQUEST);
-			Fragment mapFragment=getChildFragmentManager().findFragmentById(R.id.map);
+			if(markers.get(m)!=null){
+				RequestDetail fragment = new RequestDetail(markers.get(m),MasterFragment.ALL_REQUEST);
+				Fragment mapFragment=getChildFragmentManager().findFragmentById(R.id.map);
 
-			getChildFragmentManager().beginTransaction()
-			.hide(mapFragment)
-			.addToBackStack(RequestDetail.ID)
-			.add(R.id.mapContainer,fragment,RequestDetail.ID)
-			.commit();
+				getChildFragmentManager().beginTransaction()
+				.hide(mapFragment)
+				.addToBackStack(RequestDetail.ID)
+				.add(R.id.mapContainer,fragment,RequestDetail.ID)
+				.commit();
+			}
 		}
 	}
 
@@ -210,7 +212,7 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 	@Override
 	public void onRequestLoading() {
 		// TODO eventuali modifiche del layout durante il caricamento delle richieste.
-		
+
 	}
 
 }

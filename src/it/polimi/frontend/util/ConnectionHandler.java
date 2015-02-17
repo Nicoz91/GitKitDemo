@@ -41,7 +41,10 @@ public class ConnectionHandler extends BroadcastReceiver {
 		if(isConnected(context) && !state)
 		{
 			state = true;
-			context.startActivity(new Intent(context, MainActivity.class));
+			Intent i = new Intent(context, MainActivity.class);
+			i.putExtra("Reason", "Network");
+			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			context.startActivity(i);
 			//QueryManager.getInstance().loadRequest();
 
 		}
