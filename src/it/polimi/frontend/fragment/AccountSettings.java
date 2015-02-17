@@ -5,7 +5,6 @@ import it.polimi.frontend.activity.LoginSession;
 import it.polimi.frontend.activity.MainActivity;
 import it.polimi.frontend.activity.MyApplication;
 import it.polimi.frontend.activity.R;
-import it.polimi.frontend.activity.TabbedActivity;
 import it.polimi.frontend.util.QueryManager;
 import it.polimi.frontend.util.QueryManager.OnActionListener;
 import it.polimi.frontend.util.Storage;
@@ -62,7 +61,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 	private User user;
 	private final static int PW=0,GMAIL=1,FB=2;
 	private boolean accountType[]={false,false,false};
-	private boolean regMode=false, valid=true;
+	private boolean regMode=false, valid=true, linkingAllowed=false;
 	private String photoURL="";
 	private Uri currImageURI;
 
@@ -245,12 +244,16 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 							view.invalidate();
 						}catch(Exception e){e.printStackTrace();}
 						//TODO inserendo qua il dialog funziona ma non sono sicuro sia modo corretto
-						showGallery();
+						//showGallery();
 						//showProfileURLDialog(v);
 						break;
 					case MotionEvent.ACTION_UP:
+						//Inserendo il performClick non dovrebbe essere necessario chiamare i metodi qua dentro.
+						v.performClick();
+						break;
 					case MotionEvent.ACTION_CANCEL: 
 						view = (ImageView) v;
+						v.performClick();
 						try{
 							//clear the overlay
 							view.getDrawable().clearColorFilter();
@@ -301,6 +304,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		case R.id.editAccount:
 			menu.findItem(R.id.editAccount).setVisible(false);
 			menu.findItem(R.id.saveAccount).setVisible(true);
+			menu.findItem(R.id.cancel).setVisible(true);
 			editMode=true;
 			editable(editMode);
 			return true;
@@ -325,9 +329,19 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 						Toast.LENGTH_SHORT).show();
 				menu.findItem(R.id.editAccount).setVisible(true);
 				menu.findItem(R.id.saveAccount).setVisible(false);
+				menu.findItem(R.id.cancel).setVisible(false);
 				editMode=false;
 				editable(editMode);
 			}
+			return true;
+		case R.id.cancel:
+			Toast.makeText(MyApplication.getContext(), "Nulla è cambiato.",
+					Toast.LENGTH_SHORT).show();
+			menu.findItem(R.id.editAccount).setVisible(true);
+			menu.findItem(R.id.saveAccount).setVisible(false);
+			menu.findItem(R.id.cancel).setVisible(false);
+			editMode=false;
+			editable(editMode);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -504,7 +518,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 			bDayTV.setVisibility(View.GONE);
 			bDayET.setVisibility(View.VISIBLE);
 			for(int i=0; i<accountType.length;i++){
-				if (accountType[i]){//solo se è tra i tipi di account visibili
+				if (accountType[i] && linkingAllowed){//solo se è tra i tipi di account visibili
 					accountTV[i].setVisibility(View.GONE);
 					accountET[i].setVisibility(View.VISIBLE);
 				}
@@ -517,7 +531,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 			bDayTV.setVisibility(View.VISIBLE);
 			bDayET.setVisibility(View.GONE);
 			for(int i=0; i<accountType.length;i++){
-				if (accountType[i]){//solo se è tra i tipi di account visibili
+				if (accountType[i] && linkingAllowed){//solo se è tra i tipi di account visibili
 					accountTV[i].setVisibility(View.VISIBLE);
 					accountET[i].setVisibility(View.GONE);
 				}
@@ -623,6 +637,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 				}
 				menu.findItem(R.id.editAccount).setVisible(true);
 				menu.findItem(R.id.saveAccount).setVisible(false);
+				menu.findItem(R.id.cancel).setVisible(false);
 				editMode=false;
 				editable(editMode);
 				Toast.makeText(MyApplication.getContext(), "Dati utente aggiornati correttamente.",

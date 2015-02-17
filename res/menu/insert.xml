@@ -27,14 +27,12 @@
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/insert_done"
-        android:icon="@android:drawable/ic_menu_save"
+        android:icon="@drawable/ic_menu_mark"
         android:orderInCategory="100"
         android:title="Salva"
         android:visible="false"
         app:showAsAction="ifRoom"/>
-	<!--  Icone per qualche motivo non raggiungibili anche se presenti
-        android:icon="@android:drawable/ic_menu_forward"
-        android:icon="@android:drawable/ic_menu_back"
-        android:icon="@android:drawable/ic_menu_mark"
+	<!--  Alternativa al 'Mark' per il salva
+        android:icon="@android:drawable/ic_menu_save"
         -->
 </menu>
