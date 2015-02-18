@@ -98,11 +98,13 @@
     <string name="registrationCompleted">Registration completed.</string>
     <string name="serverError">Error during server interaction. Try again in a few minutes.</string>
     <string name="userUpdateCompleted">User data successfully updated.</string>
-    <string name="actionNotPerformed">It was impossible to complete the action.</string>
+    <string name="actionNotPerformed">It was impossible to complete the operation.</string>
     <string name="positionRequested">Requested position.</string>
     <string name="startEndValidator">The end date can\'t be before the start date.</string>
     <string name="maxReachedError">Max reached! You can\'t join.</string>
     <string name="youAreHere">You are here!</string>
     <string name="serverConnection">Server connection&#8230;</string>
     <string name="loadingRequests">Loading requests.</string>
+    <string name="insertPosition">Insert e position on the map.</string>
+    <string name="requestCreated">Request successfully created.</string>
 </resources>

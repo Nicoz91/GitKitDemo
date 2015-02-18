@@ -123,7 +123,7 @@ public class RequestActivity extends ActionBarActivity implements OnActionListen
 				QueryManager.getInstance().insertRequest(req);
 			}
 			else 
-				Toast.makeText(MyApplication.getContext(),"Inserisci una posizione sulla mappa",Toast.LENGTH_SHORT).show();
+				Toast.makeText(MyApplication.getContext(),getString(R.string.insertPosition),Toast.LENGTH_SHORT).show();
 
 			return true;
 		default:
@@ -158,14 +158,14 @@ public class RequestActivity extends ActionBarActivity implements OnActionListen
 			mProgressDialog = null;
 		}
 		mProgressDialog = new ProgressDialog(this);
-		mProgressDialog.setTitle("Attendi...");
+		mProgressDialog.setTitle(getString(R.string.wait));
 		mProgressDialog.setMessage(message);
 	}
 	
 	@Override
 	public void onPerformingAction(int action) {
 		if(action == OnActionListener.INSERT_REQUEST){
-			showDialog("Stiamo completando la tua richiesta...");
+			showDialog(getString(R.string.performingAction));
 		}
 		
 	}
@@ -176,9 +176,9 @@ public class RequestActivity extends ActionBarActivity implements OnActionListen
 		if(action == OnActionListener.INSERT_REQUEST){
 			Request r = (Request)result;
 			if(r==null)
-				Toast.makeText(MyApplication.getContext(),"Si è verificato un errore durante l'operazione...",Toast.LENGTH_SHORT).show();
+				Toast.makeText(MyApplication.getContext(),getString(R.string.actionNotPerformed),Toast.LENGTH_SHORT).show();
 			else
-				Toast.makeText(MyApplication.getContext(),"Richiesta inserita correttamente.",Toast.LENGTH_SHORT).show();
+				Toast.makeText(MyApplication.getContext(),getString(R.string.requestCreated),Toast.LENGTH_SHORT).show();
 			this.finish();
 		}
 		
