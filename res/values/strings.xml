@@ -103,6 +103,8 @@
     <string name="startEndValidator">La data di fine non può essere precedente a quella di inizio.</string>
     <string name="maxReachedError">Richiesta al completo! Impossibile partecipare.</string>
     <string name="youAreHere">Ti trovi qui!</string>
+    <string name="serverConnection">Connessione al server&#8230;</string>
+    <string name="loadingRequests">Sto caricando le richieste.</string>
     
     
 </resources>

@@ -210,7 +210,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 	@Override
 	public void onPerformingAction(int action) {
 		if(action == OnActionListener.GET_USER)
-			showDialog("Connessione al server...");
+			showDialog(getString(R.string.serverConnection));
 	}
 
 	@Override
@@ -219,7 +219,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 			User u = (User)result;
 			if(!signing){
 				if(u == null){
-					Toast.makeText(MainActivity.this, "Si è verificato un problema nella connessione con il server.", Toast.LENGTH_LONG).show();
+					Toast.makeText(MainActivity.this, getString(R.string.serverError), Toast.LENGTH_LONG).show();
 					return;
 				}
 
@@ -236,7 +236,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 			}else{
 				try {	
 					if(u == null){
-						Toast.makeText(MainActivity.this, "Si è verificato un problema nella connessione con il server.", Toast.LENGTH_LONG).show();
+						Toast.makeText(MainActivity.this, getString(R.string.serverError), Toast.LENGTH_LONG).show();
 						return;
 					}
 
@@ -261,7 +261,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 					}
 					return;
 				} catch (Exception e) {
-					Toast.makeText(MainActivity.this, "Si è verificato un problema nella connessione con il server.", Toast.LENGTH_LONG).show();
+					Toast.makeText(MainActivity.this, getString(R.string.serverError), Toast.LENGTH_LONG).show();
 					e.printStackTrace();
 				}
 			}
@@ -291,13 +291,13 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 			mProgressDialog = null;
 		}
 		mProgressDialog = new ProgressDialog(this);
-		mProgressDialog.setTitle("Attendi...");
+		mProgressDialog.setTitle(getString(R.string.wait));
 		mProgressDialog.setMessage(message);
 	}
 
 	@Override
 	public void onRequestLoading() {
-		showDialog("Sto caricando le richieste");
+		showDialog(getString(R.string.loadingRequests));
 	}
 
 	@Override

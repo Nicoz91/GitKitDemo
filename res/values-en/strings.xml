@@ -103,5 +103,6 @@
     <string name="startEndValidator">The end date can\'t be before the start date.</string>
     <string name="maxReachedError">Max reached! You can\'t join.</string>
     <string name="youAreHere">You are here!</string>
-    
+    <string name="serverConnection">Server connection&#8230;</string>
+    <string name="loadingRequests">Loading requests.</string>
 </resources>
