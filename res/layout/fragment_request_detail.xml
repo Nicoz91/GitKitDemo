@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:divider="?android:attr/dividerVertical"
+    android:orientation="vertical"
     android:showDividers="middle" >
 
     <LinearLayout
@@ -59,9 +59,9 @@
         <TextView
             android:id="@+id/titleLabel"
             style="@style/titleTextStyle"
-            android:gravity="left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="left"
             android:text="@string/insert_title_label" />
 
         <TextView
@@ -107,7 +107,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
     </LinearLayout>
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -150,17 +150,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/joinReq"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/join" />
+        android:orientation="horizontal" >
 
-    <Button
-        android:id="@+id/showPartecipant"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/showPartecipants" />
+        <Button
+            android:id="@+id/joinReq"
+            style="@style/buttonStyle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="@string/join" />
+
+        <Button
+            android:id="@+id/showPartecipant"
+            style="@style/buttonStyle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="@string/showPartecipants" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/empty"

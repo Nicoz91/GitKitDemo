@@ -45,5 +45,15 @@
         <item name="android:textStyle">bold</item>
         <item name="android:gravity">center_vertical|right</item>
     </style>
+    <!-- Style per bottoni. Utile generatore online: http://angrytools.com/android/button/ -->
+    <style name="buttonStyle">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:background">@drawable/button_shape</item>
+    </style>
 
 </resources>
