@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="waiting">Provo a connettermi al server</string>
     <string name="showNotification">Notifiche</string>
     <string name="dateSliderTitle">Selected date</string>
     <string name="app_name">Gitkit Demo</string>

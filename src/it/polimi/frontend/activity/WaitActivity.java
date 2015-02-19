@@ -2,6 +2,7 @@ package it.polimi.frontend.activity;
 
 import it.polimi.frontend.util.ConnectionHandler;
 import android.support.v7.app.ActionBarActivity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,6 +14,7 @@ public class WaitActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_wait);
+		showDialog(getString(R.string.waiting));
 	}
 
 	@Override
@@ -46,6 +48,30 @@ public class WaitActivity extends ActionBarActivity {
 			this.finish();
 			//super.onBackPressed();
 			}
+	}
+	
+	private ProgressDialog mProgressDialog;
+	protected void showDialog(String message) {
+		
+		setProgressDialog(message);
+		if(this!=null && !this.isFinishing())
+			mProgressDialog.show();
+	}
+
+	protected void hideDialog() {
+		if (mProgressDialog != null && mProgressDialog.isShowing()) {
+			mProgressDialog.dismiss();
+		}
+	}
+
+	private void setProgressDialog(String message) {
+		if(mProgressDialog!=null){
+			mProgressDialog.dismiss();
+			mProgressDialog = null;
+		}
+		mProgressDialog = new ProgressDialog(this);
+		mProgressDialog.setTitle(getString(R.string.wait));
+		mProgressDialog.setMessage(message);
 	}
 	
 	
