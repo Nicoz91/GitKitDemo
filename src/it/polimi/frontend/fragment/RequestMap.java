@@ -40,14 +40,14 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 	private Map<Marker,Request> markers;
 	private boolean twoPane=false;
 	private static View view;
-
+	private GPSTracker gps ;
 	public RequestMap(){
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		GPSTracker gps = new GPSTracker(MyApplication.getContext());
+		gps = new GPSTracker(MyApplication.getContext());
 
 		// check if GPS enabled     
 		if(gps.canGetLocation()){
@@ -105,16 +105,13 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 		for(Request req : requests)
 			if(!req.getPastRequest())
 				present.add(req);
-
 		CircleOptions circleOptions = new CircleOptions().center(position) // set center
-				.radius(200) // set radius in meters
+				.radius(600) // set radius in meters
 				.fillColor(0x5500ff00)
 				.strokeWidth(2)
 				.strokeColor(Color.BLACK);
-
-
-
 		map.addCircle(circleOptions);
+
 		try{
 		map.addMarker(new MarkerOptions().position(position).title(getString(R.string.youAreHere)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 		}catch(Exception e){}

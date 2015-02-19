@@ -159,6 +159,7 @@ public class RequestActivity extends ActionBarActivity implements OnActionListen
 		}
 		mProgressDialog = new ProgressDialog(this);
 		mProgressDialog.setTitle(getString(R.string.wait));
+		mProgressDialog.setCancelable(false);
 		mProgressDialog.setMessage(message);
 	}
 	

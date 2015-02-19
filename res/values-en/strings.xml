@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+	<string name="no_notification">There aren\'t notification to display.</string>
     <string name="waiting">Connecting to the server</string>
     <string name="showNotification">Notification</string>
     <string name="dateSliderTitle">Selected date</string>
@@ -76,7 +76,7 @@
     <string name="detailMale">Male, \u0020</string>
     <string name="detailFemale">Female, \u0020</string>
     <string name="detailYears">\u0020 years old</string>
-    <string name="fbNotAllowed">You can\'t leave a feedback to this user.\n-either tou haven\'t joined yet.\n-or you aren\'t in the Joining Tab.\n-or the request isn\'t past yet.\n-or you already left e feedback to this user for this request</string>
+    <string name="fbNotAllowed">You can\'t leave any feedback. </string>
 
     <string-array name="tag_array">
         <item>Food</item>

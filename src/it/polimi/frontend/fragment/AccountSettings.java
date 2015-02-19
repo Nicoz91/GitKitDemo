@@ -583,6 +583,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 	private void setProgressDialog(String message, boolean progress) {
 		mProgressDialog = new ProgressDialog(getActivity());
 		mProgressDialog.setTitle(getString(R.string.wait));
+		mProgressDialog.setCancelable(false);
 		mProgressDialog.setMessage(message);
 		if(progress){
 			mProgressDialog.setMax(100);

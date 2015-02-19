@@ -359,6 +359,7 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 	private void setProgressDialog(String message) {
 		mProgressDialog = new ProgressDialog(getActivity());
 		mProgressDialog.setTitle(getString(R.string.wait));
+		mProgressDialog.setCancelable(false);
 		mProgressDialog.setMessage(message);
 	}
 

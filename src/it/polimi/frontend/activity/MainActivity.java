@@ -240,6 +240,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 			User u = (User)result;
 			if(!signing){
 				if(u == null){
+					hideDialog();
 					Toast.makeText(MainActivity.this, getString(R.string.serverError), Toast.LENGTH_LONG).show();
 					return;
 				}
@@ -257,6 +258,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 			}else{
 				try {	
 					if(u == null){
+						hideDialog();
 						Toast.makeText(MainActivity.this, getString(R.string.serverError), Toast.LENGTH_LONG).show();
 						return;
 					}

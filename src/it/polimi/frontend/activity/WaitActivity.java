@@ -71,6 +71,7 @@ public class WaitActivity extends ActionBarActivity {
 		}
 		mProgressDialog = new ProgressDialog(this);
 		mProgressDialog.setTitle(getString(R.string.wait));
+		mProgressDialog.setCancelable(false);
 		mProgressDialog.setMessage(message);
 	}
 	

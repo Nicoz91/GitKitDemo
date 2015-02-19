@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <string name="no_notification">Non ci sono notifiche.</string>
     <string name="waiting">Provo a connettermi al server</string>
     <string name="showNotification">Notifiche</string>
     <string name="dateSliderTitle">Selected date</string>
@@ -75,8 +77,8 @@
     <string name="detailMale">Maschio, \u0020</string>
     <string name="detailFemale">Femmina, \u0020</string>
     <string name="detailYears">\u0020 anni</string>
-    <string name="fbNotAllowed">Non puoi lasciare un feedback a questa persona.\n-O non hai ancora partecipato a questa richiesta.\n-O non sei nel tab relativo alle richieste a cui partecipi.\n-O la richiesta non è ancora passata.\n-O hai già lasciato un feedback a questa persona per questa richiesta</string>
-    
+    <string name="fbNotAllowed">Non puoi lasciare nessun feedback.</string>
+
     <string-array name="tag_array">
         <item>Cibo</item>
         <item>Sport</item>
@@ -85,7 +87,6 @@
     </string-array>
 
     <string name="title_activity_notification">Notifiche</string>
-
     <string name="emptyValidator">Il campo non può essere vuoto.</string>
     <string name="mailValidator">Mail non valida.</string>
     <string name="bDayValidator">Non puoi venire dal futuro.</string>
@@ -108,6 +109,5 @@
     <string name="loadingRequests">Sto caricando le richieste.</string>
     <string name="insertPosition">Inserisci una posizione sulla mappa.</string>
     <string name="requestCreated">Richiesta creata con successo.</string>
-    
-    
+
 </resources>

@@ -2,11 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >   
+    android:orientation="vertical" >
+
     <ListView
         android:id="@+id/notificationList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3" />
+
+    <TextView
+        android:id="@+id/empty"
+        style="@style/baseTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:gravity="center"
+        android:text="@string/no_notification"
+        android:visibility="gone" />
 
 </LinearLayout>

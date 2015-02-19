@@ -198,5 +198,13 @@ public class GPSTracker extends Service implements LocationListener {
 		return null;
 	}
 
+	public boolean isGPSEnabled() {
+		return isGPSEnabled;
+	}
+
+	public void setGPSEnabled(boolean isGPSEnabled) {
+		this.isGPSEnabled = isGPSEnabled;
+	}
+
 
 }

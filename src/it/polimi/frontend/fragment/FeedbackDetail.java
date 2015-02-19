@@ -170,6 +170,7 @@ public class FeedbackDetail extends Fragment implements OnClickListener, OnRatin
 			mProgressDialog = null;
 		}
 		mProgressDialog = new ProgressDialog(getActivity());
+		mProgressDialog.setCancelable(false);
 		mProgressDialog.setTitle(getString(R.string.wait));
 		mProgressDialog.setMessage(message);
 	}
