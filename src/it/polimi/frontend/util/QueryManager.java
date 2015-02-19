@@ -1009,9 +1009,9 @@ public class QueryManager {
 			try {
 				manager.updateUser(u).execute();
 				if(f.getTo()!=null)
-					new PushMessage("Lutente "+ user.getName()+" "+user.getSurname()+" ti ha lasciato un feedback.",f.getTo()).execute();
+					new PushMessage("L'utente "+ user.getName()+" "+user.getSurname()+" ti ha lasciato un feedback.",f.getTo()).execute();
 				else
-					new PushMessage("Lutente "+ user.getName()+" "+user.getSurname()+" ti ha lasciato un feedback.",getUserFromId(f.getToId())).execute();
+					new PushMessage("L'utente "+ user.getName()+" "+user.getSurname()+" ti ha lasciato un feedback.",getUserFromId(f.getToId())).execute();
 
 			} catch (Exception e) {
 				e.printStackTrace();

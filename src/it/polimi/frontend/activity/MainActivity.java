@@ -190,16 +190,20 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 			LoginSession.reset();
 			QueryManager.destroy();
 			showSignInPage();
+			return;
 		} else if (i!=null && i.getStringExtra("Reason")!=null && i.getStringExtra("Reason").equals("Exit")){
 			QueryManager.destroy();
 			this.finish();
+			return;
 		}else if (i!=null && i.getStringExtra("Reason")!=null && i.getStringExtra("Reason").equals("Registered")){
 			showProfilePage();
+			return;
 		}else if (i!=null && i.getStringExtra("Reason")!=null && i.getStringExtra("Reason").equals("Network")){
 			if(session!=null)
 				QueryManager.getInstance().getUserByEmail(session.getEmail());
 			else
 				showSignInPage();
+			return;
 		}else if (i!=null && i.getStringExtra("Reason")!=null && i.getStringExtra("Reason").equals("Notification")){
 			if(session!=null && QueryManager.getInstance().getCurrentUser()!=null){
 				notification = true;
@@ -208,8 +212,12 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 				startActivity(in);
 			}
 			notification = true;
-
+			return;
 		}
+		if(session!=null && QueryManager.getInstance().getCurrentUser()!=null)
+			startActivity(new Intent(this, TabbedActivity.class));
+		else
+			showSignInPage();
 	}
 
 	@Override
