@@ -312,6 +312,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 			mProgressDialog = null;
 		}
 		mProgressDialog = new ProgressDialog(this);
+		mProgressDialog.setCancelable(false);
 		mProgressDialog.setTitle(getString(R.string.wait));
 		mProgressDialog.setMessage(message);
 	}

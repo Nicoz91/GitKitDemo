@@ -627,8 +627,10 @@ public class QueryManager {
 			if(u.getDevices()==null)
 				u.setDevices(new ArrayList<String>());
 			for(String dev : u.getDevices())
-				if(dev.equals(LoginSession.getDeviceId()))
+				if(dev.equals(LoginSession.getDeviceId())){
+					System.out.println("IL DEVICE È GIA SETTATO, RITORNO TRUE");
 					return true;
+				}
 			u.getDevices().add(LoginSession.getDeviceId());
 			try {
 				manager.updateUser(u).execute();
