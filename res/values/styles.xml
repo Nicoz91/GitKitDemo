@@ -46,7 +46,7 @@
         <item name="android:gravity">center_vertical|right</item>
     </style>
     <!-- Style per bottoni. Utile generatore online: http://angrytools.com/android/button/ -->
-    <style name="buttonStyle" parent="@android:style/Widget.Button">
+    <style name="buttonStyle" parent="@style/identitytoolkit_button">
         <item name="android:textColor">#FFFFFF</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

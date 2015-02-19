@@ -26,6 +26,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
 
     <permission
         android:name="it.polimi.frontend.activity.permission.C2D_MESSAGE"
@@ -157,7 +158,11 @@
         </activity>
         <activity
             android:name=".NotificationActivity"
-            android:label="@string/title_activity_notification" >
+            android:label="@string/title_activity_notification"
+            android:parentActivityName=".TabbedActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="it.polimi.frontend.activity.TabbedActivity" />
         </activity>
     </application>
 

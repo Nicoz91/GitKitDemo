@@ -51,11 +51,15 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 	private boolean signing;
 	private GitkitUser session;
 	private IdToken sessionToken;
+	private boolean notification;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		QueryManager.getInstance().addActionListener(this);
+		notification = false;
 		super.onCreate(savedInstanceState);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		setContentView(R.layout.welcome);
 		ch = new ConnectionHandler();
 		registerReceiver(ch,new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
@@ -196,6 +200,15 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 				QueryManager.getInstance().getUserByEmail(session.getEmail());
 			else
 				showSignInPage();
+		}else if (i!=null && i.getStringExtra("Reason")!=null && i.getStringExtra("Reason").equals("Notification")){
+			if(session!=null && QueryManager.getInstance().getCurrentUser()!=null){
+				notification = true;
+				Intent in = new Intent(this, TabbedActivity.class);
+				in.putExtra("Reason", "Notification");
+				startActivity(in);
+			}
+			notification = true;
+
 		}
 	}
 
@@ -302,6 +315,12 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 
 	@Override
 	public void onRequestLoaded(List<Request> requests) {
+		if(notification){
+			notification = true;
+			Intent in = new Intent(this, TabbedActivity.class);
+			in.putExtra("Reason", "Notification");
+			startActivity(in);
+		}else
 		startActivity(new Intent(this, TabbedActivity.class));
 		hideDialog();
 

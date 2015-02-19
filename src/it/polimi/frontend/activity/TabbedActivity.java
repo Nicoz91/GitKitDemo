@@ -36,6 +36,7 @@ ActionBar.TabListener , OnNotificationListener{
 	private static final int MAP_TAB=1;
 	private static final int OWNER_TAB=2;
 	private static final int JOINED_TAB=3;
+	private boolean notification;
 	private MasterFragment masterFragment,masterFragmentOwner,masterFragmentJoined;
 	private RequestMap requestMap;
 	private Menu menu;
@@ -58,13 +59,14 @@ ActionBar.TabListener , OnNotificationListener{
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		notification = false;
 		super.onCreate(savedInstanceState);
+//		this.setTheme(R.style.Customtabbed);
 		setContentView(R.layout.activity_tabbed);
 		LoginSession.setListener(this);
 		// Set up the action bar.
 		final ActionBar actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the activity.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(
@@ -113,6 +115,20 @@ ActionBar.TabListener , OnNotificationListener{
 			//che alla fine del filtraggio notifica ai listener un nuovo ArrayList<Request>
 			//con i risultati filtrati
 		}
+	}
+	
+	@Override
+	public void onResume(){
+		super.onResume();
+		Intent i = getIntent();
+		if (i!=null && i.getStringExtra("Reason")!=null && i.getStringExtra("Reason").equals("Notification")){
+				if(!notification){
+				Intent in = new Intent(this, NotificationActivity.class);
+				in.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(in);
+				notification=true;
+				}
+			}
 	}
 
 	//@TargetApi(Build.VERSION_CODES.HONEYCOMB)

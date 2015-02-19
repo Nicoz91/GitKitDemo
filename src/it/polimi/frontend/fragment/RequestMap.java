@@ -115,8 +115,9 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 
 
 		map.addCircle(circleOptions);
-
+		try{
 		map.addMarker(new MarkerOptions().position(position).title(getString(R.string.youAreHere)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+		}catch(Exception e){}
 		if(present!=null && present.size()>0)
 			setRequestMark(present);
 

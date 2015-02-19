@@ -40,10 +40,10 @@
     <string name="save">Save</string>
     <string name="join">Join</string>
     <string name="insertFeedback">Leave Feedback</string>
-    <string name="cancelPartecipation">Cancel join</string>
-    <string name="cancelRequest">Delete Request</string>
-    <string name="showPartecipants">Show Partecipants</string>
-    <string name="hidePartecipants">Hide Partecipants</string>
+    <string name="cancelPartecipation">Exit</string>
+    <string name="cancelRequest">Remove</string>
+    <string name="showPartecipants">Partecipants</string>
+    <string name="hidePartecipants">Hide</string>
     <string name="commentTitle">Comment: </string>
     <string name="commentHint">A descriptive evaluation.</string>
     <string name="sendFeedback">Leave Feedback</string>

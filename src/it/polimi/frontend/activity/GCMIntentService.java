@@ -137,6 +137,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 		else
 			builder.setContentText("Hai "+notNumber+ " notifiche.");  
 		Intent notificationIntent = new Intent(this, MainActivity.class);  
+		notificationIntent.putExtra("Reason", "Notification");
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,   
 				PendingIntent.FLAG_UPDATE_CURRENT);  
 		builder.setContentIntent(contentIntent);  
