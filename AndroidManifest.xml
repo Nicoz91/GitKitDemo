@@ -128,7 +128,8 @@
         <activity
             android:name=".TabbedActivity"
             android:label="@string/title_activity_tabbed"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="adjustPan" >
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
