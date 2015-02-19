@@ -8,7 +8,11 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
+import android.os.Build;
+
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.DropboxAPI.DropboxLink;
 import com.dropbox.client2.DropboxAPI.Entry;
@@ -17,6 +21,7 @@ import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.exception.DropboxException;
 import com.dropbox.client2.session.AppKeyPair;
 
+@SuppressLint("NewApi")
 public class Storage {
 	private static Storage instance;
 	private final static String APP_KEY = "9r7xcnhwd8krsip";
@@ -26,7 +31,11 @@ public class Storage {
 	private OnImageLoadedListener listener;
 	
 	private Storage(){
-		new Init().execute();
+		AsyncTask<Void, Void, Void> myTask = new Init();
+		if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB)
+		    myTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		else
+		    myTask.execute();
 	}
 
 	private class Init extends AsyncTask<Void, Void, Void> {
@@ -81,7 +90,11 @@ public class Storage {
 	}
 
 	public void uploadFile(String path,String name){
-		new UploadFile(path,name).execute();
+		AsyncTask<Void, Void, String> myTask = new UploadFile(path,name);
+		if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB)
+		    myTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		else
+		    myTask.execute();
 	}
 
 	private class UploadFile extends AsyncTask<Void, Void, String> {
