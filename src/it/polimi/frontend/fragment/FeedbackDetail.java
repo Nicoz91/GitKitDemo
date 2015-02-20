@@ -76,6 +76,7 @@ public class FeedbackDetail extends Fragment implements OnClickListener, OnRatin
 			//feedback di prova per visualizzazione
 			if (feedbacks==null)
 				feedbacks= new ArrayList<Feedback>();
+			if(request!=null)
 			if(!request.getPastRequest()){
 				sendFbForm.setVisibility(View.GONE);
 				rootView.findViewById(R.id.fbNotAllowed).setVisibility(View.VISIBLE);
@@ -95,6 +96,10 @@ public class FeedbackDetail extends Fragment implements OnClickListener, OnRatin
 			}
 			FeedbackAdapter fba = new FeedbackAdapter(c,0,feedbacks);
 			feedbackLV.setAdapter(fba);
+			if (request==null){
+				sendFbForm.setVisibility(View.GONE);
+				rootView.findViewById(R.id.fbNotAllowed).setVisibility(View.GONE);
+			}
 		}else
 			System.out.println("Nessun Nome dell'owner");
 		return rootView;

@@ -108,5 +108,6 @@
     <string name="loadingRequests">Loading requests.</string>
     <string name="insertPosition">Insert e position on the map.</string>
     <string name="requestCreated">Request successfully created.</string>
+    <string name="feedbacks">Feedbacks</string>
 
 </resources>

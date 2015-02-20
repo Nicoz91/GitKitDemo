@@ -5,6 +5,7 @@ import it.polimi.frontend.activity.LoginSession;
 import it.polimi.frontend.activity.MainActivity;
 import it.polimi.frontend.activity.MyApplication;
 import it.polimi.frontend.activity.R;
+import it.polimi.frontend.util.ParentFragmentUtil;
 import it.polimi.frontend.util.QueryManager;
 import it.polimi.frontend.util.QueryManager.OnActionListener;
 import it.polimi.frontend.util.Storage;
@@ -65,6 +66,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 	private String photoURL="";
 	private Uri currImageURI;
 	private String EMPTY_VALIDATOR;
+	private OnFeedbackOptionClickedListener listener;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -99,7 +101,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 			regMode = true;
 		}
 		initializeView(rootView);
-
+		listener = ParentFragmentUtil.getParent(this, OnFeedbackOptionClickedListener.class);
 		return rootView;
 	}
 
@@ -290,9 +292,11 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		if(!regMode){
 			menu.findItem(R.id.editAccount).setVisible(true);
 			menu.findItem(R.id.saveAccount).setVisible(false);
+			menu.findItem(R.id.accountFeedbacks).setVisible(true);
 		} else {
 			menu.findItem(R.id.editAccount).setVisible(false);
 			menu.findItem(R.id.saveAccount).setVisible(true);
+			menu.findItem(R.id.accountFeedbacks).setVisible(false);
 		}
 	}
 
@@ -307,6 +311,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 			menu.findItem(R.id.editAccount).setVisible(false);
 			menu.findItem(R.id.saveAccount).setVisible(true);
 			menu.findItem(R.id.cancel).setVisible(true);
+			menu.findItem(R.id.accountFeedbacks).setVisible(false);
 			editMode=true;
 			editable(editMode);
 			return true;
@@ -332,6 +337,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 				menu.findItem(R.id.editAccount).setVisible(true);
 				menu.findItem(R.id.saveAccount).setVisible(false);
 				menu.findItem(R.id.cancel).setVisible(false);
+				menu.findItem(R.id.accountFeedbacks).setVisible(true);
 				editMode=false;
 				editable(editMode);
 			}
@@ -342,8 +348,12 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 			menu.findItem(R.id.editAccount).setVisible(true);
 			menu.findItem(R.id.saveAccount).setVisible(false);
 			menu.findItem(R.id.cancel).setVisible(false);
+			menu.findItem(R.id.accountFeedbacks).setVisible(true);
 			editMode=false;
 			editable(editMode);
+			return true;
+		case R.id.accountFeedbacks:
+			listener.OnFeedbackOptionClicked();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -642,6 +652,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 				menu.findItem(R.id.editAccount).setVisible(true);
 				menu.findItem(R.id.saveAccount).setVisible(false);
 				menu.findItem(R.id.cancel).setVisible(false);
+				menu.findItem(R.id.accountFeedbacks).setVisible(true);
 				editMode=false;
 				editable(editMode);
 				Toast.makeText(MyApplication.getContext(), getString(R.string.userUpdateCompleted),
@@ -654,5 +665,9 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 
 		}
 
+	}
+	
+	public interface OnFeedbackOptionClickedListener{
+		public void OnFeedbackOptionClicked();
 	}
 }

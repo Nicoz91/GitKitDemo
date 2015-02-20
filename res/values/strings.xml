@@ -109,5 +109,6 @@
     <string name="loadingRequests">Sto caricando le richieste.</string>
     <string name="insertPosition">Inserisci una posizione sulla mappa.</string>
     <string name="requestCreated">Richiesta creata con successo.</string>
+    <string name="feedbacks">Feedbacks</string>
 
 </resources>
