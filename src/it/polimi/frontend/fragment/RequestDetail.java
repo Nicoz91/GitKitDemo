@@ -54,6 +54,7 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 	private String CANCELLA_REQ;
 	private String NON_SPECIFICATO;
 	private String LASCIA_FEED;
+	private View view;
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
 	 * fragment (e.g. upon screen orientation changes).
@@ -144,7 +145,7 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 		if (request!=null){
 			//Photo
 			if (request.getOwner()!= null && request.getOwner().getPhotoURL()!=null)
-				Picasso.with(getActivity()).load(request.getOwner().getPhotoURL()).into(profileImg);
+				Picasso.with(getActivity()).load(request.getOwner().getPhotoURL()).placeholder(R.drawable.default_photo).into(profileImg);
 			//Name and surname
 			((TextView)rootView.findViewById(R.id.ownerLabel))
 			.setText(request.getOwner().getName()+" "+request.getOwner().getSurname());
@@ -229,6 +230,7 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 		//TODO pare che non percorra tutta la gerarchia fino a Master, quindi in caso 
 		//di 2Pane bisogna ripropagare la chiamata anche da DetailContainer
 		deletionListener = ParentFragmentUtil.getParent(this, OnRequestDeletedListener.class);
+		this.view = rootView;
 		return rootView;
 	}
 
@@ -390,14 +392,18 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 			hideDialog();
 			switch(action){
 			case OnActionListener.JOIN:
-				if(ok)
+				if(ok){
 					join.setText(CANCELLA_PART);
+					update();
+				}
 				else
 					Toast.makeText(MyApplication.getContext(),getString(R.string.maxReachedError),Toast.LENGTH_SHORT).show();
 				break;
 			case OnActionListener.CANCEL_JOIN:
-				if(ok)
+				if(ok){
 					join.setText(PARTECIPA);
+					update();
+				}
 				else
 					Toast.makeText(MyApplication.getContext(),getString(R.string.actionNotPerformed),Toast.LENGTH_SHORT).show();
 				break;
@@ -408,6 +414,36 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 			}
 		}
 
+	}
+
+	private void update(){
+		if(request!=null){
+			if(request.getMaxPartecipants()!=null){
+				if (request.getMaxPartecipants().intValue()!=0){
+					int part = 0;
+					if(request.getPartecipants()!=null)
+						part = request.getPartecipants().size();
+					((TextView)view.findViewById(R.id.max))
+					.setText(part+"/"+request.getMaxPartecipants());
+				}
+				else
+					((TextView)view.findViewById(R.id.max))
+					.setText(NON_SPECIFICATO);
+			}
+			if(userPartecipant.getVisibility()==View.VISIBLE){
+				List<User> users = QueryManager.getInstance().getUserFromRequest(request);
+				if (users!=null && users.size()>0)
+					getView().findViewById(R.id.empty).setVisibility(View.GONE);
+				else
+					getView().findViewById(R.id.empty).setVisibility(View.VISIBLE);
+				Context c = getActivity();
+				if(c==null){ 
+					//					System.out.println("Il context è null ma noi bariamo");
+					c = MyApplication.getContext();
+				}
+				userPartecipant.setAdapter(new UserAdapter(c,0,users));
+			}
+		}
 	}
 
 }

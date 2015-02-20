@@ -1083,6 +1083,13 @@ public class QueryManager {
 	}
 
 	private class NotificationTask extends AsyncTask<Void, Void, ArrayList<String>> {
+		
+		@Override
+		protected void onPreExecute() {
+			for(OnActionListener l: actionListeners)
+				l.onPerformingAction(OnActionListener.NOTIFICATION);
+			super.onPreExecute();
+		}
 
 		@Override
 		protected ArrayList<String> doInBackground(Void... params) {

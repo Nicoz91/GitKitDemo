@@ -22,7 +22,8 @@ public class NotificationDetail extends Fragment implements OnActionListener{
 	private ListView notificationLV;
 	private ArrayList<String> notification;
 	private ArrayAdapter<String> adapter;
-
+	private View view;
+	
 	public NotificationDetail(){
 	}
 
@@ -33,7 +34,7 @@ public class NotificationDetail extends Fragment implements OnActionListener{
 				container, false);
 		this.notificationLV = (ListView)rootView.findViewById(R.id.notificationList);
 		notificationLV.setEmptyView(rootView.findViewById(R.id.empty));
-		
+		view = rootView;
 		notification = QueryManager.getInstance().getNotification();
 		
 		if(notification == null)
@@ -50,12 +51,13 @@ public class NotificationDetail extends Fragment implements OnActionListener{
 
 	@Override
 	public void onPerformingAction(int action) {
-		// TODO Auto-generated method stub
+		view.findViewById(R.id.notProgress).setVisibility(View.VISIBLE);
 		
 	}
 
 	@Override
 	public void onActionPerformed(Object result, int action) {
+		view.findViewById(R.id.notProgress).setVisibility(View.GONE);
 		if(action == OnActionListener.NOTIFICATION){
 			ArrayList<String> not = (ArrayList<String>) result;
 			if(not == null)
