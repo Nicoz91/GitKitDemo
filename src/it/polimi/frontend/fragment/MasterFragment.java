@@ -58,19 +58,19 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 			switch (mode) {
 			case OWNER_REQUEST:
 				if(QueryManager.getInstance().getCurrentUser().getRequests()!=null)
-				requests.addAll(QueryManager.getInstance().getCurrentUser().getRequests());
-//				System.out.println("Dovrei aver recuperato le richieste dell'owner");
+					requests.addAll(QueryManager.getInstance().getCurrentUser().getRequests());
+				//				System.out.println("Dovrei aver recuperato le richieste dell'owner");
 				break;
 			case JOINED_REQUEST:
-				if(QueryManager.getInstance().getCurrentUser().getRequests()!=null)
-				requests.addAll(QueryManager.getInstance().getUserPartecipation());
+				if(QueryManager.getInstance().getUserPartecipation()!=null)
+					requests.addAll(QueryManager.getInstance().getUserPartecipation());
 				break;
 			default: //Caso ALL_REQUEST + tutti gli altri possibili
 				ArrayList<Request> app = (ArrayList<Request>) QueryManager.getInstance().getRequests();
 				if(app!=null){
-				for(Request req : app)
-					if(!req.getPastRequest())
-						requests.add(req);
+					for(Request req : app)
+						if(!req.getPastRequest())
+							requests.add(req);
 				}
 				break;
 			}
@@ -153,7 +153,7 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 	}
 	@Override
 	public void onRequestLoaded(List<Request> requests) {
-//		System.out.println("Ho caricato: "+requests.size());
+		//		System.out.println("Ho caricato: "+requests.size());
 		RequestList requestListFragment = (RequestList)getChildFragmentManager().findFragmentByTag(RequestList.ID);
 		switch (mode) {
 		case OWNER_REQUEST:
@@ -169,7 +169,7 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 			for(Request req : requests)
 				if(!req.getPastRequest())
 					present.add(req);
-			
+
 			if (requestListFragment!=null)
 				requestListFragment.setRequestAdapter(present);
 			break;
@@ -178,7 +178,7 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 	@Override
 	public void onRequestLoading() {
 		// TODO eventuali modifiche del layout durante il caricamento delle richieste.
-		
+
 	}
 
 }

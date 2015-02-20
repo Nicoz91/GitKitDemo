@@ -223,6 +223,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 	@Override
 	protected void onDestroy() {
 		QueryManager.destroy();
+		hideDialog();
 		if(ch!=null)
 			this.unregisterReceiver(ch);
 		super.onDestroy();
