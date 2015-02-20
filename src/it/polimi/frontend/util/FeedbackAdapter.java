@@ -67,7 +67,7 @@ public class FeedbackAdapter extends ArrayAdapter<Feedback>{
 			String photoUrl=feedbacks.get(position).getFrom().getPhotoURL();
 			if (photoUrl!=null){
 				ImageView iV = (ImageView) rowView.findViewById(R.id.imgIcon);
-				Picasso.with(context).load(photoUrl).into(iV);
+				Picasso.with(context).load(photoUrl).placeholder(R.drawable.default_photo).into(iV);
 			}
 		} else {
 			reviewer.setText(NON_SPECIFICATO+" "+NON_SPECIFICATO);

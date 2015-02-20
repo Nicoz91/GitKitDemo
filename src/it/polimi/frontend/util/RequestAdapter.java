@@ -106,7 +106,7 @@ public class RequestAdapter extends ArrayAdapter<Request>{
 				String photoUrl = reqs.get(position).getOwner().getPhotoURL();
 				if (photoUrl != null){
 					ImageView iV = (ImageView) rowView.findViewById(R.id.imgIcon);
-					Picasso.with(context).load(photoUrl).into(iV);
+					Picasso.with(context).load(photoUrl).placeholder(R.drawable.default_photo).into(iV);
 				}
 			} else {
 				//Upper
