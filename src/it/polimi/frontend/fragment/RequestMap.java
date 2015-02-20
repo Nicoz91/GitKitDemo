@@ -16,7 +16,6 @@ import java.util.Map;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +24,8 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -37,11 +38,18 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 
 	private LatLng position;
 	private GoogleMap map;
+	private MapView mapView;
 	private Map<Marker,Request> markers;
 	private boolean twoPane=false;
-	private static View view;
+	private View view;
 	private GPSTracker gps ;
 	public RequestMap(){
+	}
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onActivityCreated(savedInstanceState);
 	}
 
 	@Override
@@ -74,7 +82,18 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 		try {
 			view = inflater.inflate(R.layout.fragment_request_map,
 					container, false);
-			((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
+			mapView = (MapView) view.findViewById(R.id.mapView);
+		    mapView.onCreate(savedInstanceState);
+
+		    mapView.onResume();// needed to get the map to display immediately
+
+		    try {
+		        MapsInitializer.initialize(getActivity().getApplicationContext());
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+		    mapView.getMapAsync(this);
+			//((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
 			markers = new HashMap<Marker,Request>();
 			twoPane = getResources().getBoolean(R.bool.isTablet);
 		} catch (InflateException e) {
@@ -150,22 +169,22 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 	public void onInfoWindowClick(Marker m) {
 		if(twoPane){
 			DetailContainerFragment detailContFragment = new DetailContainerFragment(markers.get(m),MasterFragment.ALL_REQUEST);
-			Fragment mapFragment=getChildFragmentManager().findFragmentById(R.id.map);
-
+			//Fragment mapFragment=getChildFragmentManager().findFragmentById(R.id.map);
+			mapView.setVisibility(View.GONE);
 			getChildFragmentManager().beginTransaction()
-			.hide(mapFragment)
-			.addToBackStack(DetailContainerFragment.ID)
+			//.hide(mapFragment)
 			.add(R.id.mapContainer,detailContFragment,DetailContainerFragment.ID)
+			.addToBackStack(DetailContainerFragment.ID)
 			.commit();
 		} else {
 			if(markers.get(m)!=null){
 				RequestDetail fragment = new RequestDetail(markers.get(m),MasterFragment.ALL_REQUEST);
-				Fragment mapFragment=getChildFragmentManager().findFragmentById(R.id.map);
-
+				//Fragment mapFragment=getChildFragmentManager().findFragmentById(R.id.map);
+				mapView.setVisibility(View.GONE);
 				getChildFragmentManager().beginTransaction()
-				.hide(mapFragment)
-				.addToBackStack(RequestDetail.ID)
+				//.hide(mapFragment)
 				.add(R.id.mapContainer,fragment,RequestDetail.ID)
+				.addToBackStack(RequestDetail.ID)
 				.commit();
 			}
 		}
@@ -192,14 +211,6 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 			.addToBackStack(FeedbackDetail.ID)
 			.add(R.id.mapContainer,fragment,FeedbackDetail.ID)
 			.commit();
-
-			getChildFragmentManager().addOnBackStackChangedListener(
-					new FragmentManager.OnBackStackChangedListener() {
-						public void onBackStackChanged() {
-							//TODO
-							// Update your UI here.
-						}
-					});
 		}
 	}
 
@@ -209,4 +220,31 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 
 	}
 
+	public void showMap(){
+		mapView.setVisibility(View.VISIBLE);
+	}
+	
+	@Override
+	public void onResume() {
+	    super.onResume();
+	    mapView.onResume();
+	}
+
+	@Override
+	public void onPause() {
+	    super.onPause();
+	    mapView.onPause();
+	}
+
+	@Override
+	public void onDestroy() {
+	    super.onDestroy();
+	    mapView.onDestroy();
+	}
+
+	@Override
+	public void onLowMemory() {
+	    super.onLowMemory();
+	    mapView.onLowMemory();
+	}
 }
