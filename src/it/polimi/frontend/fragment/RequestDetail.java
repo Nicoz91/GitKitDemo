@@ -144,7 +144,7 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 		if (request!=null){
 			//Photo
 			if (request.getOwner()!= null && request.getOwner().getPhotoURL()!=null)
-				Picasso.with(getActivity()).load(request.getOwner().getPhotoURL()).into(profileImg);
+				Picasso.with(getActivity()).load(request.getOwner().getPhotoURL()).placeholder(R.drawable.default_photo).into(profileImg);
 			//Name and surname
 			((TextView)rootView.findViewById(R.id.ownerLabel))
 			.setText(request.getOwner().getName()+" "+request.getOwner().getSurname());

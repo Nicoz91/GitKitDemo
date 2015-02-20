@@ -66,7 +66,7 @@ public class UserAdapter extends ArrayAdapter<User>{
 		String photoUrl=users.get(position).getPhotoURL();
 		if (photoUrl!=null){
 			ImageView iV = (ImageView)rowView.findViewById(R.id.imgIcon);
-			Picasso.with(context).load(users.get(position).getPhotoURL()).into(iV);
+			Picasso.with(context).load(users.get(position).getPhotoURL()).placeholder(R.drawable.default_photo).into(iV);
 		}
 
 		return rowView;

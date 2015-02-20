@@ -272,7 +272,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		if (user.getPhotoURL()!=null){
 			photoURL = user.getPhotoURL();
 			try{
-				Picasso.with(getActivity()).load(photoURL).into(profileIV);
+				Picasso.with(getActivity()).load(photoURL).placeholder(R.drawable.default_photo).into(profileIV);
 			}catch(Exception e){}
 		}
 		//Setup NonEditable Mode
@@ -504,7 +504,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 				if (photoUrl!=null && !photoUrl.equals("")
 						&& android.util.Patterns.WEB_URL.matcher(photoUrl).matches()){
 					photoURL = photoUrl;
-					Picasso.with(getActivity()).load(photoURL).into(profileIV);
+					Picasso.with(getActivity()).load(photoURL).placeholder(R.drawable.default_photo).into(profileIV);
 				} else
 					Toast.makeText(MyApplication.getContext(), "Immagine non aggiornata perchè non hai inserito un URL corretto.",
 							Toast.LENGTH_SHORT).show();
@@ -569,7 +569,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 			Toast.makeText(MyApplication.getContext(), getString(R.string.imageError),Toast.LENGTH_SHORT).show();
 		else{
 			photoURL = path;
-			Picasso.with(getActivity()).load(photoURL).into(profileIV);
+			Picasso.with(getActivity()).load(photoURL).placeholder(R.drawable.default_photo).into(profileIV);
 		}
 	}
 
