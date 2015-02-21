@@ -62,7 +62,7 @@
     <string name="insert_end_label">Fine:</string>
     <string name="insert_end_edit">Fine</string>
     <string name="insert_max_label">Partecipanti:</string>
-    <string name="insert_max_edit">1</string>
+    <string name="insert_max_edit">\'0\' o vuoto se non vuoi un limite.</string>
     <string name="title_activity_wait">Nessuna Connessione</string>
     <string name="no_data">Non ci sono richieste da visualizzare.</string>
     <string name="no_user">Nessuno ha ancora partecipato.</string>

@@ -14,7 +14,7 @@
     <string name="title_activity_tabbed">Requests</string>
     <string name="request_tab_title">All</string>
     <string name="map_tab_title">Map</string>
-    <string name="owner_tab_title">Your</string>
+    <string name="owner_tab_title">Yours</string>
     <string name="joined_tab_title">Joining</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -61,7 +61,7 @@
     <string name="insert_end_label">End:</string>
     <string name="insert_end_edit">End</string>
     <string name="insert_max_label">Partecipants:</string>
-    <string name="insert_max_edit">1</string>
+    <string name="insert_max_edit">\'0\' or empty if you don't want a limit.</string>
     <string name="title_activity_wait">No Connection</string>
     <string name="no_data">No requests to list.</string>
     <string name="no_user">Nobody has joined yet.</string>
