@@ -80,7 +80,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 			}
 			@Override
 			public void onSignInFailed() {
-				Toast.makeText(MainActivity.this, "Sign in failed", Toast.LENGTH_LONG).show();
+				Toast.makeText(MainActivity.this, getString(R.string.signInFailed), Toast.LENGTH_LONG).show();
 			}
 		}).build();
 		signing = false;

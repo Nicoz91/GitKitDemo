@@ -92,7 +92,7 @@
     <string name="generalValidator">Something wrong in the fields.</string>
     <string name="noChangeValidator">Nothing changed.</string>
     <string name="choosePicture">Select an image.</string>
-    <string name="performingAction">We\'re performing the operation.</string>
+    <string name="performingAction">I\'m performing the operation.</string>
     <string name="imageError">Error during the image loading.</string>
     <string name="wait">Wait&#8230;</string>
     <string name="registrationError">Error during registration. Try again in a few minutes.</string>
@@ -109,5 +109,6 @@
     <string name="insertPosition">Insert e position on the map.</string>
     <string name="requestCreated">Request successfully created.</string>
     <string name="feedbacks">Feedbacks</string>
+    <string name="signInFailed">Password Account created.</string>
 
 </resources>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="no_notification">Non ci sono notifiche.</string>
+    <string name="waiting">Provo a connettermi al server</string>
+    <string name="showNotification">Notifiche</string>
+    <string name="dateSliderTitle">Selected date</string>
+    <string name="app_name">EnJoin</string>
+    <string name="profile_picture_desc">Profile picture</string>
+    <string name="welcome">Benvenuto</string>
+    <string name="sign_in_label">Sign in</string>
+    <string name="manage_account_label">Gestisci account</string>
+    <string name="sign_out_label">Sign out</string>
+    <string name="fb_app_id">626114737492775</string>
+    <string name="title_activity_tabbed">Richieste</string>
+    <string name="request_tab_title">Tutte</string>
+    <string name="map_tab_title">Mappa</string>
+    <string name="owner_tab_title">Tue</string>
+    <string name="joined_tab_title">Partecipi</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Impostazioni</string>
+    <string name="logout">Log out</string>
+    <string name="insertRequest">Nuova</string>
+    <string name="iconDesc">Descr</string>
+    <string name="title_activity_settings">Impostazioni</string>
+    <string name="title_activity_request">Nuova Richiesta</string>
+    <string name="nameLabel">Nome:</string>
+    <string name="nameHint">Il tuo nome</string>
+    <string name="surnameLabel">Cognome:</string>
+    <string name="surnameHint">Il tuo cognome</string>
+    <string name="pwAccountLabel">App account:</string>
+    <string name="pwAccountHint">La mail del tuo account</string>
+    <string name="gmailAccountLabel">Google account:</string>
+    <string name="gmailAccountHint">Il tuo account google</string>
+    <string name="fbAccountLabel">Facebook Account:</string>
+    <string name="fbAccountHint">Il tuo account facebook</string>
+    <string name="bDayLabel">Data di nascita:</string>
+    <string name="bDayHint">La tua data di nascita</string>
+    <string name="genderLabel">Sesso:</string>
+    <string name="genderMale">M</string>
+    <string name="genderFemale">F</string>
+    <string name="edit">Modifica</string>
+    <string name="save">Salva</string>
+    <string name="join">Partecipa</string>
+    <string name="insertFeedback">Lascia feedback</string>
+    <string name="cancelPartecipation">Esci</string>
+    <string name="cancelRequest">Elimina</string>
+    <string name="showPartecipants">Partecipanti</string>
+    <string name="hidePartecipants">Nascondi</string>
+    <string name="commentTitle">Commento: </string>
+    <string name="commentHint">Una tua valutazione descrittiva.</string>
+    <string name="sendFeedback">Lascia un Feedback</string>
+    <string name="title_activity_test">TestActivity</string>
+    <string name="insert_title_label">Titolo:</string>
+    <string name="insert_title_edit">Titolo</string>
+    <string name="insert_description_label">Descrizione:</string>
+    <string name="insert_description_edit">Descrizione</string>
+    <string name="insert_tag_label">Tag:</string>
+    <string name="insert_tag_edit">Tag</string>
+    <string name="insert_start_label">Inizio:</string>
+    <string name="insert_start_edit">Inizio</string>
+    <string name="insert_end_label">Fine:</string>
+    <string name="insert_end_edit">Fine</string>
+    <string name="insert_max_label">Partecipanti:</string>
+    <string name="insert_max_edit">1</string>
+    <string name="title_activity_wait">Nessuna Connessione</string>
+    <string name="no_data">Non ci sono richieste da visualizzare.</string>
+    <string name="no_user">Nessuno ha ancora partecipato.</string>
+    <string name="no_fb">Nessuno ha ancora lasciato Feedback.</string>
+    <string name="search_hint">Cerca tra le richieste.</string>
+    <string name="search_title">Cerca</string>
+    <string name="startDateLabel">Data:\u0020</string>
+    <string name="durationLabel">Durata:\u0020</string>
+    <string name="typeLabel">Tipo:</string>
+    <string name="maxLabel">N° max:</string>
+    <string name="not_specified">Non specificato</string>
+    <string name="detailMale">Maschio, \u0020</string>
+    <string name="detailFemale">Femmina, \u0020</string>
+    <string name="detailYears">\u0020 anni</string>
+    <string name="fbNotAllowed">Non puoi lasciare nessun feedback.</string>
+
+    <string-array name="tag_array">
+        <item>Cibo</item>
+        <item>Sport</item>
+        <item>Giochi</item>
+        <item>Studio</item>
+    </string-array>
+
+    <string name="title_activity_notification">Notifiche</string>
+    <string name="emptyValidator">Il campo non può essere vuoto.</string>
+    <string name="mailValidator">Mail non valida.</string>
+    <string name="bDayValidator">Non puoi venire dal futuro.</string>
+    <string name="generalValidator">Qualcosa non va nei campi inseriti.</string>
+    <string name="noChangeValidator">Nulla è cambiato.</string>
+    <string name="choosePicture">Seleziona un\'immagine.</string>
+    <string name="performingAction">Sto portando a termine l\'operazione.</string>
+    <string name="imageError">Errore nel caricamento dell\'immagine.</string>
+    <string name="wait">Attendi&#8230;</string>
+    <string name="registrationError">Errore durante la registrazione. Riprova tra qualche minuto.</string>
+    <string name="registrationCompleted">Registrazione effettuata.</string>
+    <string name="serverError">Si è verificato un errore durante l\'interazione con il server. Riprova tra qualche minuto.</string>
+    <string name="userUpdateCompleted">Dati utente aggiornati correttamente.</string>
+    <string name="actionNotPerformed">È stato impossibile completare l\'operazione.</string>
+    <string name="positionRequested">Posizione richiesta.</string>
+    <string name="startEndValidator">La data di fine non può essere precedente a quella di inizio.</string>
+    <string name="maxReachedError">Richiesta al completo! Impossibile partecipare.</string>
+    <string name="youAreHere">Ti trovi qui!</string>
+    <string name="serverConnection">Connessione al server&#8230;</string>
+    <string name="loadingRequests">Sto caricando le richieste.</string>
+    <string name="insertPosition">Inserisci una posizione sulla mappa.</string>
+    <string name="requestCreated">Richiesta creata con successo.</string>
+    <string name="feedbacks">Feedbacks</string>
+    <string name="signInFailed">Password Account creato.</string>
+
+</resources>
