@@ -61,7 +61,7 @@
     <string name="insert_end_label">End:</string>
     <string name="insert_end_edit">End</string>
     <string name="insert_max_label">Partecipants:</string>
-    <string name="insert_max_edit">\'0\' or empty if you don't want a limit.</string>
+    <string name="insert_max_edit">\'0\' or empty if you don\'t want a limit.</string>
     <string name="title_activity_wait">No Connection</string>
     <string name="no_data">No requests to list.</string>
     <string name="no_user">Nobody has joined yet.</string>

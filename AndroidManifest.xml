@@ -144,14 +144,16 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".TabbedActivity" >
+            android:parentActivityName=".TabbedActivity"
+            android:windowSoftInputMode="adjustPan" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="it.polimi.frontend.activity.TabbedActivity" />
         </activity>
         <activity
             android:name=".RequestActivity"
-            android:label="@string/title_activity_request" >
+            android:label="@string/title_activity_request"
+            android:windowSoftInputMode="adjustPan" >
         </activity>
         <activity
             android:name=".WaitActivity"

@@ -1,76 +1,82 @@
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:divider="?android:attr/dividerVertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:showDividers="middle"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true"
     tools:context="it.polimi.frontend.activity.RequestActivity" >
 
-    <TableRow
+    <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1.0" >
+        android:layout_height="match_parent"
+        android:divider="?android:attr/dividerVertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:showDividers="middle"
+        tools:context="it.polimi.frontend.activity.RequestActivity" >
 
-        <TextView
-            android:id="@+id/insert_title_label"
-            style="@style/titleTextStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/insert_title_label" />
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.0" >
 
-        <EditText
-            android:id="@+id/insert_title_edit"
-            style="@style/baseTextStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:hint="@string/insert_title_edit"
-            android:inputType="text|textCapWords" />
-    </TableRow>
+            <TextView
+                android:id="@+id/insert_title_label"
+                style="@style/titleTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/insert_title_label" />
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3" >
+            <EditText
+                android:id="@+id/insert_title_edit"
+                style="@style/baseTextStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:hint="@string/insert_title_edit"
+                android:inputType="text|textCapWords" />
+        </TableRow>
 
-        <TextView
-            android:id="@+id/insert_description_label"
-            style="@style/titleTextStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/insert_description_label" />
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3" >
 
-        <EditText
-            android:id="@+id/insert_description_edit"
-            style="@style/baseTextStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="top"
-            android:hint="@string/insert_description_edit"
-            android:inputType="textCapSentences|textMultiLine"
-            android:isScrollContainer="false"
-            android:scrollHorizontally="false"
-            android:scrollbars="vertical" >
-        </EditText>
-    </TableRow>
+            <TextView
+                android:id="@+id/insert_description_label"
+                style="@style/titleTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/insert_description_label" />
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1.0" >
+            <EditText
+                android:id="@+id/insert_description_edit"
+                style="@style/baseTextStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="top"
+                android:hint="@string/insert_description_edit"
+                android:inputType="textCapSentences|textMultiLine"
+                android:isScrollContainer="false"
+                android:scrollHorizontally="false"
+                android:scrollbars="vertical" >
+            </EditText>
+        </TableRow>
 
-        <TextView
-            android:id="@+id/insert_tag_label"
-            style="@style/titleTextStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/insert_tag_label" />
-		<!-- 
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.0" >
+
+            <TextView
+                android:id="@+id/insert_tag_label"
+                style="@style/titleTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/insert_tag_label" />
+            <!--
         <EditText
             android:id="@+id/insert_tag_edit"
             style="@style/baseTextStyle"
@@ -78,83 +84,85 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:hint="@string/insert_tag_edit" />
-		-->
-        <Spinner
-            android:id="@+id/insert_tag_spin"
-            style="@style/baseTextStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
-    </TableRow>
+            -->
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1.0" >
+            <Spinner
+                android:id="@+id/insert_tag_spin"
+                style="@style/baseTextStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+        </TableRow>
 
-        <TextView
-            android:id="@+id/insert_start_label"
-            style="@style/titleTextStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/insert_start_label" />
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.0" >
 
-        <EditText
-            android:id="@+id/insert_start_edit"
-            style="@style/baseTextStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:focusableInTouchMode="false"
-            android:hint="@string/insert_start_edit"
-            android:inputType="date" />
-    </TableRow>
+            <TextView
+                android:id="@+id/insert_start_label"
+                style="@style/titleTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/insert_start_label" />
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1.0" >
+            <EditText
+                android:id="@+id/insert_start_edit"
+                style="@style/baseTextStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusableInTouchMode="false"
+                android:hint="@string/insert_start_edit"
+                android:inputType="date" />
+        </TableRow>
 
-        <TextView
-            android:id="@+id/insert_end_label"
-            style="@style/titleTextStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/insert_end_label" />
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.0" >
 
-        <EditText
-            android:id="@+id/insert_end_edit"
-            style="@style/baseTextStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:focusableInTouchMode="false"
-            android:hint="@string/insert_end_edit"
-            android:inputType="date" />
-    </TableRow>
+            <TextView
+                android:id="@+id/insert_end_label"
+                style="@style/titleTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/insert_end_label" />
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1.0" >
+            <EditText
+                android:id="@+id/insert_end_edit"
+                style="@style/baseTextStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusableInTouchMode="false"
+                android:hint="@string/insert_end_edit"
+                android:inputType="date" />
+        </TableRow>
 
-        <TextView
-            android:id="@+id/insert_max_label"
-            style="@style/titleTextStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/insert_max_label" />
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.0" >
 
-        <EditText
-            android:id="@+id/insert_max_edit"
-            style="@style/baseTextStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:hint="@string/insert_max_edit"
-            android:inputType="number" />
-    </TableRow>
+            <TextView
+                android:id="@+id/insert_max_label"
+                style="@style/titleTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/insert_max_label" />
 
-</TableLayout>
+            <EditText
+                android:id="@+id/insert_max_edit"
+                style="@style/baseTextStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:hint="@string/insert_max_edit"
+                android:inputType="number" />
+        </TableRow>
+    </TableLayout>
+
+</ScrollView>
