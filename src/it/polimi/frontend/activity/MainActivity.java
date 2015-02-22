@@ -80,7 +80,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 			}
 			@Override
 			public void onSignInFailed() {
-				Toast.makeText(MainActivity.this, "Sign in failed", Toast.LENGTH_LONG).show();
+				Toast.makeText(MainActivity.this, "Effettua il login...", Toast.LENGTH_LONG).show();
 			}
 		}).build();
 		signing = false;
@@ -168,8 +168,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 			sessionToken = null;
 		}
 	}
-	
-	
+
+
 
 	@Override
 	protected void onPause() {
@@ -297,16 +297,19 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 	 * */
 	private ProgressDialog mProgressDialog;
 	protected void showDialog(String message) {
-		
-		setProgressDialog(message);
-		if(this!=null && !this.isFinishing())
-			mProgressDialog.show();
+		try{
+			setProgressDialog(message);
+			if(this!=null && !this.isFinishing())
+				mProgressDialog.show();
+		}catch(Exception e){}
 	}
 
 	protected void hideDialog() {
-		if (mProgressDialog != null && mProgressDialog.isShowing()) {
-			mProgressDialog.dismiss();
-		}
+		try{
+			if (mProgressDialog != null && mProgressDialog.isShowing()) {
+				mProgressDialog.dismiss();
+			}
+		}catch(Exception e){}
 	}
 
 	private void setProgressDialog(String message) {
@@ -333,7 +336,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,On
 			in.putExtra("Reason", "Notification");
 			startActivity(in);
 		}else
-		startActivity(new Intent(this, TabbedActivity.class));
+			startActivity(new Intent(this, TabbedActivity.class));
 		hideDialog();
 
 	}      

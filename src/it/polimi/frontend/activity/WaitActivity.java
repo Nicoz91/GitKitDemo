@@ -47,21 +47,24 @@ public class WaitActivity extends ActionBarActivity {
 			startActivity(i);
 			this.finish();
 			//super.onBackPressed();
-			}
+		}
 	}
-	
+
 	private ProgressDialog mProgressDialog;
 	protected void showDialog(String message) {
-		
-		setProgressDialog(message);
-		if(this!=null && !this.isFinishing())
-			mProgressDialog.show();
+		try{
+			setProgressDialog(message);
+			if(this!=null && !this.isFinishing())
+				mProgressDialog.show();
+		}catch(Exception e){}
 	}
 
 	protected void hideDialog() {
-		if (mProgressDialog != null && mProgressDialog.isShowing()) {
-			mProgressDialog.dismiss();
-		}
+		try{
+			if (mProgressDialog != null && mProgressDialog.isShowing()) {
+				mProgressDialog.dismiss();
+			}
+		}catch(Exception e){}
 	}
 
 	private void setProgressDialog(String message) {
@@ -74,6 +77,6 @@ public class WaitActivity extends ActionBarActivity {
 		mProgressDialog.setCancelable(false);
 		mProgressDialog.setMessage(message);
 	}
-	
-	
+
+
 }

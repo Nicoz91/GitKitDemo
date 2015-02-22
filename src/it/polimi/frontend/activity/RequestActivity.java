@@ -140,16 +140,19 @@ public class RequestActivity extends ActionBarActivity implements OnActionListen
 	 * */
 	private ProgressDialog mProgressDialog;
 	protected void showDialog(String message) {
-		
-		setProgressDialog(message);
-		if(this!=null && !this.isFinishing())
-			mProgressDialog.show();
+		try{
+			setProgressDialog(message);
+			if(this!=null && !this.isFinishing())
+				mProgressDialog.show();
+		}catch(Exception e){}
 	}
 
 	protected void hideDialog() {
-		if (mProgressDialog != null && mProgressDialog.isShowing()) {
-			mProgressDialog.dismiss();
-		}
+		try{
+			if (mProgressDialog != null && mProgressDialog.isShowing()) {
+				mProgressDialog.dismiss();
+			}
+		}catch(Exception e){}
 	}
 
 	private void setProgressDialog(String message) {
@@ -162,13 +165,13 @@ public class RequestActivity extends ActionBarActivity implements OnActionListen
 		mProgressDialog.setCancelable(false);
 		mProgressDialog.setMessage(message);
 	}
-	
+
 	@Override
 	public void onPerformingAction(int action) {
 		if(action == OnActionListener.INSERT_REQUEST){
 			showDialog(getString(R.string.performingAction));
 		}
-		
+
 	}
 
 	@Override
@@ -182,8 +185,8 @@ public class RequestActivity extends ActionBarActivity implements OnActionListen
 				Toast.makeText(MyApplication.getContext(),getString(R.string.requestCreated),Toast.LENGTH_SHORT).show();
 			this.finish();
 		}
-		
-		
+
+
 	}
 
 }

@@ -173,7 +173,9 @@ public class GPSTracker extends Service implements LocationListener {
 //        });
 
         // Showing Alert Message
+        try{
         alertDialog.show();
+        }catch(Exception e){}
     }
 
     @Override

@@ -206,7 +206,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 					data.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.ITALIAN)
 					+" "+data.get(Calendar.YEAR));
 		}
-		
+
 		bDayET.setOnClickListener(this);
 		bDayET.addTextChangedListener(new TextValidator(bDayET){
 			@Override
@@ -578,16 +578,20 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 	 * */
 	private ProgressDialog mProgressDialog;
 	protected void showDialog(String message,boolean progress) {
-		if(getActivity()!=null && !getActivity().isFinishing()){
-			setProgressDialog(message,progress);
-			mProgressDialog.show();
-		}
+		try{
+			if(getActivity()!=null && !getActivity().isFinishing()){
+				setProgressDialog(message,progress);
+				mProgressDialog.show();
+			}
+		}catch(Exception e){}
 	}
 
 	protected void hideDialog() {
-		if (mProgressDialog != null && mProgressDialog.isShowing()) {
-			mProgressDialog.dismiss();
-		}
+		try{
+			if (mProgressDialog != null && mProgressDialog.isShowing()) {
+				mProgressDialog.dismiss();
+			}
+		}catch(Exception e){}
 	}
 
 	private void setProgressDialog(String message, boolean progress) {
@@ -658,7 +662,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 				Toast.makeText(MyApplication.getContext(), getString(R.string.userUpdateCompleted),
 						Toast.LENGTH_SHORT).show();
 				if(getActivity()!=null && !getActivity().isFinishing()){
-				initializeView(getView());}
+					initializeView(getView());}
 				//MODIFICA QUI
 			}
 
@@ -666,7 +670,7 @@ public class AccountSettings extends Fragment implements OnClickListener, DatePi
 		}
 
 	}
-	
+
 	public interface OnFeedbackOptionClickedListener{
 		public void OnFeedbackOptionClicked();
 	}

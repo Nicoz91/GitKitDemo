@@ -346,16 +346,20 @@ public class RequestDetail extends Fragment implements OnClickListener, OnItemCl
 	 * */
 	private ProgressDialog mProgressDialog;
 	protected void showDialog(String message) {
-		if (mProgressDialog == null) {
-			setProgressDialog(message);
-		}
-		mProgressDialog.show();
+		try{
+			if (mProgressDialog == null) {
+				setProgressDialog(message);
+			}
+			mProgressDialog.show();
+		}catch(Exception e){}
 	}
 
 	protected void hideDialog() {
-		if (mProgressDialog != null && mProgressDialog.isShowing()) {
-			mProgressDialog.dismiss();
-		}
+		try{
+			if (mProgressDialog != null && mProgressDialog.isShowing()) {
+				mProgressDialog.dismiss();
+			}
+		}catch(Exception e){}
 	}
 
 	private void setProgressDialog(String message) {

@@ -77,19 +77,19 @@ public class FeedbackDetail extends Fragment implements OnClickListener, OnRatin
 			if (feedbacks==null)
 				feedbacks= new ArrayList<Feedback>();
 			if(request!=null)
-			if(!request.getPastRequest()){
-				sendFbForm.setVisibility(View.GONE);
-				rootView.findViewById(R.id.fbNotAllowed).setVisibility(View.VISIBLE);
-			} else {
-				for(Feedback f : feedbacks){
-					if(f.getFrom().equals(QueryManager.getInstance().getCurrentUser()) && f.getToId().equals(owner.getId()) && f.getRequest().equals(request.getId())){
-						sendFbForm.setVisibility(View.GONE);
-						rootView.findViewById(R.id.fbNotAllowed).setVisibility(View.VISIBLE);
-					}/* else {
+				if(!request.getPastRequest()){
+					sendFbForm.setVisibility(View.GONE);
+					rootView.findViewById(R.id.fbNotAllowed).setVisibility(View.VISIBLE);
+				} else {
+					for(Feedback f : feedbacks){
+						if(f.getFrom().equals(QueryManager.getInstance().getCurrentUser()) && f.getToId().equals(owner.getId()) && f.getRequest().equals(request.getId())){
+							sendFbForm.setVisibility(View.GONE);
+							rootView.findViewById(R.id.fbNotAllowed).setVisibility(View.VISIBLE);
+						}/* else {
 						rootView.findViewById(R.id.fbNotAllowed).setVisibility(View.GONE);
 					}*/
+					}
 				}
-			}
 			Context c = getActivity();
 			if(c==null){ 
 				c = MyApplication.getContext();
@@ -157,16 +157,19 @@ public class FeedbackDetail extends Fragment implements OnClickListener, OnRatin
 	 * */
 	private ProgressDialog mProgressDialog;
 	protected void showDialog(String message) {
-
-		setProgressDialog(message);
-		if(this!=null && !this.getActivity().isFinishing())
-			mProgressDialog.show();
+		try{
+			setProgressDialog(message);
+			if(this!=null && !this.getActivity().isFinishing())
+				mProgressDialog.show();
+		}catch(Exception e){}
 	}
 
 	protected void hideDialog() {
-		if (mProgressDialog != null && mProgressDialog.isShowing()) {
-			mProgressDialog.dismiss();
-		}
+		try{
+			if (mProgressDialog != null && mProgressDialog.isShowing()) {
+				mProgressDialog.dismiss();
+			}
+		}catch(Exception e){}
 	}
 
 	private void setProgressDialog(String message) {

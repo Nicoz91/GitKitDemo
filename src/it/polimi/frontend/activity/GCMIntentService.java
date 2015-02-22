@@ -118,9 +118,11 @@ public class GCMIntentService extends GCMBaseIntentService {
 		//        context,
 		//        "Message received via Google Cloud Messaging:\n\n"
 		//            + intent.getStringExtra("message"), true, false);
+		try{
 		LoginSession.notificationReceived();
 		QueryManager.getInstance().clearNotification();
 		this.addNotification(intent.getStringExtra("message"));
+		}catch(Exception e){}
 	}
 
 	private void addNotification(String m) {
