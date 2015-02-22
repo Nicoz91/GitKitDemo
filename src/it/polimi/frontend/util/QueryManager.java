@@ -784,11 +784,13 @@ public class QueryManager {
 				newReq = manager.getRequest(r.getId()).execute();
 				if(newReq!=null)
 					System.out.println("Ho caricato la richiesta corretta e aggiornata");
+				else
+					return false;
 			} catch (Exception e1) {
 				e1.printStackTrace();
 				return false;
 			}
-			if(newReq.getPartecipants()!=null && newReq.getPartecipants().size()>=newReq.getMaxPartecipants()){
+			if(newReq!= null && newReq.getPartecipants()!=null && newReq.getPartecipants().size()>=newReq.getMaxPartecipants()){
 				System.out.println("Non puoi partecipare");
 				return false;
 			}
@@ -948,7 +950,7 @@ public class QueryManager {
 
 			for(int i=0;i<u.getRequests().size();i++){
 				if(u.getRequests().get(i).getId().equals(r.getId())){
-					u.getRequests().remove(i);
+					r = u.getRequests().remove(i);
 					break;
 				}
 
@@ -958,6 +960,7 @@ public class QueryManager {
 
 			try {
 				manager.updateUser(u).execute();
+				manager.removeRequest(r.getId()).execute();
 				ArrayList<User> partecipant = getUserFromRequest(r);
 				if(partecipant!=null){
 					System.out.println("size del partecipant: "+partecipant.size());
