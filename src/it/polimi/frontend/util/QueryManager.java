@@ -182,9 +182,9 @@ public class QueryManager {
 		if(r.getPartecipants()==null)
 			return ret;
 		for(User u : this.users){
-				for(Long idUser: r.getPartecipants())
-					if(u.getId().equals(idUser))
-						ret.add(u);		
+			for(Long idUser: r.getPartecipants())
+				if(u.getId().equals(idUser))
+					ret.add(u);		
 		}
 		return ret;
 	}
@@ -441,16 +441,29 @@ public class QueryManager {
 		@Override
 		protected Void doInBackground(Void... params) {
 			ArrayList<String> devices = (ArrayList<String>) to.getDevices();
-			if(devices == null) return null;
+			if(devices == null) {
+				System.out.println("I devices dello user sono vuoti!!!!");
+				return null;
+			}
 			try {
 				for(String device : devices){
-					message.notify(notify, device,to.getId()).execute();
+					message.notify(getEmail(to)+"$"+notify, device,to.getId()).execute();
 					System.out.println("Sto per chiamare la query...");
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			return null;
+		}
+
+		private String getEmail(User u){
+			if(u.getPwAccount()!=null)
+				return u.getPwAccount();
+			if(u.getGmailAccount()!=null)
+				return u.getGmailAccount();
+			if(u.getFbAccount()!=null)
+				return u.getFbAccount();
+			return "";
 		}
 
 
@@ -1111,8 +1124,12 @@ public class QueryManager {
 			}
 			ArrayList<String> notification = new ArrayList<String>();
 			if(not!=null && not.getItems()!=null && not.getItems().size()>0)
-				for(MessageData md : not.getItems())
-					notification.add(md.getMessage());
+				for(MessageData md : not.getItems()){
+					try{
+						String message = md.getMessage();
+						notification.add(message.substring( message.lastIndexOf('$')+1,message.length()));
+					}catch(Exception e){e.printStackTrace();}
+				}
 			return notification;
 		}
 

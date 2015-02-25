@@ -118,10 +118,18 @@ public class GCMIntentService extends GCMBaseIntentService {
 		//        context,
 		//        "Message received via Google Cloud Messaging:\n\n"
 		//            + intent.getStringExtra("message"), true, false);
+		String userid,mess;
+
 		try{
-		QueryManager.getInstance().clearNotification();
-		this.addNotification(intent.getStringExtra("message"));
-		LoginSession.notificationReceived();
+			String message = intent.getStringExtra("message");
+			userid = message.substring(0, message.lastIndexOf('$'));
+			mess = message.substring(message.lastIndexOf('$')+1,message.length());
+			if(LoginSession.getUser()!=null && LoginSession.getUser().getEmail()!=null && LoginSession.getUser().getEmail().equals(userid)){
+				QueryManager.getInstance().clearNotification();
+				this.addNotification(mess);
+				LoginSession.notificationReceived();
+			}
+
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -135,7 +143,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 		.setAutoCancel(true)
 		.setContentTitle("Notifica");
 		notNumber ++;
-		
+
 		if(notNumber == 1)
 			builder.setContentText(m);  
 		else
