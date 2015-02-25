@@ -43,6 +43,15 @@ public class InsertRequest extends Fragment{
 	private Calendar endDate;
 	private boolean valid;
 	private String EMPTY_VALIDATOR;
+	
+	
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		setRetainInstance(true);
+		super.onCreate(savedInstanceState);
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 

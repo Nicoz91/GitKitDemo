@@ -55,6 +55,7 @@ public class RequestMap extends Fragment implements OnRequestLoadedListener, OnM
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setRetainInstance(true);
 		gps = new GPSTracker(MyApplication.getContext());
 
 		// check if GPS enabled     
