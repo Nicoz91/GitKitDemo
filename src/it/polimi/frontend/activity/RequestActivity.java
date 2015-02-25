@@ -107,7 +107,9 @@ public class RequestActivity extends ActionBarActivity implements OnActionListen
 				menu.findItem(R.id.insert_done).setVisible(true);
 				fragmentTransaction.replace(R.id.insRequestContainer, map);
 				fragmentTransaction.commit();
-			}
+			}else
+				Toast.makeText(MyApplication.getContext(), getString(R.string.generalValidator),
+						Toast.LENGTH_SHORT).show();
 			return true;
 		case R.id.insert_back:
 			menu.findItem(R.id.insert_next).setVisible(true);
