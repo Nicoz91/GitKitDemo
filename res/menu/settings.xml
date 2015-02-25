@@ -14,12 +14,12 @@
         android:id="@+id/editAccount"
         android:orderInCategory="100"
         android:title="@string/edit"
-        android:icon="@android:drawable/ic_menu_edit"
+        android:icon="@drawable/ic_menu_edit"
         app:showAsAction="ifRoom"
         android:visible="true"/>
     <item
         android:id="@+id/cancel"
-        android:icon="@android:drawable/ic_menu_close_clear_cancel"
+        android:icon="@drawable/ic_menu_close_clear_cancel"
         android:orderInCategory="100"
         android:title="Annulla"
         android:visible="false"
@@ -28,7 +28,7 @@
         android:id="@+id/saveAccount"
         android:orderInCategory="100"
         android:title="@string/save"
-        android:icon="@android:drawable/ic_menu_save"
+        android:icon="@drawable/ic_menu_save"
         app:showAsAction="ifRoom"
         android:visible="false"/>
 

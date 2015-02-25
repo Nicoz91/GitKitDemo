@@ -6,13 +6,13 @@
 
     <item
         android:id="@+id/searchRequest"
-        android:icon="@android:drawable/ic_menu_search"
+        android:icon="@drawable/ic_menu_search"
         android:title="@string/search_title"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="always|collapseActionView"/>
     <item
         android:id="@+id/insertRequest"
-        android:icon="@android:drawable/ic_menu_add"
+        android:icon="@drawable/ic_menu_add"
         android:orderInCategory="100"
         android:title="@string/insertRequest"
         app:showAsAction="always"/>
@@ -24,7 +24,7 @@
         app:showAsAction="always"/>
     <item
         android:id="@+id/action_settings"
-        android:icon="@android:drawable/ic_menu_preferences"
+        android:icon="@drawable/ic_menu_preferences"
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="ifRoom"/>
@@ -32,6 +32,6 @@
         android:id="@+id/logout"
         android:orderInCategory="100"
         android:title="@string/logout"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="never"/>
 
 </menu>
