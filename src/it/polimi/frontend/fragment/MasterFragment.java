@@ -174,6 +174,12 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 				requestListFragment.setRequestAdapter(present);
 			break;
 		}
+		//Al refresh delle richieste se DetailConatiner è instanziato, rimuovilo
+		if (twoPane){
+			Fragment f= getChildFragmentManager().findFragmentByTag(DetailContainerFragment.ID);
+			if (f!=null)
+				getChildFragmentManager().beginTransaction().remove(f).commit();
+		}
 	}
 	@Override
 	public void onRequestLoading() {
