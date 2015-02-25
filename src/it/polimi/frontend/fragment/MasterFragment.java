@@ -178,7 +178,7 @@ public class MasterFragment extends Fragment implements OnRequestLoadedListener,
 		if (twoPane){
 			Fragment f= getChildFragmentManager().findFragmentByTag(DetailContainerFragment.ID);
 			if (f!=null)
-				getChildFragmentManager().beginTransaction().remove(f).commit();
+				getChildFragmentManager().beginTransaction().remove(f).commitAllowingStateLoss();
 		}
 	}
 	@Override
